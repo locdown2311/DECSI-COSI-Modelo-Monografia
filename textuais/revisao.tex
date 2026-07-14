@@ -1,8 +1,53 @@
 % ----------------------------------------------------------
-% Capitulo de revisão de literatura
+% Fundamentação Teórica
 % ----------------------------------------------------------
-\chapter{Revisão bibliográfica}
+\chapter{Fundamentação Teórica}
 \label{cap:revisao}
 % ----------------------------------------------------------
 
-Este capítulo apresenta uma revisão da literatura, bem como trabalhos correlatos.
+Este capítulo apresenta a base teórica e os conceitos fundamentais necessários para a compreensão e análise de desempenho de redes locais sem fio (\textit{Wireless Local Area Networks} -- WLANs). Abordam-se a evolução do padrão IEEE 802.11, o funcionamento físico e lógico das camadas PHY e MAC, os desafios operacionais de ambientes de alta densidade, e as métricas chaves de telemetria utilizadas para diagnóstico. Por fim, discute-se o posicionamento deste estudo em relação a trabalhos relacionados da literatura.
+
+\section{Redes WLAN e o Padrão IEEE 802.11}
+\label{sec:fundamentacao_wlan}
+
+As redes WLAN baseiam-se na família de especificações técnicas do padrão internacional IEEE 802.11. Desde a sua primeira publicação em 1997, o padrão evoluiu significativamente para atender à crescente demanda por taxas de transmissão de dados elevadas e melhor eficiência espectral. As principais emendas comerciais incluem o 802.11b e 802.11g (operando na faixa de 2,4~GHz), o 802.11n (Wi-Fi 4, introduzindo multiplexação espacial MIMO e operando em ambas as faixas), o 802.11ac (Wi-Fi 5, operando exclusivamente em 5~GHz com canais mais largos e modulação superior), e o recente 802.11ax (Wi-Fi 6, que incorpora técnicas avançadas de acesso múltiplo como OFDMA).
+
+\section{Camadas PHY e MAC em Wi-Fi}
+\label{sec:fundamentacao_camadas}
+
+O comportamento de uma rede Wi-Fi depende intimamente da coordenação entre as suas camadas Física (PHY) e de Controle de Acesso ao Meio (MAC):
+
+\begin{itemize}
+	\item \textbf{Camada Física (PHY)}: Responsável pela modulação física dos bits em ondas de RF. A velocidade de ligação física (\textit{Link Speed}) é definida pelo esquema de modulação e codificação (\textit{Modulation and Coding Scheme} -- MCS). Relações sinal-ruído (SNR) mais altas propiciam o uso de modulações densas (como 256-QAM no 802.11ac), enquanto atenuações severas forçam o rádio a retroceder (\textit{fallback}) para esquemas mais robustos e lentos (como BPSK ou QPSK), reduzindo a capacidade do link.
+	\item \textbf{Camada MAC}: Responsável pela coordenação do acesso ao canal físico, que utiliza o protocolo de contenção distributiva CSMA/CA (\textit{Carrier Sense Multiple Access with Collision Avoidance}). Como o meio sem fio é um canal compartilhado em \textit{half-duplex}, apenas um rádio (AP ou cliente) pode transmitir por vez em um dado canal e espaço de cobertura. A concorrência excessiva gera colisões no ar, forçando a retransmissão de quadros físicos e reduzindo o tempo de canal útil disponível (\textit{airtime}).
+\end{itemize}
+
+\section{Ambientes de Alta Densidade}
+\label{sec:fundamentacao_densidade}
+
+Cenários de alta densidade corporativos (como campi universitários) caracterizam-se pelo elevado número de dispositivos clientes associados a um único AP ou distribuídos em células geograficamente sobrepostas. Nessas condições, as limitações do protocolo CSMA/CA tornam-se críticas: a contenção pelo canal cresce de forma exponencial com o número de clientes ativos. O aumento no tempo de espera (\textit{backoff}) e a ocorrência frequente de colisões eletromagnéticas degradam drasticamente o desempenho individual de vazão, mesmo que os clientes estejam fisicamente próximos da antena do ponto de acesso e com excelente nível de sinal recebido.
+
+\section{Interferência e Eficiência Espectral}
+\label{sec:fundamentacao_interferencia}
+
+A operação de WLANs é limitada pela disponibilidade de espectro nas faixas não licenciadas de 2,4~GHz e 5~GHz:
+\begin{itemize}
+	\item \textbf{Banda de 2,4 GHz}: Possui largura de banda estreita, disponibilizando apenas 3 canais mutuamente não sobrepostos (1, 6 e 11) na maior parte das regulações. Trata-se de uma banda saturada, sujeita a interferências de outras redes Wi-Fi vizinhas (interferência co-canal e de canal adjacente) e de dispositivos não-802.11 (fornos micro-ondas, telefones sem fio e Bluetooth), o que resulta em alta taxa de colisão de pacotes.
+	\item \textbf{Banda de 5 GHz}: Oferece um espectro muito mais amplo, com dezenas de canais não sobrepostos e menor atenuação contra ruídos externos. Contudo, possui menor poder de propagação física através de barreiras estruturais (paredes e divisórias) em comparação com a faixa de 2,4~GHz, exigindo maior densidade física de antenas para evitar zonas de sombra (sinal atenuado).
+\end{itemize}
+
+\section{Métricas de Desempenho e Telemetria}
+\label{sec:fundamentacao_metricas}
+
+O diagnóstico operativo baseia-se na extração ativa de parâmetros de telemetria das controladoras. As grandezas físicas cruciais incluem:
+\begin{itemize}
+	\item \textbf{Intensidade de Sinal (RSSI/Signal)}: Potência absoluta recebida pelo rádio (dBm). Valores acima de $-65$~dBm indicam excelente sinal, enquanto marcas abaixo de $-75$~dBm representam conectividade marginal.
+	\item \textbf{Ruído de Fundo (Noise)}: Potência do ruído térmico e eletromagnético ambiental (dBm). Determina o piso limitante do SNR.
+	\item \textbf{Retransmissões de Quadros}: Percentual de pacotes físicos que precisaram ser reenviados. No UniFi, essa métrica é estimada dinamicamente pelo firmware sob a forma de \textit{Client Connection Quality} (\acs{CCQ}), onde a perda de pacotes reduz linearmente a eficiência nominal do link.
+	\item \textbf{Throughput (Vazão)}: Taxa efetiva de dados úteis transferida na camada de aplicação (Mbps), dividida entre Downstream (TX) e Upstream (RX).
+\end{itemize}
+
+\section{Trabalhos Relacionados}
+\label{sec:fundamentacao_relacionados}
+
+Mencionar outros trabalhos

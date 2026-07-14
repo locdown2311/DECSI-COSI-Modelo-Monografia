@@ -4,7 +4,7 @@ Este relatório apresenta e analisa os coeficientes de correlação de \textbf{P
 
 \textbf{Limitação do Escopo}: As discussões e conclusões apresentadas neste relatório baseiam-se estritamente no cenário e conjunto de dados observados durante o período de coleta. Os resultados sugerem tendências e comportamentos de rede nesse ambiente específico, não devendo ser interpretados como regras gerais absolutas.
 
-Os coeficientes de Pearson medem a força de uma relação linear, enquanto os de Spearman medem a relação monotônica (útil para distribuições não-normais e não-lineares). Ambos variam de -1 a +1. Os símbolos `\textit{` representam significância estatística de }p\textit{ < 0.05 e `}\textit{` representam }p* < 0.01.
+Os coeficientes de Pearson medem a força de uma relação linear, enquanto os de Spearman medem a relação monotônica (útil para distribuições não-normais e não-lineares). Ambos variam de -1 a +1. Os símbolos `\textit{` representam significância estatística de }p\textit{ < 0.05 e `\textsuperscript{**}` representam }p\textsuperscript{*} < 0.01.
 
 \subsection{Tabela Consolidada de Coeficientes de Pearson (\textit{r\_p}) e Spearman (\textit{r\_s})}
 
@@ -18,15 +18,15 @@ Os coeficientes de Pearson medem a força de uma relação linear, enquanto os d
       \toprule
       Relação Investigada & Ruckus (\textit{r\_p}) & Ruckus (\textit{r\_s}) & Amostras (\textit{N}) & UniFi (\textit{r\_p}) & UniFi (\textit{r\_s}) & Amostras (\textit{N}) \\
       \midrule
-      \textbf{RSSI x Throughput Total} & -0.0086\textit{} & 0.0363\textit{} & 107726 & 0.2305\textit{} & 0.4512\textit{} & 11641 \\
-      \textbf{RSSI x Retransmissoes} & 0.0215\textit{} & 0.1642\textit{} & 107726 & -0.3437\textit{} & -0.3660\textit{} & 11641 \\
-      \textbf{Retransmissoes x Throughput Total} & -0.1009\textit{} & -0.0768\textit{} & 120510 & -0.0989\textit{} & -0.1321\textit{} & 11641 \\
-      \textbf{Qtd Clientes x Throughput Agregado AP} & 0.6953\textit{} & 0.7962\textit{} & 16708 & 0.3310\textit{} & 0.5253\textit{} & 5506 \\
-      \textbf{Qtd Clientes x Retransmissoes Medias AP} & -0.0590\textit{} & 0.3572\textit{} & 16708 & 0.1081\textit{} & 0.2302\textit{} & 5506 \\
-      \textbf{Noise x Retransmissoes} & -0.3952\textit{} & -0.6323\textit{} & 107726 & 0.0447\textit{} & -0.0043 & 11641 \\
-      \textbf{Noise x RSSI} & -0.3933\textit{} & -0.3762\textit{} & 107726 & 0.1053\textit{} & 0.0083 & 11641 \\
-      \textbf{Link Speed TX x Throughput TX} & 0.1086\textit{} & 0.5475\textit{} & 112719 & 0.0536\textit{} & 0.2877\textit{} & 11641 \\
-      \textbf{Volume Total x Tempo de Sessao} & 0.3417\textit{} & 0.6861\textit{} & 120510 & 0.0980\textit{} & 0.3121\textit{} & 11641 \\
+      \textbf{RSSI x Throughput Total} & -0.0086\textsuperscript{**} & 0.0363\textsuperscript{**} & 107726 & 0.2305\textsuperscript{**} & 0.4512\textsuperscript{**} & 11641 \\
+      \textbf{RSSI x Retransmissoes} & 0.0215\textsuperscript{**} & 0.1642\textsuperscript{**} & 107726 & -0.3437\textsuperscript{**} & -0.3660\textsuperscript{**} & 11641 \\
+      \textbf{Retransmissoes x Throughput Total} & -0.1009\textsuperscript{**} & -0.0768\textsuperscript{**} & 120510 & -0.0989\textsuperscript{**} & -0.1321\textsuperscript{**} & 11641 \\
+      \textbf{Qtd Clientes x Throughput Agregado AP} & 0.6953\textsuperscript{**} & 0.7962\textsuperscript{**} & 16708 & 0.3310\textsuperscript{**} & 0.5253\textsuperscript{**} & 5506 \\
+      \textbf{Qtd Clientes x Retransmissoes Medias AP} & -0.0590\textsuperscript{**} & 0.3572\textsuperscript{**} & 16708 & 0.1081\textsuperscript{**} & 0.2302\textsuperscript{**} & 5506 \\
+      \textbf{Noise x Retransmissoes} & -0.3952\textsuperscript{**} & -0.6323\textsuperscript{**} & 107726 & 0.0447\textsuperscript{**} & -0.0043 & 11641 \\
+      \textbf{Noise x RSSI} & -0.3933\textsuperscript{**} & -0.3762\textsuperscript{**} & 107726 & 0.1053\textsuperscript{**} & 0.0083 & 11641 \\
+      \textbf{Link Speed TX x Throughput TX} & 0.1086\textsuperscript{**} & 0.5475\textsuperscript{**} & 112719 & 0.0536\textsuperscript{**} & 0.2877\textsuperscript{**} & 11641 \\
+      \textbf{Volume Total x Tempo de Sessao} & 0.3417\textsuperscript{**} & 0.6861\textsuperscript{**} & 120510 & 0.0980\textsuperscript{**} & 0.3121\textsuperscript{**} & 11641 \\
       \bottomrule
     \end{tabular}%
   }%

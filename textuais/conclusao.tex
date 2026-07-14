@@ -1,8 +1,38 @@
 % ----------------------------------------------------------
 % Conclusão
 % ----------------------------------------------------------
-\chapter[Conclusão]{Conclusão}
-%\addcontentsline{toc}{chapter}{Conclusão}
-% ---
+\chapter{Conclusão}
+\label{cap:conclusao}
+% ----------------------------------------------------------
 
-Este trabalho apresentou...
+Este trabalho de conclusão apresentou o desenvolvimento, a validação e a aplicação prática de um pipeline unificado de processamento e análise estatística de dados telemétricos provenientes de infraestruturas Wi-Fi heterogêneas no campus da UFOP. A integração de bases de dados telemétricas dos fabricantes Ruckus e UniFi demonstrou que é viável caracterizar de forma padronizada o desempenho físico de rádio e classificar automaticamente anomalias de rede.
+
+\section{Síntese dos Principais Resultados}
+\label{sec:conclusao_resultados}
+
+As análises quantitativas geradas ao longo do estudo propiciaram diagnósticos de infraestrutura:
+\begin{itemize}
+	\item \textbf{Padronização Telemétrica}: Superou-se o desafio de integrar métricas de fabricantes distintos (como o alinhamento de fusos horários e a normalização de taxas e velocidades físicas), estabelecendo um dataset consolidado comum;
+	\item \textbf{Índice de Jain}: A modelagem da equidade de compartilhamento provou-se um indicador útil para rastrear a distribuição de recursos e identificar cenários de monopolização de canal físico;
+	\item \textbf{Classificação de Gargalos}: O classificador determinístico por limiares segmentou os estados de conexão dos APs, revelando que a instabilidade de roaming (G4) e a cobertura física marginal (G1) representam os problemas mais crônicos nas dependências do campus, enquanto o gargalo cabeado físico de backhaul (G5) manteve-se nulo;
+	\item \textbf{Validação por Agrupamento K-Means}: A clusterização agrupou de forma coerente e sem vieses heurísticos os APs em quatro perfis operacionais bem definidos (Grupos A, B, C e D), comprovando a concordância entre os estados determinísticos de gargalo e os clusters gerados pelo modelo de aprendizado de máquina.
+\end{itemize}
+
+\section{Limitações do Trabalho}
+\label{sec:conclusao_limitacoes}
+
+Reconhecem-se as seguintes limitações no escopo metodológico da pesquisa:
+\begin{itemize}
+	\item \textbf{Período Amostral}: A coleta de telemetria restringiu-se a uma janela temporal específica de observação. Embora representativa do ciclo de uso diário, flutuações sazonais acentuadas (como períodos de férias acadêmicas ou eventos sazonais de grande porte) não foram capturadas;
+	\item \textbf{Assimetria de Métricas de Retransmissão}: O cálculo de retransmissões no ecossistema UniFi foi baseado em uma estimativa indireta do firmware (CCQ), visto que os rádios Ubiquiti não registram de forma aberta os contadores brutos de retransmissões físicas no rádio.
+\end{itemize}
+
+\section{Propostas de Trabalhos Futuros}
+\label{sec:conclusao_futuros}
+
+Como continuidade a este projeto de pesquisa, sugerem-se as seguintes frentes de desenvolvimento:
+\begin{itemize}
+	\item \textbf{Automatização em Tempo Real}: Integrar o classificador de gargalos diretamente aos coletores das controladoras para gerar alertas automáticos instantâneos aos administradores ou desencadear ações corretivas programadas na rede;
+	\item \textbf{Expansão de Métricas para Wi-Fi 6 (802.11ax)}: Incorporar novos contadores específicos de OFDMA e multiplexação bidirecional MU-MIMO para avaliar o ganho de eficiência dos canais físicos mais modernos instalados no campus;
+	\item \textbf{Predição de Gargalos via Aprendizado de Máquina}: Treinar modelos de aprendizado de máquina supervisionados (como redes neurais recorrentes ou XGBoost) para prever a ocorrência de congestionamentos ou degradações de sinal com horas de antecedência, baseando-se no comportamento histórico de carga telemétrica de cada Access Point.
+\end{itemize}

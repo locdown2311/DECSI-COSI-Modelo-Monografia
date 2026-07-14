@@ -1,0 +1,87 @@
+% ----------------------------------------------------------
+% Metodologia
+% ----------------------------------------------------------
+\chapter{Metodologia}
+\label{cap:metodologia}
+% ----------------------------------------------------------
+
+Este capítulo apresenta a abordagem metodológica adotada para a modelagem, a estruturação e o pipeline de análise estatística de dados de telemetria das redes sem fio. Descreve-se o ambiente de estudo, as estratégias empregadas para coleta e alinhamento temporal, a modelagem da equidade de compartilhamento pelo Índice de Jain, bem como as técnicas quantitativas de inferência e agrupamento utilizadas.
+
+\section{Caracterização do Ambiente de Estudo}
+\label{sec:metodologia_ambiente}
+
+O estudo foi conduzido utilizando dados experimentais coletados na infraestrutura de rede corporativa sem fio ativa da Universidade Federal de Ouro Preto (\acsp{UFOP}). O ambiente de coleta abrange setores administrativos, bibliotecas e salas de aula de múltiplos blocos acadêmicos do campus. Essa infraestrutura caracteriza-se pela coexistência de equipamentos de dois fabricantes principais:
+\begin{itemize}
+	\item A rede corporativa principal é baseada em pontos de acesso da marca Ruckus Wireless, gerenciados centralizadamente por controladoras SmartZone. Esta infraestrutura atende a locais com alta concentração de alunos;
+	\item Setores administrativos específicos e laboratórios de pesquisa utilizam equipamentos da marca Ubiquiti UniFi, coordenados de forma independente por servidores UniFi Controller.
+\end{itemize}
+
+Essa coexistência de plataformas distintas no mesmo espaço físico-acadêmico constitui um ambiente ideal para o desenvolvimento de um pipeline analítico de comparação heterogênea.
+
+\section{Estratégia de Coleta de Dados}
+\label{sec:metodologia_coleta}
+
+A aquisição dos logs telemétricos de telemetria baseia-se em duas estratégias complementares de monitoramento:
+\begin{itemize}
+	\item \textbf{Monitoramento Ativo (Polling)}: As controladoras centrais são consultadas de forma cíclica e automatizada por scripts coletores ativos. Para o ecossistema Ruckus, a extração de dados é realizada utilizando consultas SNMP (\textit{Simple Network Management Protocol}) diretamente nos rádios. No ecossistema UniFi, as requisições de coleta são direcionadas periodicamente à API REST HTTP do UniFi Controller;
+	\item \textbf{Monitoramento Passivo (Syslog)}: No caso da rede Ruckus, a coleta SNMP é enriquecida pela captura de mensagens de log Syslog encaminhadas em tempo real pelos APs sempre que ocorrem eventos de associação, desassociação ou transições de clientes (\textit{roaming}), permitindo rastrear o comportamento dinâmico dos usuários.
+\end{itemize}
+
+\section{Construção e Alinhamento do Dataset}
+\label{sec:metodologia_dataset}
+
+Os dados telemétricos coletados brutos apresentam incompatibilidades severas de nomenclatura e estampas temporais. Para a construção de um dataset consolidado e comparável, implementou-se um pipeline de tratamento contendo as seguintes operações:
+\begin{enumerate}
+	\item \textbf{Normalização de Timezones}: As estampas de tempo brutos da controladora UniFi são reportadas em UTC (fuso zero), enquanto o Ruckus registra dados no horário local. O pipeline converte e unifica todos os registros para o fuso local oficial de Brasília (UTC-3), permitindo correlações temporais diretas de carga diária;
+	\item \textbf{Compatibilização de Identificadores}: O pipeline realiza o mapeamento dos nomes físicos dos APs de cada fabricante. Para o Ruckus, os longos endereços MAC são simplificados no formato \texttt{RK-XXXX} (onde \texttt{XXXX} são os caracteres finais do MAC) para melhorar a legibilidade visual; os APs UniFi são indexados pelos seus nomes cadastrados na gerência (ex: \texttt{Guarita Entrada}, \texttt{Lab Redes});
+	\item \textbf{Mascaramento de Clientes}: Os endereços MAC dos clientes são anonimizados gerando hashes criptográficos unidirecionais, preservando a privacidade dos usuários em conformidade com as diretrizes da LGPD, mas mantendo a capacidade de identificar individualmente conexões repetidas do mesmo dispositivo.
+\end{enumerate}
+
+\section{Definição das Métricas de Análise}
+\label{sec:metodologia_metricas}
+
+As métricas de telemetria física foram consolidadas e parametrizadas. Dentre elas, destaca-se a modelagem de throughput e do equilíbrio na distribuição dos recursos físicos:
+\begin{itemize}
+	\item \textbf{Cálculo de Throughput}: A vazão instantânea do cliente em megabits por segundo (Mbps) é obtida dividindo a diferença incremental do volume total de bytes trafegados (\textit{tx\_bytes} e \textit{rx\_bytes}) pelo intervalo real de tempo decorrido entre duas coletas de telemetria consecutivas;
+	\item \textbf{Índice de Equidade de Jain (\textit{Jain's Fairness Index})}: Para avaliar o equilíbrio na distribuição da capacidade do rádio entre múltiplos dispositivos que compartilham concorrentemente o canal de RF de um AP, implementou-se o cálculo do Índice de Jain ($J$). Para um instante $t$ com $n$ clientes ativos compartilhando o meio físico, o índice é definido pela Equação~\ref{eq:jain_metodologia}:
+
+	\begin{equation}
+	\label{eq:jain_metodologia}
+	J(x_1, x_2, \dots, x_n) = \frac{\left( \sum_{i=1}^{n} x_i \right)^2}{n \sum_{i=1}^{n} x_i^2}
+	\end{equation}
+
+	onde $n \ge 2$ representa o número de dispositivos ativos e $x_i$ é a taxa de throughput individual obtida pelo cliente $i$ (Mbps). O índice varia estritamente no intervalo $[1/n, 1.0]$. Um valor de $J = 1.0$ representa equidade perfeita, enquanto valores próximos de $1/n$ sinalizam monopolização do canal de RF por poucos clientes (\textit{airtime starvation}).
+\end{itemize}
+
+\section{Estratégia de Análise Estatística}
+\label{sec:metodologia_estrategia}
+
+O pipeline de análise quantitativa é dividido em três blocos metodológicos principais:
+\begin{enumerate}
+	\item \textbf{Análise Exploratória e de Correlação}: Verificação do comportamento das variáveis numéricas calculando os coeficientes de correlação de Pearson ($r_p$) para relações lineares e de Spearman ($r_s$) para relações monotônicas não-lineares, permitindo cruzar parâmetros como sinal físico, ruído e retransmissões;
+	\item \textbf{Testes Estatísticos de Comparação}: Para testar formalmente se as diferenças observadas entre fabricantes e bandas de frequência são estatisticamente significativas, aplica-se primeiramente o teste de Shapiro-Wilk para avaliar a normalidade das distribuições. Como as métricas físicas de rede Wi-Fi não seguem uma distribuição normal, emprega-se o teste não-paramétrico U de Mann-Whitney para comparar as medianas corporativas;
+	\item \textbf{Agrupamento Não-Supervisionado (K-Means)}: Para mapear o perfil operacional dos rádios sem vieses de limiares manuais, implementou-se a clusterização via algoritmo \textit{K-Means} com $K=4$ grupos para classificar os APs no espaço métrico multidimensional das variáveis consolidada do rádio $j$:
+	
+	\begin{equation}
+	\label{eq:features_kmeans_metodologia}
+	X_j = \{ C_j, T_j, S_j, R_j \}
+	\end{equation}
+
+	onde:
+	\begin{itemize}
+		\item $C_j$ representa a média de dispositivos clientes conectados simultaneamente ao rádio $j$;
+		\item $T_j$ representa a média de vazão agregada (\textit{throughput}) do rádio $j$, mensurada em Mbps;
+		\item $S_j$ representa a média de potência de sinal físico recebido (\textit{signal}) no rádio $j$, medida em dBm;
+		\item $R_j$ representa a média da taxa de retransmissão de quadros de dados físicos no rádio $j$, expressa em percentual.
+	\end{itemize}
+\end{enumerate}
+
+\section{Hipóteses de Pesquisa}
+\label{sec:metodologia_hipoteses}
+
+A investigação do comportamento de rádio das marcas Ruckus e UniFi é orientada pelas seguintes hipóteses de rede física:
+\begin{itemize}
+	\item \textbf{Hipótese 1 ($H_1$)}: Dispositivos operando na banda de 5~GHz alcançam taxas de throughput significativamente maiores do que os conectados na banda de 2,4~GHz, devido à maior largura de canal e menor poluição do espectro;
+	\item \textbf{Hipótese 2 ($H_2$)}: Conexões com intensidade física de sinal degradada (sinal inferior a $-75$~dBm) resultam em taxas de retransmissão significativamente maiores do que conexões operando com sinal saudável;
+	\item \textbf{Hipótese 3 ($H_3$)}: Setores com maior densidade de clientes ativos conectados simultaneamente apresentam menor equidade de compartilhamento (Índice de Jain reduzido) devido à contenção de canal do protocolo MAC CSMA/CA.
+\end{itemize}

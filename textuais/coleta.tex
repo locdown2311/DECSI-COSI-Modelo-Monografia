@@ -1,0 +1,35 @@
+% ----------------------------------------------------------
+% Coleta e Tratamento dos Dados
+% ----------------------------------------------------------
+\chapter{Coleta e Tratamento dos Dados}
+\label{cap:coleta}
+% ----------------------------------------------------------
+
+Este capítulo descreve os aspectos operacionais da arquitetura tecnológica de redes do campus, detalhando as ferramentas e dispositivos que dão suporte à infraestrutura. Adicionalmente, expõe-se o processo de consistência inicial, limpeza e higienização das bases de dados brutas de telemetria por meio da importação do relatório de validação.
+
+\section{Ferramentas e Infraestrutura de Rede}
+\label{sec:coleta_ferramentas}
+
+A infraestrutura sob monitoramento é suportada por um conjunto integrado de ferramentas de gerência, segurança e controle operacional.
+
+\subsection{Firewall (pfSense)}
+O pfSense atua como o \textit{gateway} principal de borda e servidor de firewall da rede local. Ele é encarregado de realizar o roteamento inter-VLAN, gerenciar servidores DHCP para a distribuição dinâmica de endereços IPs aos dispositivos sem fio, controlar políticas de segurança lógica por meio de tabelas de firewall e atuar como concentrador de tráfego, servindo como o ponto central para monitorar as taxas volumétricas globais direcionadas à Internet.
+
+\subsection{Controladora Ruckus (SmartZone)}
+A controladora física Ruckus SmartZone gerencia centralizadamente os Access Points Ruckus distribuídos nos prédios acadêmicos do campus. Ela coordena dinamicamente a potência de transmissão, a seleção de canais de RF e as chaves de criptografia WPA2-Enterprise das redes sem fio institucionais. A SmartZone expõe as estatísticas operacionais dos rádios via SNMP e atua como servidora Syslog, despachando logs detalhados de transições de conexão de clientes.
+
+\subsection{Controladora UniFi (UniFi Controller)}
+A controladora baseada em software UniFi Controller é instalada localmente no servidor de gerência para monitorar os rádios Ubiquiti das unidades de pesquisa e escritórios administrativos específicos. O UniFi Controller gerencia as configurações dos APs UniFi e disponibiliza os parâmetros físicos de rádio de cada cliente (como sinal RSSI e CCQ) por meio de um serviço HTTP API local estruturado em formato JSON.
+
+\subsection{Plataforma de Visualização (Grafana)}
+O Grafana é empregado pelos administradores do campus como plataforma de análise de dados operacionais em tempo real e visualização de métricas históricas. Ele consome dados de séries temporais das controladoras para alimentar painéis interativos que monitoram a quantidade de usuários ativos por setor, o consumo agregado de largura de banda e alertas de indisponibilidade de rádios.
+
+\subsection{Scripts de Coleta Telemétrica}
+Os scripts coletores ativos foram codificados em linguagem Python e agendados para execução periódica no servidor de gerência. Os coletores utilizam a biblioteca \texttt{pysnmp} para interrogar periodicamente as OIDs da Ruckus Wireless e requisições HTTP autenticadas via biblioteca \texttt{requests} para consumir dados em JSON da API UniFi, gravando os logs brutos estruturados diariamente em disco.
+
+\section{Limpeza e Tratamento dos Dados}
+\label{sec:coleta_limpeza}
+
+A higienização inicial das informações e a consolidação do conjunto de dados limpo é essencial para eliminar ruídos de polling repetido e valores nulos de conexões inconsistentes. A validação empírica dos dados consolidados é apresentada e discutida a seguir.
+
+\input{./textuais/resultados_validacao}

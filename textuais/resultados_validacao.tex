@@ -127,8 +127,8 @@ A tabela abaixo mostra a relação entre os campos extraídos de cada fabricante
       \midrule
       Potência do Sinal & `signal\_rssi` & `signal` & `signal` (dBm) \\
       Relação Sinal/Ruído & `snr` & `rssi` & `RSSI` (dB) \\
-      Throughput Downstream & `tx\_bytes / uptime` & `tx\_bytes\_r * 8` & `throughput\_tx\_mbps` \\
-      Throughput Upstream & `rx\_bytes / uptime` & `rx\_bytes\_r * 8` & `throughput\_rx\_mbps` \\
+      Throughput Downstream & `tx\_bytes / uptime` & `tx\_bytes\_r \textsuperscript{*} 8` & `throughput\_tx\_mbps` \\
+      Throughput Upstream & `rx\_bytes / uptime` & `rx\_bytes\_r \textsuperscript{*} 8` & `throughput\_rx\_mbps` \\
       Retransmissões & `tx\_retries / (tx\_pkts + tx\_retries)` & `100 - (ccq / 10)` & `retransmissoes\_pct` \\
       Volume Trafegado & `tx\_bytes`, `rx\_bytes` & `tx\_bytes\_r \textit{ uptime`, `rx\_bytes\_r } uptime` & `volume\_tx\_mb`, `volume\_rx\_mb` \\
       Modulação de Velocidade & `throughput\_rate` & `tx\_rate`, `rx\_rate` & `link\_speed\_tx\_mbps`, `link\_speed\_rx\_mbps` \\

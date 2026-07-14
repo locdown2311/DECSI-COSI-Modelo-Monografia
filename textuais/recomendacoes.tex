@@ -1,0 +1,57 @@
+% ----------------------------------------------------------
+% Recomendações
+% ----------------------------------------------------------
+\chapter{Recomendações Técnicas}
+\label{cap:recomendacoes}
+% ----------------------------------------------------------
+
+Este capítulo apresenta um conjunto de intervenções técnicas e administrativas recomendadas para a infraestrutura de redes locais sem fio da UFOP. As sugestões baseiam-se diretamente nas descobertas quantitativas extraídas do pipeline de telemetria, organizadas de forma a otimizar a qualidade de sinal, mitigar congestionamentos de rádio, planejar o espectro e projetar evoluções de cabeamento físico.
+
+\section{Mitigação de Cobertura Atenuada (G1)}
+\label{sec:recomendacoes_g1}
+
+A baixa qualidade física de sinal recebido (Gargalo G1) afetou mais de $42\%$ das amostras no ambiente Ruckus e cerca de $28\%$ no UniFi. Esse patamar elevado de conexões degradadas indica a presença de zonas de sombra de RF no campus. Recomenda-se:
+\begin{itemize}
+	\item \textbf{Ajuste de Posicionamento e Altura}: Reposicionar os APs que operam em salas com barreiras de alvenaria espessa ou divisórias metálicas, retirando-os de nichos fechados e instalando-os no teto de corredores ou áreas abertas de circulação;
+	\item \textbf{Controle Dinâmico de Potência (TX Power)}: Ajustar os limites mínimos de potência de transmissão das antenas nas controladoras, evitando que rádios reduzam dinamicamente a cobertura abaixo de níveis toleráveis de recepção nas bordas das células;
+	\item \textbf{Redimensionamento Local}: Instalar APs adicionais em setores de sombra identificados como críticos (como o AP \texttt{RK-ceb0} e \texttt{unifi-ap-4-d}, que registraram as piores potências médias).
+
+\end{itemize}
+
+\section{Alívio de Congestionamento de Usuários (G2)}
+\label{sec:recomendacoes_g2}
+
+O congestionamento do ponto de acesso (Gargalo G2) foi altamente representativo na rede Ruckus ($46,3\%$), refletindo o adensamento acadêmico. Para mitigar o esgotamento de recursos dos rádios, recomenda-se:
+\begin{itemize}
+	\item \textbf{Direcionamento de Banda (\textit{Band Steering})}: Configurar as controladoras para forçar o direcionamento de clientes com suporte a 5~GHz para essa frequência, aliviando a contenção na faixa saturada de 2,4~GHz;
+	\item \textbf{Limitação de Clientes por Rádio}: Impor um teto flexível de conexões simultâneas por rádio (ex: limite de 30 clientes ativos por rádio físico), forçando novos dispositivos a se associarem a células vizinhas menos carregadas;
+	\item \textbf{Distribuição de Carga (\textit{Load Balancing})}: Ativar rotinas de balanceamento de carga entre APs fisicamente adjacentes nas salas de aula de grande porte.
+
+\end{itemize}
+
+\section{Otimização de Canais e Controle de Interferência (G3)}
+\label{sec:recomendacoes_g3}
+
+A interferência co-canal e ruído elevado (Gargalo G3) foram identificados de forma concentrada na banda de 2,4~GHz. Para otimizar a eficiência de transmissão no espectro local, recomenda-se:
+\begin{itemize}
+	\item \textbf{Desativação Parcial de Rádios em 2,4 GHz}: Em locais com alta densidade de APs instalados (onde há forte sobreposição de canais 2,4~GHz), recomenda-se desativar o rádio de 2,4~GHz de frações alternadas de equipamentos, mantendo apenas a cobertura de 5~GHz ativa neles para eliminar colisões mútuas;
+	\item \textbf{Planejamento Fixo de Canais}: Nos APs UniFi, desativar a seleção automática de canal que gera instabilidade e fixar manualmente a distribuição alternada de canais 1, 6 e 11 entre APs vizinhos.
+
+\end{itemize}
+
+\section{Estabilização de Roaming e Clientes Aderentes (G4)}
+\label{sec:recomendacoes_g4}
+
+A instabilidade de roaming (Gargalo G4) revelou-se o problema mais disseminado na rede corporativa, afetando mais de $84\%$ dos registros de conexão da Ruckus. Dispositivos clientes tendem a manter a associação com rádios distantes e atenuados mesmo na presença de antenas mais próximas e saudáveis (\textit{sticky clients}). Recomenda-se:
+\begin{itemize}
+	\item \textbf{Limiar de RSSI Mínimo (\textit{Min-RSSI})}: Configurar nas controladoras UniFi e Ruckus o desligamento automático (\textit{kick}) de clientes cuja potência de sinal recebida caia abaixo de $-75$~dBm. Isso força o dispositivo cliente a realizar uma nova varredura e se associar a uma antena local mais próxima;
+	\item \textbf{Ativação de Protocolos de Roaming Rápido}: Configurar nos SSIDs corporativos o suporte aos padrões da família IEEE 802.11k (descoberta de vizinhança de rádio), 802.11r (transição rápida de chaves) e 802.11v (gerência de transição de rede), acelerando a transição física dos clientes móveis sem perdas de pacotes.
+\end{itemize}
+
+\section{Planejamento de Evolução de Cabeamento (G5)}
+\label{sec:recomendacoes_g5}
+
+Embora o gargalo de infraestrutura cabeada (Gargalo G5) tenha apresentado frequência nula ($0\%$) no período observado (visto que as demandas agregadas individuais dos APs operaram distantes do limite útil de portas \textit{Fast Ethernet} de 100 Mbps), recomenda-se uma gerência preventiva:
+\begin{itemize}
+	\item \textbf{Upgrade Preventivo para APs do Grupo A}: Realizar a substituição de cabos estruturados e portas de \textit{switch} de acesso de \textit{Fast Ethernet} para \textit{Gigabit Ethernet} (1 Gbps) especificamente para os pontos de acesso classificados no \textbf{Grupo A: Muito Carregado} (como o \texttt{RK-fea0} e \texttt{RK-35c0}), garantindo que surtos sazonais de tráfego agregado no ambiente universitário não saturem o \textit{link} físico cabeado local no futuro.
+\end{itemize}

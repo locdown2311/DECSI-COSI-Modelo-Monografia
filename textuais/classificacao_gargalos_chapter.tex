@@ -1,0 +1,64 @@
+% ----------------------------------------------------------
+% Classificação dos Gargalos
+% ----------------------------------------------------------
+\chapter{Classificação dos Gargalos}
+\label{cap:classificacao}
+% ----------------------------------------------------------
+
+Este capítulo descreve a implementação prática do classificador determinístico heurístico de gargalos corporativos e a parametrização do modelo não-supervisionado de aprendizado de máquina \textit{K-Means}. Apresentam-se os critérios físicos adotados para a árvore de decisão, as variáveis selecionadas para a modelagem dos clusters de Access Points e a discussão empírica consolidada dos resultados gerados pelo pipeline de dados.
+
+\section{Classificação de Gargalos Baseada em Limiares}
+\label{sec:classificacao_limiares_cap}
+
+A identificação automática das causas de degradação de vazão em cada AP foi modelada inicialmente por meio de uma árvore de decisão com limiares físicos heurísticos baseados em boas práticas de gerência de redes corporativas. Esse classificador determinístico rotula o estado operacional de cada amostra de telemetria em um de cinco perfis de gargalos físicos e de infraestrutura, além do estado ideal:
+
+\begin{enumerate}
+	\item \textbf{Baixa Qualidade de Enlace (Gargalo G1)}: Ocorre quando a potência média de recepção do rádio é atenuada. Define-se o limiar de gatilho para amostras em que o sinal físico recebido pelo AP (\textit{signal}) é estritamente inferior a $-75$~dBm;
+	\item \textbf{Congestionamento do Meio (Gargalo G2)}: Caracteriza o esgotamento de recursos decorrente da densidade de dispositivos. É disparado quando o número de clientes ativos simultâneos conectados no mesmo AP e minuto é maior ou igual a $15$ dispositivos;
+	\item \textbf{Interferência ou SNR Ruim (Gargalo G3)}: Identifica a perda de integridade física dos quadros de rádio decorrente de interferência externa. É ativado quando o ruído de fundo (\textit{noise}) é superior a $-90$~dBm, ou quando a relação sinal-ruído (\textit{Signal-to-Noise Ratio} -- SNR) é inferior a $20$~dB em clientes que possuem boa intensidade de sinal recebido (maior ou igual a $-75$~dBm);
+	\item \textbf{Instabilidade de Roaming (Gargalo G4)}: Mapeia o comportamento de instabilidade na associação de clientes. É disparado para dispositivos clientes que registraram mais de $5$ transições rápidas de AP (\textit{roaming}) no período de observação de um dia;
+	\item \textbf{Gargalo de Infraestrutura Cabeada (Gargalo G5)}: Identifica a saturação do enlace físico que conecta o AP ao \textit{switch} de acesso da rede local. É acionado quando a taxa de throughput agregada sustentada no rádio atinge ou supera o patamar de $90$~Mbps, aproximando-se do limite de vazão útil de uma porta física \textit{Fast Ethernet} de $100$~Mbps;
+	\item \textbf{Operação Ideal (Sem Gargalos)}: Amostras que apresentam sinal físico saudável (maior ou igual a $-75$~dBm), ausência de congestionamento de canal ou interferência eletromagnética crônica, sem ocorrência de instabilidade de associação ou saturação de cabeamento.
+\end{enumerate}
+
+Essa divisão sistemática permite que os administradores identifiquem se a degradação de sinal de um setor decorre de barreiras estruturais da edificação (G1), subdimensionamento do número de rádios instalados (G2), poluição do espectro local por canais concorrentes (G3), instabilidade de antena do cliente (G4) ou obsolescência dos equipamentos de rede cabeada e switches locais (G5).
+
+\section{Agrupamento Operacional de Access Points (K-Means)}
+\label{sec:kmeans_desenvolvimento_cap}
+
+Com o objetivo de validar a classificação de gargalos e definir o comportamento operacional típico de cada rádio de forma automatizada e livre de vieses heurísticos manuais, aplicou-se o algoritmo de aprendizado de máquina não-supervisionado \textit{K-Means}. 
+
+O algoritmo foi parametrizado para identificar exatamente $K=4$ clusters operacionais para cada fabricante. As variáveis de entrada selecionadas para caracterizar o espaço métrico multidimensional de operação de cada rádio $j$ foram calculadas a partir das médias temporais consolidadas:
+
+\begin{equation}
+\label{eq:features_kmeans_cap}
+X_j = \{ C_j, T_j, S_j, R_j \}
+\end{equation}
+
+onde:
+\begin{itemize}
+	\item $C_j$ representa a média de dispositivos clientes conectados simultaneamente ao rádio $j$;
+	\item $T_j$ representa a média de vazão agregada (\textit{throughput}) do rádio $j$, mensurada em Mbps;
+	\item $S_j$ representa a média de potência de sinal físico recebido (\textit{signal}) no rádio $j$, medida em dBm;
+	\item $R_j$ representa a média da taxa de retransmissão de quadros de dados físicos no rádio $j$, expressa em percentual.
+\end{itemize}
+
+Antes de aplicar a clusterização, realizou-se a normalização z-score das variáveis de entrada por meio do módulo \textit{StandardScaler}. Esse passo metodológico é essencial em algoritmos de distância euclidiana como o \textit{K-Means}, pois impede que métricas com escalas numéricas superiores (como as amostras físicas em dBm ou volumes agregados) dominem o cálculo de distância em relação a métricas com intervalos menores (como número médio de usuários).
+
+A normalização z-score para uma variável $x$ é dada pela Equação~\ref{eq:zscore_cap}:
+
+\begin{equation}
+\label{eq:zscore_cap}
+z = \frac{x - \mu}{\sigma}
+\end{equation}
+
+onde $\mu$ representa a média amostral e $\sigma$ o desvio padrão da respectiva métrica.
+
+A execução do modelo de agrupamento classifica cada rádio no cluster com a menor distância quadrada média até o centróide representante, originando os perfis descritos como Grupo A (Muito Carregado), Grupo B (Pouco Utilizado), Grupo C (Carga Moderada) e Grupo D (Baixa Qualidade de Sinal / Instável).
+
+\section{Resultados da Classificação e do Agrupamento}
+\label{sec:resultados_classificacao_cap}
+
+Abaixo são detalhados e discutidos os resultados práticos gerados na classificação de telemetria e no agrupamento não-supervisionado de pontos de acesso.
+
+\input{./textuais/resultados_gargalos}
