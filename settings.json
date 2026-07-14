@@ -1,0 +1,6 @@
+"files.exclude": {
+    "**/*.aux": true,
+    "**/*.log": true,
+    "**/*.fls": true,
+    "**/*.fdb_latexmk": true
+}

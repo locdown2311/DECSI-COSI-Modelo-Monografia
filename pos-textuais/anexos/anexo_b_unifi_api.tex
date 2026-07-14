@@ -1,0 +1,47 @@
+% ----------------------------------------------------------
+\chapter{Endpoints da API do UniFi Controller}
+\label{an:api_unifi}
+% ----------------------------------------------------------
+
+Este anexo descreve os principais endpoints HTTP REST e chaves de dados expostos pela controladora central Ubiquiti UniFi, que foram consultados periodicamente pelo coletor ativo da UFOP para consolidar as estatísticas dos clientes em tempo de execução.
+
+\begin{table}[htb]
+\IBGEtab{%
+  \caption{Endpoints da API REST Utilizados na Coleta UniFi}%
+  \label{tab:endpoints_api_unifi}%
+}{%
+  \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lll}
+      \toprule
+      Método HTTP & Endpoint REST da Controladora & Descrição e Propósito da Coleta \\
+      \midrule
+      \texttt{POST} & \texttt{/api/login} & Autenticação e aquisição do cookie de sessão \\
+      \texttt{GET} & \texttt{/api/s/default/stat/sta} & Telemetria em tempo real de clientes conectados \\
+      \texttt{GET} & \texttt{/api/s/default/stat/device} & Status operacional, canais e nomes dos Access Points \\
+      \texttt{POST} & \texttt{/api/logout} & Encerramento e expiração da sessão de API \\
+      \bottomrule
+    \end{tabular}%
+  }%
+}{%
+  \fonte{Ubiquiti Networks UniFi API Documentation.}%
+}
+\end{table}
+
+Abaixo é apresentado um fragmento de payload JSON típico retornado pelo endpoint de clientes (\texttt{/stat/sta}) e mapeado no processo de normalização:
+
+\begin{lstlisting}[caption={Fragmento de Payload JSON do UniFi Controller STA}, label={lst:json_unifi}]
+{
+  "mac": "aa:bb:cc:dd:ee:ff",
+  "ap_mac": "fc:ec:da:00:11:22",
+  "channel": 36,
+  "radio_proto": "ac",
+  "signal": -65,
+  "noise": -98,
+  "rssi": 33,
+  "ccq": 920,
+  "tx_bytes_r": 125000,
+  "rx_bytes_r": 14200,
+  "tx_rate": 150000,
+  "rx_rate": 86600
+}
+\end{lstlisting}

@@ -1,0 +1,39 @@
+% ----------------------------------------------------------
+\chapter{Código do Classificador Operativo de Gargalos}
+\label{ap:regras_classificador}
+% ----------------------------------------------------------
+
+Este apêndice apresenta a rotina de classificação baseada em limiares físicos e lógicos desenvolvida em Python. O algoritmo avalia as métricas de rádio de cada registro de conexão telemétrica e categoriza a amostra operacional em perfis mutuamente exclusivos de gargalo físico ou ideal.
+
+\begin{lstlisting}[language=Python, caption={Rotina de Classificação de Gargalos de Rede}, label={lst:classificador_gargalos}]
+def classify_bottlenecks(df):
+    """
+    Classifica cada registro de telemetria nos perfis de gargalo
+    de rede ou operacao ideal baseados nos limiares heuristicos.
+    """
+    # 1. Gargalo G1: Baixa Qualidade de Enlace (sinal < -75 dBm)
+    df['gargalo_sinal'] = df['signal'] < -75
+    
+    # 2. Gargalo G2: Congestionamento do Meio (clientes ativos >= 15)
+    df['gargalo_congestionamento'] = df['clientes_ativos_por_ap_minuto'] >= 15
+    
+    # 3. Gargalo G3: Interferencia / SNR Ruim (ruido > -90 dBm ou SNR < 20 dB com sinal saudavel)
+    df['gargalo_interferencia'] = (df['noise'] > -90) | ((df['signal'] >= -75) & (df['SNR'] < 20))
+    
+    # 4. Gargalo G4: Instabilidade de Roaming (mais de 5 transicoes no dia)
+    df['gargalo_roaming'] = df['total_roaming'] > 5
+    
+    # 5. Gargalo G5: Gargalo Cabeado (throughput do AP >= 90 Mbps - limite Fast Ethernet)
+    df['gargalo_cabo'] = df['tp_agregado_ap'] >= 90
+    
+    # Estado Ideal: Amostras sem ocorrencia de nenhum dos limitantes anteriores
+    df['sem_gargalo'] = ~(
+        df['gargalo_sinal'] | 
+        df['gargalo_congestionamento'] | 
+        df['gargalo_interferencia'] | 
+        df['gargalo_roaming'] | 
+        df['gargalo_cabo']
+    )
+    
+    return df
+\end{lstlisting}

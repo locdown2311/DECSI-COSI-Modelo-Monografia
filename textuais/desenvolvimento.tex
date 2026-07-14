@@ -1,8 +1,95 @@
 % ----------------------------------------------------------
 % Desenvolvimento
 % ----------------------------------------------------------
-\chapter{Desenvolvimento}
+\chapter{Metodologia e Desenvolvimento}
 \label{cap:desenvolvimento}
 % ----------------------------------------------------------
 
-Este capítulo descreve o desenvolvimento do trabalho...
+Este capítulo apresenta a abordagem metodológica adotada para a modelagem, o pré-processamento de dados e o desenvolvimento do classificador operativo de gargalos em redes locais sem fio corporativas. A metodologia subdivide-se nas etapas de consolidação dos conjuntos de dados (\textit{datasets}) brutos, normalização de métricas e alinhamento temporal, modelagem matemática da equidade de compartilhamento por meio do Índice de Jain, parametrização dos limiares lógicos de diagnóstico e estruturação do agrupamento não-supervisionado via algoritmo \textit{K-Means}.
+
+Nas seções a seguir, descrevem-se os procedimentos detalhados que compõem o pipeline de dados telemétricos construído para dar suporte às análises do trabalho.
+
+\section{Coleta de Dados e Pré-processamento}
+\label{sec:coleta_dados}
+
+Os conjuntos de dados brutos analisados foram extraídos de servidores de gerência ativa das controladoras Wi-Fi corporativas da \acsp{UFOP}. O primeiro \textit{dataset} contém informações detalhadas de conexões de clientes associados à infraestrutura de rádios Ruckus, cobrindo pontos estratégicos do campus. A coleta nesse ambiente foi realizada por meio de consultas periódicas utilizando o protocolo \acs{SNMP} (\textit{Simple Network Management Protocol}) diretamente nos rádios, complementadas pelo recebimento de logs de eventos e transições de associação via \textit{Syslog} encaminhados pela controladora central. O segundo \textit{dataset} compreende dados de telemetria da controladora UniFi, responsável pela conectividade em setores administrativos específicos. Para a rede UniFi, a coleta dos dados de telemetria e das métricas de conexão dos dispositivos clientes foi efetuada através de requisições periódicas estruturadas à \acs{API} \acs{HTTP} disponibilizada pela controladora central.
+
+Devido à disparidade entre as soluções de gerência dos fabricantes e as formas de aquisição das informações, o processo de pré-processamento foi essencial para garantir a consistência das análises. Os logs brutos da Ruckus foram compilados com registros estruturados em intervalos nominais de amostragem (\textit{polling}) de aproximadamente 5 minutos. Já a controladora UniFi registrou eventos de conexão e métricas com coletas indexadas em intervalos variáveis de cerca de 2 minutos.
+
+A etapa de higienização de dados envolveu as seguintes operações de normalização:
+\begin{itemize}
+	\item \textbf{Padronização de identificadores}: Criação de colunas unificadas de nomenclatura de APs (\textit{access points}) e chaves comuns para clientes (endereços MAC mascarados por questões de privacidade);
+	\item \textbf{Ajuste de fuso horário (\textit{timezone})}: Conversão de todas as estampas de tempo (\textit{timestamps}) brutos para o horário local de Brasília (UTC-3), eliminando discrepâncias verificadas nos servidores da UniFi que registravam dados em UTC;
+	\item \textbf{Cálculo de Throughput}: Obtenção das taxas instantâneas de vazão agregada e por cliente em megabits por segundo (Mbps), dividindo a diferença de volume trafegado pelo intervalo real de tempo decorrido entre amostras sucessivas.
+\end{itemize}
+
+Após o pré-processamento, os dados consolidados foram persistidos em arquivos no formato CSV padronizado, prontos para a ingestão pelas rotinas estatísticas subsequentes.
+
+\section{Índice de Equidade de Jain}
+\label{sec:indice_jain}
+
+Para avaliar o equilíbrio na distribuição da capacidade física de transmissão entre os múltiplos dispositivos clientes que compartilham concorrentemente o mesmo meio de propagação de RF de um AP, implementou-se o cálculo estatístico do Índice de Equidade de Jain (\textit{Jain's Fairness Index}).
+
+A formulação matemática para o cálculo do índice de equidade $J$ em uma amostra contendo $n$ clientes ativos conectados concorrentemente a um mesmo rádio em um instante temporal $t$ é dada pela Equação~\ref{eq:jain}:
+
+\begin{equation}
+\label{eq:jain}
+J(x_1, x_2, \dots, x_n) = \frac{\left( \sum_{i=1}^{n} x_i \right)^2}{n \sum_{i=1}^{n} x_i^2}
+\end{equation}
+
+onde:
+\begin{itemize}
+	\item $n$ representa o número de dispositivos clientes ativos associados ao AP no instante analisado (sendo exigido $n \ge 2$ para que a partilha de recursos seja aplicável);
+	\item $x_i$ representa a taxa de transferência individual percebida pelo cliente $i$ (medida em Mbps).
+\end{itemize}
+
+O Índice de Jain varia estritamente no intervalo entre $1/n$ e $1,0$. Um valor de $J = 1,0$ indica um cenário de equidade perfeita, onde todos os clientes ativos obtêm frações idênticas da largura de banda do canal. Por outro lado, valores próximos do limite inferior de $1/n$ sugerem a monopolização do meio físico de transmissão por parte de poucos clientes (\textit{airtime starvation}), sinalizando uma potencial anomalia ou configuração inadequada dos recursos de QoS no AP.
+
+\section{Classificação de Gargalos Baseada em Limiares}
+\label{sec:classificacao_limiares}
+
+A identificação automática das causas de degradação de vazão em cada AP foi modelada inicialmente por meio de uma árvore de decisão com limiares físicos heurísticos baseados em boas práticas de gerência de redes corporativas. Esse classificador determinístico rotula o estado operacional de cada amostra de telemetria em um de cinco perfis de gargalos físicos e de infraestrutura, além do estado ideal:
+
+\begin{enumerate}
+	\item \textbf{Baixa Qualidade de Enlace (Gargalo G1)}: Ocorre quando a potência média de recepção do rádio é atenuada. Define-se o limiar de gatilho para amostras em que o sinal físico recebido pelo AP (\textit{signal}) é estritamente inferior a $-75$~dBm;
+	\item \textbf{Congestionamento do Meio (Gargalo G2)}: Caracteriza o esgotamento de recursos decorrente da densidade de dispositivos. É disparado quando o número de clientes ativos simultâneos conectados no mesmo AP e minuto é maior ou igual a $15$ dispositivos;
+	\item \textbf{Interferência ou SNR Ruim (Gargalo G3)}: Identifica a perda de integridade física dos quadros de rádio decorrente de interferência externa. É ativado quando o ruído de fundo (\textit{noise}) é superior a $-90$~dBm, ou quando a relação sinal-ruído (\textit{Signal-to-Noise Ratio} -- SNR) é inferior a $20$~dB em clientes que possuem boa intensidade de sinal recebido (maior ou igual a $-75$~dBm);
+	\item \textbf{Instabilidade de Roaming (Gargalo G4)}: Mapeia o comportamento de instabilidade na associação de clientes. É disparado para dispositivos clientes que registraram mais de $5$ transições rápidas de AP (\textit{roaming}) no período de observação de um dia;
+	\item \textbf{Gargalo de Infraestrutura Cabeada (Gargalo G5)}: Identifica a saturação do enlace físico que conecta o AP ao \textit{switch} de acesso da rede local. É acionado quando a taxa de throughput agregada sustentada no rádio atinge ou supera o patamar de $90$~Mbps, aproximando-se do limite de vazão útil de uma porta física \textit{Fast Ethernet} de $100$~Mbps;
+	\item \textbf{Operação Ideal (Sem Gargalos)}: Amostras que apresentam sinal físico saudável (maior ou igual a $-75$~dBm), ausência de congestionamento de canal ou interferência eletromagnética crônica, sem ocorrência de instabilidade de associação ou saturação de cabeamento.
+\end{enumerate}
+
+Essa divisão sistemática permite que os administradores identifiquem se a degradação de sinal de um setor decorre de barreiras estruturais da edificação (G1), subdimensionamento do número de rádios instalados (G2), poluição do espectro local por canais concorrentes (G3), instabilidade de antena do cliente (G4) ou obsolescência dos equipamentos de rede cabeada e switches locais (G5).
+
+\section{Agrupamento Operacional de Access Points (K-Means)}
+\label{sec:kmeans_desenvolvimento}
+
+Com o objetivo de validar a classificação de gargalos e definir o comportamento operacional típico de cada rádio de forma automatizada e livre de vieses heurísticos manuais, aplicou-se o algoritmo de aprendizado de máquina não-supervisionado \textit{K-Means}. 
+
+O algoritmo foi parametrizado para identificar exatamente $K=4$ clusters operacionais para cada fabricante. As variáveis de entrada selecionadas para caracterizar o espaço métrico multidimensional de operação de cada rádio $j$ foram calculadas a partir das médias temporais consolidadas:
+
+\begin{equation}
+\label{eq:features_kmeans}
+X_j = \{ C_j, T_j, S_j, R_j \}
+\end{equation}
+
+onde:
+\begin{itemize}
+	\item $C_j$ representa a média de dispositivos clientes conectados simultaneamente ao rádio $j$;
+	\item $T_j$ representa a média de vazão agregada (\textit{throughput}) do rádio $j$, mensurada em Mbps;
+	\item $S_j$ representa a média de potência de sinal físico recebido (\textit{signal}) no rádio $j$, medida em dBm;
+	\item $R_j$ representa a média da taxa de retransmissão de quadros de dados físicos no rádio $j$, expressa em percentual.
+\end{itemize}
+
+Antes de aplicar a clusterização, realizou-se a normalização z-score das variáveis de entrada por meio do módulo \textit{StandardScaler}. Esse passo metodológico é essencial em algoritmos de distância euclidiana como o \textit{K-Means}, pois impede que métricas com escalas numéricas superiores (como as amostras físicas em dBm ou volumes agregados) dominem o cálculo de distância em relação a métricas com intervalos menores (como número médio de usuários).
+
+A normalização z-score para uma variável $x$ é dada pela Equação~\ref{eq:zscore}:
+
+\begin{equation}
+\label{eq:zscore}
+z = \frac{x - \mu}{\sigma}
+\end{equation}
+
+onde $\mu$ representa a média amostral e $\sigma$ o desvio padrão da respectiva métrica.
+
+A execução do modelo de agrupamento classifica cada rádio no cluster com a menor distância quadrada média até o centróide representante, originando os perfis descritos como Grupo A (Muito Carregado), Grupo B (Pouco Utilizado), Grupo C (Carga Moderada) e Grupo D (Baixa Qualidade de Sinal / Instável).

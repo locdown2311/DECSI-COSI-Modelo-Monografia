@@ -1,0 +1,30 @@
+% ----------------------------------------------------------
+\chapter{Tabela de \textit{MIBs} SNMP Ruckus Wireless}
+\label{an:oids_ruckus}
+% ----------------------------------------------------------
+
+Este anexo apresenta os principais identificadores de objetos (OIDs) e descritores da \textit{MIB} (\textit{Management Information Base}) proprietária da Ruckus Wireless, consultados periodicamente via protocolo SNMP pelas ferramentas de gerência ativa no campus da UFOP.
+
+\begin{table}[htb]
+\IBGEtab{%
+  \caption{Mapeamento de OIDs SNMP Utilizados na Coleta Ruckus}%
+  \label{tab:oids_snmp_ruckus}%
+}{%
+  \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lll}
+      \toprule
+      Métrica Telemétrica & OID SNMP de Consulta & Descrição na \textit{MIB} da Ruckus \\
+      \midrule
+      Nome do AP & \texttt{1.3.6.1.4.1.25053.1.2.2.1.1.2.1.1} & Identificador textual legível do rádio \\
+      Canal de RF & \texttt{1.3.6.1.4.1.25053.1.1.1.15.1.1.1.5} & Canal operacional físico do rádio \\
+      Clientes Conectados & \texttt{1.3.6.1.4.1.25053.1.1.1.15.1.1.1.9} & Quantidade de associações ativas por minuto \\
+      RSSI do Cliente & \texttt{1.3.6.1.4.1.25053.1.1.1.15.1.1.1.6} & Nível médio de potência de sinal do rádio do cliente \\
+      Retransmissões TX & \texttt{1.3.6.1.4.1.25053.1.1.1.15.1.1.1.23} & Contador de quadros reenviados devido a erros de RF \\
+      Uptime do Rádio & \texttt{1.3.6.1.4.1.25053.1.2.1.1.1.1.9} & Tempo de atividade operacional contínua do rádio \\
+      \bottomrule
+    \end{tabular}%
+  }%
+}{%
+  \fonte{Ruckus Wireless \textit{MIB} Reference Manual.}%
+}
+\end{table}

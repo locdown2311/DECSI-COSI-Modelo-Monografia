@@ -5,83 +5,59 @@
 \label{cap:introducao}
 % ----------------------------------------------------------
 
-Este documento é um modelo de monografia para o Curso de \acf{SI}. Este curso é vinculado ao \acf{DECSI} do \acf{ICEA} da \acf{UFOP}. O modelo foi elaborado de acordo com a Resolução n$^\circ$ 012 do \acf{COSI} de 7 de março de 2016 (com atualizações em 20 de março de 2018,  21 de outubro de 2018 e 17 de dezembro de 2019). Contribuições importantes ao modelo foram feitas pelo COSI e pela equipe da Biblioteca de \acf{JM}.
+Nos últimos anos, a infraestrutura de redes locais sem fio (\textit{Wireless Local Area Networks} -- WLANs) tornou-se um recurso de utilidade essencial para o ecossistema das instituições de ensino superior. Em ambientes universitários, como nos \textit{campi} da Universidade Federal de Ouro Preto (\acsp{UFOP}), a rede Wi-Fi suporta uma vasta gama de atividades pedagógicas, administrativas e científicas. A demanda contínua por conectividade, impulsionada pela diversidade de dispositivos móveis dos usuários, impõe aos administradores de rede o desafio de monitorar e garantir elevados padrões de Qualidade de Serviço (\textit{Quality of Service} -- QoS).
 
-A primeira versão da classe e do modelo do DECSI foi desenvolvida pelo \textbf{Prof. Glauber Modolo Cabral}\footnote{https://github.com/glaubersp}. Em seguida, atualizações foram realizadas pelo aluno \textbf{Oto Braz}\footnote{https://github.com/otobraz}. As adequações às resoluções foram realizadas a partir das versões desenvolvidas por eles.
+Entretanto, diagnosticar anomalias e avaliar o desempenho em redes sem fio corporativas de grande porte é uma tarefa complexa. As WLANs acadêmicas frequentemente operam com equipamentos de múltiplos fabricantes, caracterizando ambientes de rede heterogêneos. A análise do comportamento físico desses canais requer o monitoramento constante de dados de telemetria, cuja extração e padronização impõem dificuldades metodológicas severas devido à disparidade de métricas e de frequências de amostragem oferecidas pelas controladoras de rede. Neste contexto, este trabalho investiga a integração e análise estatística de dados telemétricos das marcas Ruckus e UniFi na \acsp{UFOP}, visando classificar comportamentos operativos e gargalos de rede.
 
-Cursos e colegiados que \textbf{autorizaram} a utilizarem este modelo:
-
-	\begin{itemize}
-		\item Colegiado de Engenharia de Computação (COEC) -- a partir de Março/2019.
-	\end{itemize}
-
-Para a utilização deste documento em outros cursos \textbf{recomenda-se} a verificação junto ao colegiado em questão acerca do modelo apropriado.
-
-O modelo é uma versão personalizada da classe \abnTeX\ e utilizada de acordo como a licença associada (\textit{LaTeX Project Public License v1.3c}\footnote{\url{https://www.latex-project.org/lppl/}}). Informações sobre a classe \abnTeX\ podem ser obtidas em \url{http://www.abntex.net.br/} e \url{https://github.com/abntex/abntex2}.
-
-Para facilitar a organização, os itens foram separados de acordo com a estrutura definida pela norma \citeonline{NBR14724:2011}. Os grupos principais são \textit{pré-textuais}, \textit{textuais} e \textit{pós-textuais}, como apresentado a seguir:
-
-\begin{verbatim}
-		+ decsi-cosi-modelo-monografia.tex
-		| + pre-textuais -> dedicatoria, agradecimentos, epígrafe, resumos,
-		|										dentre outros.
-		| + textuais -> capítulos da monografia.
-		| + pos-textuais -> apêndices e anexos.
-\end{verbatim}
-
-As demais pastas foram incluídas como apoio aos itens, além de conter arquivos complementares.
-
-\begin{verbatim}
-		| + bib -> arquivo de referência bibliográfica - bibtex.
-		| + documentos -> resoluções COSI e normas.
-		| + config -> dados e pacotes.
-		| + img -> imagens e afins.
-\end{verbatim}
-
-Recomenda-se a leitura de referências sobre metodologia científica para a definição correta da estrutura dos capítulos da monografia. Dentre outras, sugere-se a leitura de \citeonline{wazlawick:2009} e \citeonline{SilvaMenezes:2005}.
-
-Seguem algumas sugestões de estrutura para os capítulos e recomendações sobre a escrita. \textbf{É importante observar que entre as seções deve ter um texto introdutório. Um tópico nunca deverá ficar sem um texto relacionado a ele} (Biblioteca JM). Termos e expressões em outras línguas devem estar em itálico: \textit{Model, View, Controller, Database}, dentre outros. Acerca das \textbf{fontes} em imagens, tabelas, gráficos e demais itens, mesmo que esses itens sejam gerados pelo(a) aluno(a), \textbf{é necessário incluir}: ``Fonte: elaborado pelo autor'' ou ``Fonte: dados da pesquisa'' (Biblioteca JM). Você pode encontrar também diversos exemplos de utilização do modelo que foram elaborados pela Equipe do \abnTeX\ no Anexo \ref{cap_exemplos}. As instruções para compilação do documento são apresentadas na Seção \ref{abntex:compila}.
-
-% ----------------------------
-
-\section{Elaboração do capítulo}
-
-Este capítulo apresenta o seu trabalho. Você deve contextualizar o problema abordado, descrever os objetivos gerais e específicos, apresentar a metodologia e como o trabalho está estruturado.
+Nas seções seguintes, detalha-se o contexto motivador deste estudo, os objetivos que direcionam a pesquisa, a metodologia de execução adotada e a estrutura de divisão deste documento de monografia.
 
 \section{O problema de pesquisa}
 \label{sec:problema}
 
-O problema de pesquisa
+A heterogeneidade de hardwares e sistemas operacionais de gerência de rede representa um obstáculo para a manutenção preventiva e diagnóstico de problemas de conectividade. Enquanto a controladora Ruckus (utilizada na rede principal da \acsp{UFOP}) extrai dados consolidados que incluem a taxa física de retransmissão de pacotes diretamente do rádio, a controladora UniFi (empregada em áreas periféricas ou unidades de pesquisa) reporta a qualidade de enlace por meio de uma métrica estimada baseada no firmware denominada \textit{Client Connection Quality} (\acs{CCQ}). Além disso, os intervalos de coleta (\textit{polling}) diferem significativamente, e inconsistências temporais relativas a fusos horários nos arquivos de registro (\textit{logs}) dificultam correlações diretas.
+
+Diante desse cenário, a ausência de um pipeline de dados unificado impede a classificação padronizada de gargalos. O administrador de rede carece de ferramentas metodológicas que permitam determinar se as quedas de desempenho percebidas pelos usuários decorrem de cobertura atenuada (sinal fraco), congestionamento físico do espectro (concorrência de meio por múltiplos clientes ativos) ou forte ruído e interferência eletromagnética (elevadas taxas de retransmissão sob baixa carga de tráfego). O problema central desta pesquisa consiste, portanto, em responder: de que forma a normalização de dados telemétricos e a aplicação de técnicas estatísticas e aprendizado de máquina podem unificar a caracterização operacional e a identificação automática de gargalos em uma infraestrutura Wi-Fi heterogênea?
 
 \section{Objetivos}
 \label{sec:objetivos}
 
-O presente trabalho consiste ...
+O presente trabalho visa estabelecer um framework metodológico para o processamento unificado e a análise quantitativa de desempenho de redes sem fio.
 
-Este trabalho possui aos seguintes objetivos específicos: (\textbf{utilizar os verbos no infinitivo}).
+O objetivo geral deste estudo consiste em desenvolver um pipeline sistemático de coleta, normalização, análise estatística e classificação de gargalos operacionais para redes corporativas Wi-Fi heterogêneas utilizando dados de telemetria nas dependências da \acsp{UFOP}.
 
+Para a consecução do objetivo geral, definem-se os seguintes objetivos específicos:
 \begin{itemize}
-	\item Desenvolver ...
-	\item Incorporar ...
-	\item Validar
+	\item Padronizar e normalizar bases de dados brutas de telemetria provenientes de fabricantes distintos (Ruckus e UniFi), realizando o alinhamento de fusos horários e de escalas temporais de coleta;
+	\item Incorporar métricas analíticas avançadas na avaliação do desempenho da rede, especificamente computando o Índice de Equidade de Jain (\textit{Jain's Fairness Index}) para mensurar o equilíbrio na distribuição da vazão (\textit{throughput}) entre clientes concorrentes;
+	\item Validar as hipóteses de comportamento físico das bandas de frequência (2,4~GHz e 5~GHz) e o impacto das condições de sinal sobre as taxas de retransmissão por meio de testes estatísticos de hipótese não-paramétricos;
+	\item Classificar os gargalos operacionais dos pontos de acesso (\textit{access points} -- \acsp{AP}) a partir de limiares físicos e agrupamentos lógicos formados pelo algoritmo de aprendizado de máquina não-supervisionado \textit{K-Means}.
 \end{itemize}
 
 \section{Metodologia}
 \label{sec:metodologia}
 
-O objeto de pesquisa deste trabalho ...
+A metodologia proposta para a realização desta monografia apoia-se em uma abordagem empírico-analítica aplicada a dados experimentais reais obtidos diretamente da infraestrutura corporativa do \textit{campus}.
 
-Os passos para execução deste trabalho são assim definidos:
-
+Os passos para a execução do trabalho compreendem as seguintes atividades fundamentais:
 \begin{itemize}
-	\item Revisão da literatura ..
-	\item Desenvolvimento ...
-	\item Validação ...
-	\item Análise e discussão ...
+	\item \textbf{Revisão de literatura}: Estudo aprofundado acerca de propagação de RF, protocolos da família IEEE~802.11, índices de equidade de rede, diagnóstico de gargalos Wi-Fi e técnicas estatísticas aplicadas à telemetria;
+	\item \textbf{Pré-processamento e normalização}: Desenvolvimento de scripts em linguagem Python utilizando as bibliotecas \textit{pandas} e \textit{numpy} para limpeza das bases de dados, tratamento de nulos, consistência temporal e filtragem de ruídos operacionais;
+	\item \textbf{Análise estatística descritiva e testes}: Aplicação de testes de Shapiro-Wilk para verificação de normalidade, seguidos por testes U de Mann-Whitney para comparações de distribuições de sinal, retransmissões e \textit{throughput};
+	\item \textbf{Modelagem de gargalos e agrupamento}: Implementação de regras baseadas em limiares de rede corporativa e treinamento do classificador \textit{K-Means} com quatro perfis operativos (Grupo A, Grupo B, Grupo C e Grupo D);
+	\item \textbf{Compilação de relatórios e documentação}: Geração sistemática de visualizações e formatação dos capítulos de análise e conclusões operacionais.
 \end{itemize}
 
 \section{Organização do trabalho}
+\label{sec:organizacao}
 
-\textbf{É importante observar que a estrutura é apresentada a partir do próximo capítulo. O capítulo de Introdução não deve compor esta descrição. Além disso, sempre que você fizer referência à algum item específico, a inicial deve ser maiúscula. Por exemplo, Capítulo 2, Tabela 5, Figura 1, dentre outros.}
+A estrutura geral de desenvolvimento deste trabalho de conclusão está descrita nas partes seguintes deste documento, organizadas em capítulos temáticos focados no referencial conceitual, metodologia de processamento e resultados experimentais.
 
-O restante deste trabalho é organizado como se segue. O Capítulo~\ref{cap:revisao} apresenta...
+O restante deste trabalho é organizado como se segue.
+
+O Capítulo~\ref{cap:revisao} apresenta a revisão bibliográfica e fundamentação teórica, abordando a física de rádio, padrões de comunicação sem fio e os conceitos fundamentais para a análise de desempenho de redes sem fio.
+
+O Capítulo~\ref{cap:desenvolvimento} detalha a metodologia de desenvolvimento aplicada à limpeza de dados de telemetria, formulação matemática do Índice de Jain, critérios físicos dos gargalos e a parametrização do agrupamento estatístico via \textit{K-Means}.
+
+O Capítulo~\ref{cap:resultados} descreve a totalidade dos resultados e discussões, agrupando as análises exploratórias, matrizes de correlação, testes estatísticos de hipótese e o mapeamento operativo dos perfis de clusters dos \acsp{AP} monitorados.
+
+Por fim, o Capítulo~\ref{cap:conclusao} sintetiza as principais contribuições deste estudo, apresentando considerações finais sobre as limitações e indicando propostas de trabalhos futuros.
