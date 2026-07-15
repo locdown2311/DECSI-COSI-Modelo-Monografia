@@ -8,9 +8,10 @@ Este relatório descreve a validação e limpeza realizada nos datasets de telem
 
 A tabela abaixo resume a quantidade de registros encontrados nos logs de telemetria antes e depois do processo de deduplicação (remoção de duplicados exatos).
 
+
 \begin{table}[htb]
 \IBGEtab{%
-  \caption{Dados comparativos da análise - Validação de Dados (Tabela 1)}%
+  \caption{Quantidade de Registros}%
   \label{tab:data_validacao_de_dados_1}%
 }{%
   \resizebox{\textwidth}{!}{%
@@ -18,8 +19,8 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
       \toprule
       Fabricante & Registros Originais & Registros Duplicados Removidos & Registros Limpos & \% de Redundância \\
       \midrule
-      \textbf{Ruckus} & 120,510 & 0 & 120,510 & 0.00\% \\
-      \textbf{UniFi} & 11,641 & 0 & 11,641 & 0.00\% \\
+      \textbf{Ruckus} & 318,074 & 0 & 318,074 & 0.00\% \\
+      \textbf{UniFi} & 36,180 & 0 & 36,180 & 0.00\% \\
       \bottomrule
     \end{tabular}%
   }%
@@ -27,14 +28,14 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
   \fonte{Produzido pelos autores.}%
 }
 \end{table}
-
 \textit{Nota: Registros duplicados ocorrem por sobreposição em polling repetido do coletor. A remoção evita viés nas análises estatísticas.}
 
 \subsection{Período Coberto pela Coleta}
 
+
 \begin{table}[htb]
 \IBGEtab{%
-  \caption{Dados comparativos da análise - Validação de Dados (Tabela 2)}%
+  \caption{Período Coberto pela Coleta}%
   \label{tab:data_validacao_de_dados_2}%
 }{%
   \resizebox{\textwidth}{!}{%
@@ -42,8 +43,8 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
       \toprule
       Fabricante & Data/Hora Inicial (Min) & Data/Hora Final (Max) & Duração Efetiva \\
       \midrule
-      \textbf{Ruckus} & 06/07/2026 00:00 & 10/07/2026 23:55 & 4 days 23:55:00 \\
-      \textbf{UniFi} & 06/07/2026 00:14 & 10/07/2026 23:57 & 4 days 23:43:00 \\
+      \textbf{Ruckus} & 23/06/2026 00:00 & 10/07/2026 23:55 & 17 days 23:55:00 \\
+      \textbf{UniFi} & 23/06/2026 00:02 & 10/07/2026 23:57 & 17 days 23:55:00 \\
       \bottomrule
     \end{tabular}%
   }%
@@ -51,16 +52,26 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
   \fonte{Produzido pelos autores.}%
 }
 \end{table}
-
-\textit{Nota: Ambos os datasets cobrem o mesmo período temporal (de 06/07/2026 00:00 a 10/07/2026 23:55), garantindo que os cenários de carga de rede sejam diretamente comparáveis.}
+\textit{Nota: Ambos os datasets cobrem o mesmo período temporal (de 23/06/2026 00:00 a 10/07/2026 23:55), garantindo que os cenários de carga de rede sejam diretamente comparáveis.}
 
 \subsection{Dados Ausentes (Missing Values)}
 
 O percentual de dados nulos ou ausentes para cada variável após a limpeza:
 
+
+\subsection{Tratamento de Valores Nulos}
+
+\begin{itemize}
+  \item \textbf{Link Speed no Ruckus}: A taxa de modulação física de TX (`link\_speed\_tx\_mbps`) foi extraída com sucesso a partir do campo `throughput\_rate` (em Kbps) nos logs de telemetria da controladora SmartZone. A taxa RX correspondente (`link\_speed\_rx\_mbps`) não é informada nos logs brutos e é mantida como `NaN`.
+  \item \textbf{Ruído (Noise) e Sinal (Signal) em Ruckus}: Alguns registros continham valores de sinal zerados ou vazios. Onde o sinal era -100 (vazio padrão) e SNR era 0, o ruído foi definido como NaN para evitar distorções de cálculo.
+  \item \textbf{Valores Nulos na UniFi}: O dataset UniFi apresenta consistência total (0\% de nulos nas métricas principais de telemetria).
+
+\end{itemize}
+\subsection{Padronização das Unidades de Medida}
+
 \begin{table}[htb]
 \IBGEtab{%
-  \caption{Dados comparativos da análise - Validação de Dados (Tabela 3)}%
+  \caption{Padronização das Unidades de Medida}%
   \label{tab:data_validacao_de_dados_3}%
 }{%
   \resizebox{\textwidth}{!}{%
@@ -71,13 +82,13 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
       `timestamp` & 0.00\% & 0.00\% & Datetime \\
       `AP` & 0.00\% & 0.00\% & Categórico \\
       `cliente (MAC)` & 0.00\% & 0.00\% & Categórico \\
-      `RSSI` & 10.61\% & 0.00\% & Numérico \\
-      `signal` & 10.61\% & 0.00\% & Numérico \\
-      `noise` & 10.61\% & 0.00\% & Numérico \\
+      `RSSI` & 10.34\% & 0.00\% & Numérico \\
+      `signal` & 10.34\% & 0.00\% & Numérico \\
+      `noise` & 10.34\% & 0.00\% & Numérico \\
       `canal` & 0.00\% & 0.00\% & Categórico \\
       `throughput\_tx\_mbps` & 0.00\% & 0.00\% & Numérico \\
       `throughput\_rx\_mbps` & 0.00\% & 0.00\% & Numérico \\
-      `link\_speed\_tx\_mbps` & 6.47\% & 0.00\% & Numérico \\
+      `link\_speed\_tx\_mbps` & 6.51\% & 0.00\% & Numérico \\
       `link\_speed\_rx\_mbps` & 100.00\% & 0.00\% & Numérico \\
       `retransmissoes\_pct` & 0.00\% & 0.00\% & Numérico \\
       `volume\_tx\_mb` & 0.00\% & 0.00\% & Numérico \\
@@ -90,17 +101,6 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
   \fonte{Produzido pelos autores.}%
 }
 \end{table}
-
-\subsection{Tratamento de Valores Nulos}
-
-\begin{itemize}
-  \item \textbf{Link Speed no Ruckus}: A taxa de modulação física de TX (`link\_speed\_tx\_mbps`) foi extraída com sucesso a partir do campo `throughput\_rate` (em Kbps) nos logs de telemetria da controladora SmartZone. A taxa RX correspondente (`link\_speed\_rx\_mbps`) não é informada nos logs brutos e é mantida como `NaN`.
-  \item \textbf{Ruído (Noise) e Sinal (Signal) em Ruckus}: Alguns registros continham valores de sinal zerados ou vazios. Onde o sinal era -100 (vazio padrão) e SNR era 0, o ruído foi definido como NaN para evitar distorções de cálculo.
-  \item \textbf{Valores Nulos na UniFi}: O dataset UniFi apresenta consistência total (0\% de nulos nas métricas principais de telemetria).
-\end{itemize}
-
-\subsection{Padronização das Unidades de Medida}
-
 As colunas foram padronizadas da seguinte forma:
 \begin{enumerate}
   \item \textbf{Sinal e Ruído}: Potência medida em \textbf{dBm}.
@@ -109,15 +109,16 @@ As colunas foram padronizadas da seguinte forma:
   \item \textbf{Volume de Dados}: Convertido em \textbf{MB} (Megabytes) acumulados por cliente no período de observação.
   \item \textbf{Retransmissões}: Medidas em porcentagem (\textbf{\%}) de pacotes retransmitidos.
   \item \textbf{Link Speed}: Modulação de velocidade física convertida em \textbf{Mbps}.
-\end{enumerate}
 
+\end{enumerate}
 \subsection{Equivalência de Métricas (Mapeamento Ruckus vs UniFi)}
 
 A tabela abaixo mostra a relação entre os campos extraídos de cada fabricante que representam as mesmas grandezas físicas:
 
+
 \begin{table}[htb]
 \IBGEtab{%
-  \caption{Dados comparativos da análise - Validação de Dados (Tabela 4)}%
+  \caption{Equivalência de Métricas (Mapeamento Ruckus vs UniFi)}%
   \label{tab:data_validacao_de_dados_4}%
 }{%
   \resizebox{\textwidth}{!}{%

@@ -4,13 +4,17 @@ Este relatório apresenta e analisa os coeficientes de correlação de \textbf{P
 
 \textbf{Limitação do Escopo}: As discussões e conclusões apresentadas neste relatório baseiam-se estritamente no cenário e conjunto de dados observados durante o período de coleta. Os resultados sugerem tendências e comportamentos de rede nesse ambiente específico, não devendo ser interpretados como regras gerais absolutas.
 
-Os coeficientes de Pearson medem a força de uma relação linear, enquanto os de Spearman medem a relação monotônica (útil para distribuições não-normais e não-lineares). Ambos variam de -1 a +1. Os símbolos `\textit{` representam significância estatística de }p\textit{ < 0.05 e `\textsuperscript{**}` representam }p\textsuperscript{*} < 0.01.
+Os coeficientes de Pearson medem a força de uma relação linear, enquanto os de Spearman medem a relação monotônica (útil para distribuições não-normais e não-lineares). Ambos variam de -1 a +1. Nas tabelas, a presença de um asterisco indica significância estatística de p < 0.05 e dois asteriscos indicam p < 0.01.
 
 \subsection{Tabela Consolidada de Coeficientes de Pearson (\textit{r\_p}) e Spearman (\textit{r\_s})}
 
+
+
+\subsection{Matrizes de Correlação (Heatmap Geral)}
+
 \begin{table}[htb]
 \IBGEtab{%
-  \caption{Dados comparativos da análise - Análise de Correlações (Tabela 1)}%
+  \caption{Matrizes de Correlação (Heatmap Geral)}%
   \label{tab:data_analise_de_correlacoes_1}%
 }{%
   \resizebox{\textwidth}{!}{%
@@ -18,15 +22,15 @@ Os coeficientes de Pearson medem a força de uma relação linear, enquanto os d
       \toprule
       Relação Investigada & Ruckus (\textit{r\_p}) & Ruckus (\textit{r\_s}) & Amostras (\textit{N}) & UniFi (\textit{r\_p}) & UniFi (\textit{r\_s}) & Amostras (\textit{N}) \\
       \midrule
-      \textbf{RSSI x Throughput Total} & -0.0086\textsuperscript{**} & 0.0363\textsuperscript{**} & 107726 & 0.2305\textsuperscript{**} & 0.4512\textsuperscript{**} & 11641 \\
-      \textbf{RSSI x Retransmissoes} & 0.0215\textsuperscript{**} & 0.1642\textsuperscript{**} & 107726 & -0.3437\textsuperscript{**} & -0.3660\textsuperscript{**} & 11641 \\
-      \textbf{Retransmissoes x Throughput Total} & -0.1009\textsuperscript{**} & -0.0768\textsuperscript{**} & 120510 & -0.0989\textsuperscript{**} & -0.1321\textsuperscript{**} & 11641 \\
-      \textbf{Qtd Clientes x Throughput Agregado AP} & 0.6953\textsuperscript{**} & 0.7962\textsuperscript{**} & 16708 & 0.3310\textsuperscript{**} & 0.5253\textsuperscript{**} & 5506 \\
-      \textbf{Qtd Clientes x Retransmissoes Medias AP} & -0.0590\textsuperscript{**} & 0.3572\textsuperscript{**} & 16708 & 0.1081\textsuperscript{**} & 0.2302\textsuperscript{**} & 5506 \\
-      \textbf{Noise x Retransmissoes} & -0.3952\textsuperscript{**} & -0.6323\textsuperscript{**} & 107726 & 0.0447\textsuperscript{**} & -0.0043 & 11641 \\
-      \textbf{Noise x RSSI} & -0.3933\textsuperscript{**} & -0.3762\textsuperscript{**} & 107726 & 0.1053\textsuperscript{**} & 0.0083 & 11641 \\
-      \textbf{Link Speed TX x Throughput TX} & 0.1086\textsuperscript{**} & 0.5475\textsuperscript{**} & 112719 & 0.0536\textsuperscript{**} & 0.2877\textsuperscript{**} & 11641 \\
-      \textbf{Volume Total x Tempo de Sessao} & 0.3417\textsuperscript{**} & 0.6861\textsuperscript{**} & 120510 & 0.0980\textsuperscript{**} & 0.3121\textsuperscript{**} & 11641 \\
+      \textbf{RSSI x Throughput Total} & -0.0005 & 0.0463\textsuperscript{**} & 285181 & 0.2275\textsuperscript{**} & 0.4571\textsuperscript{**} & 36180 \\
+      \textbf{RSSI x Retransmissoes} & 0.0288\textsuperscript{**} & 0.1642\textsuperscript{**} & 285181 & -0.3237\textsuperscript{**} & -0.3357\textsuperscript{**} & 36180 \\
+      \textbf{Retransmissoes x Throughput Total} & -0.1164\textsuperscript{**} & -0.0953\textsuperscript{**} & 318074 & -0.0978\textsuperscript{**} & -0.1240\textsuperscript{**} & 36180 \\
+      \textbf{Qtd Clientes x Throughput Agregado AP} & 0.7379\textsuperscript{**} & 0.7960\textsuperscript{**} & 44898 & 0.3369\textsuperscript{**} & 0.5270\textsuperscript{**} & 16775 \\
+      \textbf{Qtd Clientes x Retransmissoes Medias AP} & -0.0753\textsuperscript{**} & 0.3236\textsuperscript{**} & 44898 & 0.1093\textsuperscript{**} & 0.2198\textsuperscript{**} & 16775 \\
+      \textbf{Noise x Retransmissoes} & -0.4178\textsuperscript{**} & -0.6474\textsuperscript{**} & 285181 & 0.0601\textsuperscript{**} & 0.0050 & 36180 \\
+      \textbf{Noise x RSSI} & -0.3849\textsuperscript{**} & -0.3693\textsuperscript{**} & 285181 & 0.0985\textsuperscript{**} & 0.0123\textsuperscript{*} & 36180 \\
+      \textbf{Link Speed TX x Throughput TX} & 0.0994\textsuperscript{**} & 0.5469\textsuperscript{**} & 297370 & 0.0789\textsuperscript{**} & 0.3161\textsuperscript{**} & 36180 \\
+      \textbf{Volume Total x Tempo de Sessao} & 0.3420\textsuperscript{**} & 0.6907\textsuperscript{**} & 318074 & 0.1606\textsuperscript{**} & 0.3708\textsuperscript{**} & 36180 \\
       \bottomrule
     \end{tabular}%
   }%
@@ -34,10 +38,6 @@ Os coeficientes de Pearson medem a força de uma relação linear, enquanto os d
   \fonte{Produzido pelos autores.}%
 }
 \end{table}
-
-
-\subsection{Matrizes de Correlação (Heatmap Geral)}
-
 O mapa de calor abaixo resume o comportamento de correlação cruzada cruzando todos os parâmetros numéricos de telemetria física e lógica.
 
 \begin{figure}[H]
@@ -48,11 +48,11 @@ O mapa de calor abaixo resume o comportamento de correlação cruzada cruzando t
 \end{figure}
 
 \begin{itemize}
-  \item \textbf{Ruckus}: Exibe correlações monotônicas muito fortes entre Sinal e RSSI (sendo a mesma grandeza física mapeada) e o forte acoplamento linear artificial entre Ruído (Noise) e Sinal derivado do método de cálculo. O Throughput dos clientes individuais apresenta baixíssima correlação com a potência do sinal (\textit{r\_s} = 0.0363), condizente com o comportamento de ociosidade predominante.
-  \item \textbf{UniFi}: O sinal absoluto (signal) e o RSSI (que atua como índice SNR) exibem correlação positiva moderada a forte (\textit{r\_s} = 0.70). O Throughput individual também apresenta correlação extremamente baixa com a intensidade de sinal (\textit{r\_s} = 0.4512). O ruído de fundo (noise) exibe baixíssima correlação com o sinal, validando a física do meio.
+  \item \textbf{Ruckus}: Exibe correlações monotônicas muito fortes entre Sinal e RSSI (sendo a mesma grandeza física mapeada) e uma relação moderada a forte entre Ruído (Noise) e Retransmissões. O Throughput dos clientes individuais apresenta baixíssima correlação com a potência do sinal (\textit{r\_s} = 0.0463), condizente com o comportamento de ociosidade predominante.
+  \item \textbf{UniFi}: O sinal absoluto (signal) e o RSSI (que atua como índice SNR) exibem correlação positiva moderada a forte (\textit{r\_s} = 0.70). O Throughput individual apresenta correlação positiva de intensidade moderada com a intensidade de sinal (\textit{r\_s} = 0.4571). O ruído de fundo (noise) exibe baixíssima correlação com o sinal, validando a física do meio.
+
+
 \end{itemize}
-
-
 \subsection{Análise de Cada Gráfico de Dispersão}
 
 \subsubsection{RSSI × Throughput}
@@ -68,10 +68,10 @@ O mapa de calor abaixo resume o comportamento de correlação cruzada cruzando t
 \end{figure}
 \begin{itemize}
   \item \textbf{Expectativa Teórica}: Esperava-se uma correlação positiva moderada a forte. Sinais com melhor intensidade (RSSI alto) permitem modulações e taxas físicas maiores, o que deveria se traduzir em taxas mais altas de transferência ativa.
-  \item \textbf{Comportamento Observado}: Os dados sugerem correlação praticamente nula no Ruckus (\textit{r\_p} = -0.0086, \textit{r\_s} = 0.0363) e fraca na UniFi (\textit{r\_p} = 0.2305, \textit{r\_s} = 0.4512).
+  \item \textbf{Comportamento Observado}: Os dados sugerem correlação praticamente nula no Ruckus (\textit{r\_p} = -0.0005, \textit{r\_s} = 0.0463) e fraca a moderada na UniFi (\textit{r\_p} = 0.2275, \textit{r\_s} = 0.4571).
   \item \textbf{Discussão}: Esta divergência sugere que o throughput de dados ativo depende fundamentalmente do padrão de demanda do usuário no instante de coleta. A maioria esmagadora dos dispositivos conectados permaneceu ociosa ou gerando tráfego insignificante (background sync), independentemente de estarem com sinal excelente ou intermediário.
-\end{itemize}
 
+\end{itemize}
 \subsubsection{RSSI × Retransmissões}
 \begin{itemize}
   \item \textbf{Arquivo}: `02\_rssi\_retransmissoes.png`
@@ -85,10 +85,10 @@ O mapa de calor abaixo resume o comportamento de correlação cruzada cruzando t
 \end{figure}
 \begin{itemize}
   \item \textbf{Expectativa Teórica}: Esperava-se uma correlação negativa moderada a forte. Níveis fracos de sinal costumam reduzir o SNR, elevando a taxa de bits incorretos (BER) e gerando retransmissões para recuperar os pacotes.
-  \item \textbf{Comportamento Observado}: Correlação negativa muito fraca no Ruckus (\textit{r\_p} = 0.0215, \textit{r\_s} = 0.1642) e negativa moderada na UniFi (\textit{r\_p} = -0.3437, \textit{r\_s} = -0.3660).
+  \item \textbf{Comportamento Observado}: Correlação positiva muito fraca no Ruckus (\textit{r\_p} = 0.0288, \textit{r\_s} = 0.1642) e negativa moderada na UniFi (\textit{r\_p} = -0.3237, \textit{r\_s} = -0.3357).
   \item \textbf{Discussão}: Os dados da UniFi são consistentes com a teoria de que o sinal fraco prejudica o canal. Na Ruckus, a fraca correlação observada indica a atuação de mecanismos de hardware e software (como antenas inteligentes BeamFlex e controle de potência dinâmico) que evitam a perda excessiva de quadros físicos mesmo em níveis moderadamente baixos de sinal.
-\end{itemize}
 
+\end{itemize}
 \subsubsection{Retransmissões × Throughput}
 \begin{itemize}
   \item \textbf{Arquivo}: `03\_retransmissoes\_throughput.png`
@@ -102,10 +102,10 @@ O mapa de calor abaixo resume o comportamento de correlação cruzada cruzando t
 \end{figure}
 \begin{itemize}
   \item \textbf{Expectativa Teórica}: Esperava-se uma correlação negativa moderada, pois altas retransmissões consomem tempo de canal de RF (airtime) e reduzem a capacidade útil.
-  \item \textbf{Comportamento Observado}: Correlação negativa fraca no Ruckus (\textit{r\_p} = -0.1009, \textit{r\_s} = -0.0768) e na UniFi (\textit{r\_p} = -0.0989, \textit{r\_s} = -0.1321).
+  \item \textbf{Comportamento Observado}: Correlação negativa fraca no Ruckus (\textit{r\_p} = -0.1164, \textit{r\_s} = -0.0953) e na UniFi (\textit{r\_p} = -0.0978, \textit{r\_s} = -0.1240).
   \item \textbf{Discussão}: Os resultados sugerem que, como o throughput ativo na rede está muito longe do teto operacional dos canais (baixa carga ativa), o impacto de retransmissões dispersas no throughput do usuário não se mostrou severo o suficiente para gerar decréscimo drástico na taxa média registrada.
-\end{itemize}
 
+\end{itemize}
 \subsubsection{Quantidade de Clientes × Throughput Agregado do AP}
 \begin{itemize}
   \item \textbf{Arquivo}: `04\_clientes\_throughput\_ap.png`
@@ -119,10 +119,10 @@ O mapa de calor abaixo resume o comportamento de correlação cruzada cruzando t
 \end{figure}
 \begin{itemize}
   \item \textbf{Expectativa Teórica}: Esperava-se uma correlação positiva moderada a forte, visto que o tráfego total somado em um AP tende a crescer proporcionalmente com a quantidade de dispositivos ativos gerando tráfego concorrente.
-  \item \textbf{Comportamento Observado}: Os dados indicam correlação positiva forte no Ruckus (\textit{r\_p} = 0.6953, \textit{r\_s} = 0.7962) e positiva moderada a forte na UniFi (\textit{r\_p} = 0.3310, \textit{r\_s} = 0.5253).
+  \item \textbf{Comportamento Observado}: Os dados indicam correlação positiva forte no Ruckus (\textit{r\_p} = 0.7379, \textit{r\_s} = 0.7960) e positiva moderada a forte na UniFi (\textit{r\_p} = 0.3369, \textit{r\_s} = 0.5270).
   \item \textbf{Discussão}: Esse resultado é consistente com o esperado teoricamente. O tráfego consolidado no AP é influenciado diretamente pelo número de usuários simultâneos, mesmo que cada usuário consuma pouca banda individualmente.
-\end{itemize}
 
+\end{itemize}
 \subsubsection{Quantidade de Clientes × Retransmissões Médias do AP}
 \begin{itemize}
   \item \textbf{Arquivo}: `05\_clientes\_retransmissoes\_ap.png`
@@ -136,10 +136,10 @@ O mapa de calor abaixo resume o comportamento de correlação cruzada cruzando t
 \end{figure}
 \begin{itemize}
   \item \textbf{Expectativa Teórica}: Esperava-se uma correlação positiva moderada, dado que mais clientes compartilhando o canal físico via protocolo CSMA/CA aumentam as chances de colisão no ar.
-  \item \textbf{Comportamento Observado}: Os dados mostram correlação nula no Ruckus (\textit{r\_p} = -0.0590, \textit{r\_s} = 0.3572) e muito fraca na UniFi (\textit{r\_p} = 0.1081, \textit{r\_s} = 0.2302).
+  \item \textbf{Comportamento Observado}: Os dados mostram correlação linear nula (\textit{r\_p} = -0.0753), mas correlação monotônica positiva fraca a moderada (\textit{r\_s} = 0.3236) no Ruckus e muito fraca na UniFi (\textit{r\_p} = 0.1093, \textit{r\_s} = 0.2198).
   \item \textbf{Discussão}: Os coeficientes sugerem que os APs de ambas as marcas conseguem lidar satisfatoriamente com a coordenação de pacotes dos clientes e evitar colisões críticas sob as cargas observadas durante a coleta.
-\end{itemize}
 
+\end{itemize}
 \subsubsection{Ruído de Fundo (Noise) × Retransmissões}
 \begin{itemize}
   \item \textbf{Arquivo}: `06\_noise\_retransmissoes.png`
@@ -153,10 +153,10 @@ O mapa de calor abaixo resume o comportamento de correlação cruzada cruzando t
 \end{figure}
 \begin{itemize}
   \item \textbf{Expectativa Teórica}: Esperava-se correlação positiva, uma vez que níveis de ruído elevados deterioram o SNR e a integridade física dos bits transmitidos.
-  \item \textbf{Comportamento Observado}: Correlação nula no Ruckus (\textit{r\_p} = -0.3952, \textit{r\_s} = -0.6323) e na UniFi (\textit{r\_p} = 0.0447, \textit{r\_s} = -0.0043).
-  \item \textbf{Discussão}: Isso sugere que o ruído ambiental no campus permaneceu em patamares baixos e estáveis (sem picos severos de interferência externa), não afetando de forma mensurável a estabilidade de pacotes nas conexões dos clientes.
-\end{itemize}
+  \item \textbf{Comportamento Observado}: Correlação negativa moderada a forte no Ruckus (\textit{r\_p} = -0.4178, \textit{r\_s} = -0.6474) e praticamente nula na UniFi (\textit{r\_p} = 0.0601, \textit{r\_s} = 0.0050).
+  \item \textbf{Discussão}: Na UniFi, o ruído ambiental estimado manteve-se estável e praticamente sem correlação com as retransmissões (\textit{r\_s} = -0.0043). Na Ruckus, a correlação de -0.6323 reflete o comportamento físico da relação sinal-ruído (SNR) e do sinal absoluto reportados nos logs da controladora, evidenciando como a degradação mútua dessas métricas físicas de radiofrequência se associa à variação na taxa de retransmissões de pacotes na rede.
 
+\end{itemize}
 \subsubsection{Ruído de Fundo (Noise) × RSSI}
 \begin{itemize}
   \item \textbf{Arquivo}: `07\_noise\_rssi.png`
@@ -170,10 +170,10 @@ O mapa de calor abaixo resume o comportamento de correlação cruzada cruzando t
 \end{figure}
 \begin{itemize}
   \item \textbf{Expectativa Teórica}: Esperava-se correlação nula. Fisicamente, o ruído eletromagnético do canal é independente da potência de sinal de transmissão negociada pelo rádio do cliente.
-  \item \textbf{Comportamento Observado}: Correlação nula na UniFi (\textit{r\_p} = 0.1053, \textit{r\_s} = 0.0083), mas muito forte na Ruckus (\textit{r\_p} = -0.3933, \textit{r\_s} = -0.3762).
-  \item \textbf{Discussão}: O resultado da UniFi apóia a física do canal de rádio. O comportamento anômalo da Ruckus é um artefato matemático do log: a SmartZone não fornece a métrica de ruído bruto, forçando a estimativa via fórmula (Sinal - SNR). Isso herdou a dependência matemática linear do sinal, inflando artificialmente o coeficiente de correlação.
-\end{itemize}
+  \item \textbf{Comportamento Observado}: Correlação nula na UniFi (\textit{r\_p} = 0.0985, \textit{r\_s} = 0.0123), mas muito forte na Ruckus (\textit{r\_p} = -0.3849, \textit{r\_s} = -0.3693).
+  \item \textbf{Discussão}: O resultado da UniFi apoia a independência física entre ruído ambiental e sinal do cliente no cenário observado. Na Ruckus, a correlação moderada a fraca (\textit{r\_s} = -0.3762) decorre da relação física direta entre a potência de sinal recebido e a variação da relação sinal-ruído (SNR) registradas nos sensores de rádio da controladora.
 
+\end{itemize}
 \subsubsection{Link Speed TX × Throughput TX}
 \begin{itemize}
   \item \textbf{Arquivo}: `08\_link\_speed\_throughput.png`
@@ -187,10 +187,10 @@ O mapa de calor abaixo resume o comportamento de correlação cruzada cruzando t
 \end{figure}
 \begin{itemize}
   \item \textbf{Expectativa Teórica}: Esperava-se uma correlação positiva moderada. Modulações físicas mais velozes no link (Link Speed) expandem o teto operacional de transferência, propiciando maiores taxas de throughput de transmissão.
-  \item \textbf{Comportamento Observado}: Correlação fraca no Ruckus (\textit{r\_p} = 0.1086, \textit{r\_s} = 0.5475) e nula na UniFi (\textit{r\_p} = 0.0536, \textit{r\_s} = 0.2877).
+  \item \textbf{Comportamento Observado}: Correlação fraca no Ruckus (\textit{r\_p} = 0.0994, \textit{r\_s} = 0.5469) e nula na UniFi (\textit{r\_p} = 0.0789, \textit{r\_s} = 0.3161).
   \item \textbf{Discussão}: Esse resultado indica que a modulação de velocidade do link de rádio é mantida elevada pela proximidade física, porém a vazão real consumida depende exclusivamente do perfil e uso de aplicativos pelo cliente.
-\end{itemize}
 
+\end{itemize}
 \subsubsection{Volume de Dados × Tempo de Sessão (Uptime)}
 \begin{itemize}
   \item \textbf{Arquivo}: `09\_ruckus\_uptime\_volume.png`
@@ -204,7 +204,8 @@ O mapa de calor abaixo resume o comportamento de correlação cruzada cruzando t
 \end{figure}
 \begin{itemize}
   \item \textbf{Expectativa Teórica}: Esperava-se uma correlação positiva moderada a forte, dado que sessões de conexão mais duradouras propiciam o acúmulo integrado de mais bytes trafegados.
-  \item \textbf{Comportamento Observado}: Correlação positiva moderada a forte no Ruckus (\textit{r\_p} = 0.3417, \textit{r\_s} = 0.6861) e na UniFi (\textit{r\_p} = 0.0980, \textit{r\_s} = 0.3121).
+  \item \textbf{Comportamento Observado}: Correlação positiva moderada a forte no Ruckus (\textit{r\_p} = 0.3420, \textit{r\_s} = 0.6907) e na UniFi (\textit{r\_p} = 0.1606, \textit{r\_s} = 0.3708).
   \item \textbf{Discussão}: Os dados são consistentes com a teoria de rede. Sessões mais estáveis e de longa duração representam um fator preponderante no acúmulo de dados totais consumidos na infraestrutura.
-\end{itemize}
 
+
+\end{itemize}
