@@ -22,4 +22,5 @@ Abaixo são detalhados os principais scripts do pipeline executados para a conso
     \item \textbf{\texttt{analisador\_testes.py}}: Aplica os testes de normalidade de Shapiro-Wilk e de significância estatística U de Mann-Whitney para validação das hipóteses, acompanhado do cálculo do tamanho de efeito operacional (\textit{effect size} $r$ e $d$).
     \item \textbf{\texttt{classificador\_gargalos.py}}: Executa a classificação heurística de gargalos operacionais de rede (G1 a G5), realiza o agrupamento de Access Points via algoritmo K-Means e gera os gráficos correspondentes de distribuição de carga.
     \item \textbf{\texttt{run\_pipeline.py}}: Script orquestrador central que executa todo o pipeline de processamento na sequência lógica correta, gerando as tabelas em CSV e convertendo os relatórios finais.
+    \item \textbf{\texttt{convert\_md\_to\_tex.py}}: Script utilitário responsável por ler os relatórios em Markdown, aplicar as regras de escape LaTeX e formatação brasileira de números (decimais por vírgula, milhares por ponto) e exportar os arquivos textuais finais.
 \end{enumerate}
