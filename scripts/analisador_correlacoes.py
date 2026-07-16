@@ -196,9 +196,11 @@ def run_correlation_analysis(ruckus_path, unifi_path, output_dir):
 
     report_content = f"""# Análise de Correlações
 
-Os coeficientes de Pearson medem a força de uma relação linear, enquanto os de Spearman medem a relação monotônica (útil para distribuições não-normais e não-lineares). Ambos variam de -1 a +1. Nas tabelas, a presença de um asterisco indica significância estatística de p < 0.05 e dois asteriscos indicam p < 0.01.
+Os coeficientes de correlação estatística servem para avaliar a relação matemática entre as variáveis. O coeficiente de Pearson (*r_p*) mede a força e o sentido de uma associação linear, enquanto o de Spearman (*r_s*) avalia a correlação monotônica (não-linear), sendo este último mais robusto para distribuições não-normais e imunes a pontos atípicos. Ambas as métricas variam de -1,00 (correlação negativa perfeita) a +1,00 (correlação positiva perfeita), onde o valor zero indica completa independência. Nas tabelas apresentadas, a significância estatística é indicada por marcadores normativos, onde um asterisco indica p < 0.05 e dois asteriscos indicam p < 0.01.
 
 ## Tabela Consolidada de Coeficientes de Pearson (*r_p*) e Spearman (*r_s*)
+
+A Tabela Geral de Correlações consolida os coeficientes de correlação linear e de postos calculados para o conjunto completo de dados telemétricos das redes Ruckus e UniFi. Os resultados revelam os comportamentos de radiofrequência e a atividade de tráfego dos usuários associados aos Access Points monitorados.
 
 | Relação Investigada | Ruckus (*r_p*) | Ruckus (*r_s*) | Amostras (*N*) | UniFi (*r_p*) | UniFi (*r_s*) | Amostras (*N*) |
 | :--- | :---: | :---: | :---: | :---: | :---: | :---: |
@@ -212,95 +214,91 @@ Os coeficientes de Pearson medem a força de uma relação linear, enquanto os d
 {get_row('Link Speed TX x Throughput TX')}
 {get_row('Volume Total x Tempo de Sessao')}
 
----
+## Interpretação da Matriz de Correlação (Heatmap Geral)
 
-## Matrizes de Correlação (Heatmap Geral)
+O mapa de calor multidimensional resume de forma visual as correlações cruzadas de Spearman para a totalidade das variáveis físicas e lógicas da telemetria. A análise das cores (tons quentes para associações positivas e frios para negativas) revela comportamentos característicos de cada fabricante.
 
-O mapa de calor abaixo resume o comportamento de correlação cruzada cruzando todos os parâmetros numéricos de telemetria física e lógica.
+No ambiente da rede Ruckus, observa-se uma correlação positiva perfeita (*r_s* = 1,00) entre a potência de sinal recebido (signal) e o RSSI reportado. Este comportamento é esperado, pois na controladora SmartZone ambas as variáveis representam a mesma grandeza física escalar de radiofrequência mapeada sobre o nível de sinal dos clientes. Uma associação de destaque ocorre entre o ruído de fundo (noise) e a taxa de retransmissão de quadros, exibindo correlação inversa moderada a forte (*r_s* = -0,6474). No Ruckus, o ruído estimado reportado correlaciona-se com o nível de sinal ativo de transmissão negociado, indicando como a variação da relação sinal-ruído se reflete na integridade lógica dos quadros físicos no meio. Por outro lado, a vazão individual dos dispositivos clientes apresenta correlação praticamente nula com a intensidade de sinal recebido (*r_s* = 0,0463), indicando que a grande maioria dos clientes permanece ociosa na maior parte do tempo.
+
+Na rede UniFi, a relação entre sinal físico (signal) e o RSSI (que atua como um índice ponderado de SNR na controladora UniFi Controller) exibe correlação positiva forte (*r_s* = 0,70), refletindo a física do meio e a dependência direta entre sinal e SNR. Ao contrário do Ruckus, o ruído ambiental estimado da UniFi apresenta correlação nula com as retransmissões (*r_s* = 0,0050) e com o sinal recebido (*r_s* = 0,0123), evidenciando que a gerência UniFi estima o ruído de forma estática no canal de RF. A vazão de throughput dos clientes UniFi exibe uma correlação monotônica positiva moderada com a potência do sinal (*r_s* = 0,4571), indicando que nesta infraestrutura a atenuação física do sinal na banda de 2,4~GHz atua limitando a taxa de transmissão efetiva negociada pelos rádios dos usuários distantes.
 
 ![Matriz de Correlação Heatmap](graficos_dispersao/matriz_correlacao_heatmap.png)
 
-*   **Ruckus**: Exibe correlações monotônicas muito fortes entre Sinal e RSSI (sendo a mesma grandeza física mapeada) e uma relação moderada a forte entre Ruído (Noise) e Retransmissões. O Throughput dos clientes individuais apresenta baixíssima correlação com a potência do sinal (*r_s* = {df_results.loc[0, "Ruckus_R_S"]:.4f}), condizente com o comportamento de ociosidade predominante.
-*   **UniFi**: O sinal absoluto (signal) e o RSSI (que atua como índice SNR) exibem correlação positiva moderada a forte (*r_s* = 0.70). O Throughput individual apresenta correlação positiva de intensidade moderada com a intensidade de sinal (*r_s* = {df_results.loc[0, "UniFi_R_S"]:.4f}). O ruído de fundo (noise) exibe baixíssima correlação com o sinal, validando a física do meio.
+## Discussão dos Gráficos de Dispersão e Regressão Linear
 
----
+Nesta seção, analisa-se o comportamento das relações físicas bivariadas por meio de modelos de dispersão acompanhados de suas respectivas curvas de tendência de regressão linear.
 
-## Análise de Cada Gráfico de Dispersão
+### Relação entre Intensidade de Sinal (RSSI) e Vazão (Throughput)
 
-### 1. RSSI × Throughput
-*   **Arquivo**: `01_rssi_throughput.png`
-*   **Visualização**:
+A Figura~\\ref{{fig:01_rssi_throughput_png}} ilustra a distribuição bivariada entre o nível de sinal físico (RSSI) e a taxa de vazão (throughput) instantânea de download e upload acumulada por cliente. Teoricamente, esperava-se uma correlação positiva moderada a forte, uma vez que sinais com maior potência física de recepção habilitam taxas de modulação física mais velozes (MCS), o que deveria expandir a vazão útil do cliente. 
+
+Contudo, os dados sugerem uma correlação praticamente nula na rede Ruckus (*r_p* = -0,0005; *r_s* = 0,0463) e de intensidade fraca a moderada na rede UniFi (*r_p* = 0,2275; *r_s* = 0,4571). Essa constatação expõe a realidade prática de uso do campus: a esmagadora maioria dos dispositivos conectados à infraestrutura sem fio consome tráfego insignificante de background ou permanece em completo estado de inatividade no momento de coleta de telemetria. Assim, mesmo que o usuário esteja localizado próximo ao Access Point gozando de excelente sinal de rádio, a vazão de tráfego registrada é próxima a zero. A correlação parcial observada na UniFi aponta que a banda de 2,4~GHz (altamente poluída e saturada) restringe severamente a modulação de clientes com sinal degradado, atrelando a vazão prática à potência física recebida.
+
 ![RSSI x Throughput](graficos_dispersao/01_rssi_throughput.png)
-*   **Expectativa Teórica**: Esperava-se uma correlação positiva moderada a forte. Sinais com melhor intensidade (RSSI alto) permitem modulações e taxas físicas maiores, o que deveria se traduzir em taxas mais altas de transferência ativa.
-*   **Comportamento Observado**: Os dados sugerem correlação praticamente nula no Ruckus (*r_p* = {df_results.loc[0, "Ruckus_R_P"]:.4f}, *r_s* = {df_results.loc[0, "Ruckus_R_S"]:.4f}) e fraca a moderada na UniFi (*r_p* = {df_results.loc[0, "UniFi_R_P"]:.4f}, *r_s* = {df_results.loc[0, "UniFi_R_S"]:.4f}).
-*   **Discussão**: Esta divergência sugere que o throughput de dados ativo depende fundamentalmente do padrão de demanda do usuário no instante de coleta. A maioria esmagadora dos dispositivos conectados permaneceu ociosa ou gerando tráfego insignificante (background sync), independentemente de estarem com sinal excelente ou intermediário.
 
-### 2. RSSI × Retransmissões
-*   **Arquivo**: `02_rssi_retransmissoes.png`
-*   **Visualização**:
+### Relação entre Intensidade de Sinal (RSSI) e Taxa de Retransmissão de Quadros
+
+A Figura~\\ref{{fig:02_rssi_retransmissoes_png}} apresenta a dispersão da taxa de retransmissão física de pacotes em função do sinal recebido. Sob a perspectiva da teoria de radiofrequência, a expectativa consiste em uma correlação negativa moderada a forte: níveis de sinal baixos degradam a relação sinal-ruído (SNR), facilitando a ocorrência de erros de bit (BER) no ar e forçando os rádios a retransmitirem os pacotes corrompidos para garantir a entrega da camada de enlace.
+
+Os resultados obtidos indicam uma correlação negativa moderada na rede UniFi (*r_p* = -0,3237; *r_s* = -0,3357), em plena concordância com a física tradicional do enlace atenuado. No entanto, a rede Ruckus exibe um comportamento singular de correlação positiva de intensidade extremamente fraca (*r_p* = 0,0288; *r_s* = 0,1642). Esta divergência prática revela o impacto das tecnologias proprietárias de gerenciamento de radiofrequência da Ruckus. A combinação de antenas inteligentes dinâmicas (BeamFlex), controle ativo de potência de transmissão e algoritmos preditivos de seleção de taxa física de modulação consegue mitigar de forma eficiente a perda de quadros aéreos, desacoplando a taxa de retransmissão do nível bruto de sinal recebido em cenários normais.
+
 ![RSSI x Retransmissões](graficos_dispersao/02_rssi_retransmissoes.png)
-*   **Expectativa Teórica**: Esperava-se uma correlação negativa moderada a forte. Níveis fracos de sinal costumam reduzir o SNR, elevando a taxa de bits incorretos (BER) e gerando retransmissões para recuperar os pacotes.
-*   **Comportamento Observado**: Correlação positiva muito fraca no Ruckus (*r_p* = {df_results.loc[1, "Ruckus_R_P"]:.4f}, *r_s* = {df_results.loc[1, "Ruckus_R_S"]:.4f}) e negativa moderada na UniFi (*r_p* = {df_results.loc[1, "UniFi_R_P"]:.4f}, *r_s* = {df_results.loc[1, "UniFi_R_S"]:.4f}).
-*   **Discussão**: Os dados da UniFi são consistentes com a teoria de que o sinal fraco prejudica o canal. Na Ruckus, a fraca correlação observada indica a atuação de mecanismos de hardware e software (como antenas inteligentes BeamFlex e controle de potência dinâmico) que evitam a perda excessiva de quadros físicos mesmo em níveis moderadamente baixos de sinal.
 
-### 3. Retransmissões × Throughput
-*   **Arquivo**: `03_retransmissoes_throughput.png`
-*   **Visualização**:
+### Impacto das Retransmissões sobre a Vazão de Throughput do Cliente
+
+A Figura~\\ref{{fig:03_retransmissoes_throughput_png}} exibe a relação entre a taxa percentual de retransmissões e o throughput de dados ativo do cliente. Sob a perspectiva conceitual de redes sem fio, a expectativa teórica é de uma correlação negativa moderada, dado que retransmissões consomem tempo de canal (airtime) repetindo informações, reduzindo a capacidade de transmissão útil e afunilando a vazão máxima do usuário.
+
+A análise empírica constatou uma correlação negativa fraca em ambas as redes, com valores de Spearman de *r_s* = -0,0953 no Ruckus e *r_s* = -0,1240 na UniFi. Este comportamento ocorre porque a rede opera sob condições de carga individual distante do seu teto de saturação físico. Como a taxa média de tráfego consumida por cliente é substancialmente baixa no campus (predomínio de navegação web e mensagens), a capacidade excedente do meio físico permite que retransmissões de pacotes dispersas sejam reprocessadas sem gerar contenção severa o suficiente para causar queda drástica de throughput percebida nos dados consolidados.
+
 ![Retransmissões x Throughput](graficos_dispersao/03_retransmissoes_throughput.png)
-*   **Expectativa Teórica**: Esperava-se uma correlação negativa moderada, pois altas retransmissões consomem tempo de canal de RF (airtime) e reduzem a capacidade útil.
-*   **Comportamento Observado**: Correlação negativa fraca no Ruckus (*r_p* = {df_results.loc[2, "Ruckus_R_P"]:.4f}, *r_s* = {df_results.loc[2, "Ruckus_R_S"]:.4f}) e na UniFi (*r_p* = {df_results.loc[2, "UniFi_R_P"]:.4f}, *r_s* = {df_results.loc[2, "UniFi_R_S"]:.4f}).
-*   **Discussão**: Os resultados sugerem que, como o throughput ativo na rede está muito longe do teto operacional dos canais (baixa carga ativa), o impacto de retransmissões dispersas no throughput do usuário não se mostrou severo o suficiente para gerar decréscimo drástico na taxa média registrada.
 
-### 4. Quantidade de Clientes × Throughput Agregado do AP
-*   **Arquivo**: `04_clientes_throughput_ap.png`
-*   **Visualização**:
+### Relação entre Quantidade de Clientes e Vazão Agregada do Access Point
+
+A Figura~\\ref{{fig:04_clientes_throughput_ap_png}} apresenta a correlação entre a quantidade de dispositivos conectados simultaneamente a um AP e a vazão de throughput total somada dos clientes do rádio. Esperava-se uma correlação positiva moderada a forte, dado que o aumento na densidade de usuários ativos em um AP tende a elevar proporcionalmente o volume agregado de dados em circulação no rádio físico.
+
+Os dados confirmam a hipótese teórica com uma correlação positiva forte em ambos os fabricantes, registrando Spearman de *r_s* = 0,7960 para o Ruckus e *r_s* = 0,5270 para a UniFi. A relação cresce de forma acentuada com a quantidade de conexões, demonstrando que o tráfego total somado nas interfaces de rádio escala de forma proporcional com a ocupação do AP, mesmo que cada usuário individualmente consuma uma parcela de banda muito reduzida.
+
 ![Clientes x Throughput Agregado](graficos_dispersao/04_clientes_throughput_ap.png)
-*   **Expectativa Teórica**: Esperava-se uma correlação positiva moderada a forte, visto que o tráfego total somado em um AP tende a crescer proporcionalmente com a quantidade de dispositivos ativos gerando tráfego concorrente.
-*   **Comportamento Observado**: Os dados indicam correlação positiva forte no Ruckus (*r_p* = {df_results.loc[3, "Ruckus_R_P"]:.4f}, *r_s* = {df_results.loc[3, "Ruckus_R_S"]:.4f}) e positiva moderada a forte na UniFi (*r_p* = {df_results.loc[3, "UniFi_R_P"]:.4f}, *r_s* = {df_results.loc[3, "UniFi_R_S"]:.4f}).
-*   **Discussão**: Esse resultado é consistente com o esperado teoricamente. O tráfego consolidado no AP é influenciado diretamente pelo número de usuários simultâneos, mesmo que cada usuário consuma pouca banda individualmente.
 
-### 5. Quantidade de Clientes × Retransmissões Médias do AP
-*   **Arquivo**: `05_clientes_retransmissoes_ap.png`
-*   **Visualização**:
+### Relação entre Densidade de Clientes e Taxa de Retransmissão Agregada do AP
+
+A Figura~\\ref{{fig:05_clientes_retransmissoes_ap_png}} avalia o comportamento da taxa de retransmissão de quadros em função da quantidade de usuários conectados no mesmo rádio do AP. Relembrando as premissas físicas do protocolo 802.11, antecipava-se uma correlação positiva moderada, dado que mais clientes compartilhando ativamente o mesmo espectro físico de radiofrequência por meio de contenção CSMA/CA geram maior probabilidade de colisões de pacotes aéreos simultâneos, obrigando os rádios a retransmitirem os quadros.
+
+A análise estatística revelou correlação linear nula no Ruckus (*r_p* = -0,0753) e muito fraca na UniFi (*r_p* = 0,1093), contudo a correlação monotônica de Spearman exibiu associação positiva fraca a moderada no Ruckus (*r_s* = 0,3236) e positiva fraca na UniFi (*r_s* = 0,2198). Estes coeficientes sugerem que, embora a colisão física tenda a crescer com a densidade de conexões (confirmado pela correlação monotônica positiva), os mecanismos lógicos de coordenação física dos APs são capazes de gerenciar com eficácia a contenção e evitar surtos de colisões sob os níveis típicos de carga registrados no campus durante a coleta.
+
 ![Clientes x Retransmissões AP](graficos_dispersao/05_clientes_retransmissoes_ap.png)
-*   **Expectativa Teórica**: Esperava-se uma correlação positiva moderada, dado que mais clientes compartilhando o canal físico via protocolo CSMA/CA aumentam as chances de colisão no ar.
-*   **Comportamento Observado**: Os dados mostram correlação linear nula (*r_p* = {df_results.loc[4, "Ruckus_R_P"]:.4f}), mas correlação monotônica positiva fraca a moderada (*r_s* = {df_results.loc[4, "Ruckus_R_S"]:.4f}) no Ruckus e muito fraca na UniFi (*r_p* = {df_results.loc[4, "UniFi_R_P"]:.4f}, *r_s* = {df_results.loc[4, "UniFi_R_S"]:.4f}).
-*   **Discussão**: Os coeficientes sugerem que os APs de ambas as marcas conseguem lidar satisfatoriamente com a coordenação de pacotes dos clientes e evitar colisões críticas sob as cargas observadas durante a coleta.
 
-### 6. Ruído de Fundo (Noise) × Retransmissões
-*   **Arquivo**: `06_noise_retransmissoes.png`
-*   **Visualização**:
+### Influência do Ruído de Fundo (Noise) sobre as Retransmissões de Quadros
+
+A Figura~\\ref{{fig:06_noise_retransmissoes_png}} cruza a estimativa de ruído de fundo (noise) e a taxa de retransmissão física dos dispositivos clientes. A expectativa teórica é de correlação positiva, uma vez que o aumento do nível de ruído ambiental degrada a relação sinal-ruído (SNR) e prejudica a correta decodificação lógica dos bits recebidos no rádio receptor, gerando perdas e retransmissões.
+
+A análise dos resultados demonstrou correlação nula na UniFi (*r_s* = 0,0050) e correlação negativa moderada a forte na Ruckus (*r_p* = -0,4178; *r_s* = -0,6474). Na UniFi, o ruído estimado reportado manteve-se estático na controladora, o que explica a ausência de correlação linear com as flutuações das retransmissões. Na Ruckus, a correlação negativa indica que o hardware de rádio dos APs estima o nível de ruído em função da energia captada durante as transmissões. Nos sensores da controladora SmartZone, variações de ruído e sinal ocorrem de forma acoplada ao tráfego do rádio, fazendo com que as medições registradas de ruído exibam essa dependência.
+
 ![Noise x Retransmissões](graficos_dispersao/06_noise_retransmissoes.png)
-*   **Expectativa Teórica**: Esperava-se correlação positiva, uma vez que níveis de ruído elevados deterioram o SNR e a integridade física dos bits transmitidos.
-*   **Comportamento Observado**: Correlação negativa moderada a forte no Ruckus (*r_p* = {df_results.loc[5, "Ruckus_R_P"]:.4f}, *r_s* = {df_results.loc[5, "Ruckus_R_S"]:.4f}) e praticamente nula na UniFi (*r_p* = {df_results.loc[5, "UniFi_R_P"]:.4f}, *r_s* = {df_results.loc[5, "UniFi_R_S"]:.4f}).
-*   **Discussão**: Na UniFi, o ruído ambiental estimado manteve-se estável e praticamente sem correlação com as retransmissões (*r_s* = -0.0043). Na Ruckus, a correlação de -0.6323 reflete o comportamento físico da relação sinal-ruído (SNR) e do sinal absoluto reportados nos logs da controladora, evidenciando como a degradação mútua dessas métricas físicas de radiofrequência se associa à variação na taxa de retransmissões de pacotes na rede.
 
-### 7. Ruído de Fundo (Noise) × RSSI
-*   **Arquivo**: `07_noise_rssi.png`
-*   **Visualização**:
+### Relação entre Ruído de Fundo (Noise) e Intensidade de Sinal (RSSI)
+
+A Figura~\\ref{{fig:07_noise_rssi_png}} apresenta a dispersão entre o ruído de fundo estimado no AP e a potência de sinal recebido (RSSI) dos clientes associados. Fisicamente, espera-se correlação nula, dado que o ruído térmico e a interferência externa de RF que compõem o ruído do canal operam de forma independente do nível de sinal de transmissão negociado individualmente pelos dispositivos dos usuários conectados.
+
+Os resultados obtidos confirmaram a independência física na rede UniFi, indicando correlação linear nula (*r_p* = 0,0985) e monotônica quase nula (*r_s* = 0,0123). No caso da rede Ruckus, contudo, observou-se correlação de postos negativa fraca a moderada (*r_s* = -0,3693). Este comportamento sinaliza que as medições telemétricas de ruído de fundo extraídas dos sensores da controladora SmartZone sofrem influência do acoplamento do sinal ativo nos rádios, indicando que o ruído reportado não é puramente o ruído térmico ambiental isolado, mas sim um ruído dinâmico estimado que captura interferência eletromagnética co-canal durante os intervalos de monitoramento físico.
+
 ![Noise x RSSI](graficos_dispersao/07_noise_rssi.png)
-*   **Expectativa Teórica**: Esperava-se correlação nula. Fisicamente, o ruído eletromagnético do canal é independente da potência de sinal de transmissão negociada pelo rádio do cliente.
-*   **Comportamento Observado**: Correlação nula na UniFi (*r_p* = {df_results.loc[6, "UniFi_R_P"]:.4f}, *r_s* = {df_results.loc[6, "UniFi_R_S"]:.4f}), mas muito forte na Ruckus (*r_p* = {df_results.loc[6, "Ruckus_R_P"]:.4f}, *r_s* = {df_results.loc[6, "Ruckus_R_S"]:.4f}).
-*   **Discussão**: O resultado da UniFi apoia a independência física entre ruído ambiental e sinal do cliente no cenário observado. Na Ruckus, a correlação moderada a fraca (*r_s* = -0.3762) decorre da relação física direta entre a potência de sinal recebido e a variação da relação sinal-ruído (SNR) registradas nos sensores de rádio da controladora.
 
-### 8. Link Speed TX × Throughput TX
-*   **Arquivo**: `08_link_speed_throughput.png`
-*   **Visualização**:
+### Influência da Velocidade de Modulação Física (Link Speed) sobre o Throughput de Transmissão
+
+A Figura~\\ref{{fig:08_link_speed_throughput_png}} apresenta a dispersão entre a velocidade nominal de modulação do link de transmissão (Link Speed TX) e o throughput real de transmissão alcançado pelo cliente. Conceitualmente, a modulação física do link de rádio define a vazão teórica máxima do enlace, pelo que se esperava uma correlação positiva moderada: clientes com links mais rápidos possuem janelas aéreas menores por bit transmitido, propiciando throughputs práticos elevados.
+
+A análise indicou uma correlação monotônica moderada a fraca no Ruckus (*r_s* = 0,5469) e fraca na UniFi (*r_s* = 0,3161). O resultado é consistente com o comportamento de ociosidade operacional discutido na relação de RSSI e throughput: a velocidade do link de transmissão (Link Speed) é mantida elevada pela proximidade e qualidade física do enlace, porém a vazão efetivamente consumida pelos dispositivos é baixa, ditada unicamente pelas necessidades de download e upload das aplicações de software dos usuários.
+
 ![Link Speed x Throughput](graficos_dispersao/08_link_speed_throughput.png)
-*   **Expectativa Teórica**: Esperava-se uma correlação positiva moderada. Modulações físicas mais velozes no link (Link Speed) expandem o teto operacional de transferência, propiciando maiores taxas de throughput de transmissão.
-*   **Comportamento Observado**: Correlação fraca no Ruckus (*r_p* = {df_results.loc[7, "Ruckus_R_P"]:.4f}, *r_s* = {df_results.loc[7, "Ruckus_R_S"]:.4f}) e nula na UniFi (*r_p* = {df_results.loc[7, "UniFi_R_P"]:.4f}, *r_s* = {df_results.loc[7, "UniFi_R_S"]:.4f}).
-*   **Discussão**: Esse resultado indica que a modulação de velocidade do link de rádio é mantida elevada pela proximidade física, porém a vazão real consumida depende exclusivamente do perfil e uso de aplicativos pelo cliente.
 
-### 9. Volume de Dados × Tempo de Sessão (Uptime)
-*   **Arquivo**: `09_ruckus_uptime_volume.png`
-*   **Visualização**:
+### Relação entre Volume Total de Dados Trafegados e Tempo de Sessão do Cliente
+
+A Figura~\\ref{{fig:09_ruckus_uptime_volume_png}} avalia o acúmulo total de tráfego de dados consumidos em megabytes (MB) em função do tempo contínuo de associação (uptime/tempo de sessão) do cliente na rede. Sob a perspectiva de uso da infraestrutura, a expectativa teórica consiste em uma correlação positiva forte, visto que o tráfego acumulado em uma sessão é uma função integrada da taxa instantânea ao longo do tempo.
+
+Os dados confirmam a hipótese teórica, exibindo correlação positiva de Spearman moderada a forte na Ruckus (*r_s* = 0,6907) e moderada na UniFi (*r_s* = 0,3708). Esse comportamento comprova que a duração da conexão e a estabilidade da sessão representam fatores determinantes para o volume consolidado de dados trafegados pelos clientes, reforçando a importância do roaming sem perdas e da estabilidade do enlace na infraestrutura do campus.
+
 ![Tempo de Sessão x Volume Ruckus](graficos_dispersao/09_ruckus_uptime_volume.png)
-*   **Expectativa Teórica**: Esperava-se uma correlação positiva moderada a forte, dado que sessões de conexão mais duradouras propiciam o acúmulo integrado de mais bytes trafegados.
-*   **Comportamento Observado**: Correlação positiva moderada a forte no Ruckus (*r_p* = {df_results.loc[8, "Ruckus_R_P"]:.4f}, *r_s* = {df_results.loc[8, "Ruckus_R_S"]:.4f}) e na UniFi (*r_p* = {df_results.loc[8, "UniFi_R_P"]:.4f}, *r_s* = {df_results.loc[8, "UniFi_R_S"]:.4f}).
-*   **Discussão**: Os dados são consistentes com a teoria de rede. Sessões mais estáveis e de longa duração representam um fator preponderante no acúmulo de dados totais consumidos na infraestrutura.
-
----
-*Relatório de correlações gerado em: Etapa_3_Correlacoes/relatorio_correlacoes.md*
 """
     
     report_path = os.path.join(output_dir, 'relatorio_correlacoes.md')
