@@ -491,12 +491,7 @@ def run_bottleneck_analysis(ruckus_path, unifi_path, output_dir):
     uf_d_sig = centroids_uf.loc[idx_low_ret_uf, 'sinal_medio'] if not centroids_uf.empty else 0.0
     uf_d_ret = centroids_uf.loc[idx_low_ret_uf, 'retransmissoes_media'] if not centroids_uf.empty else 0.0
 
-    report_content = f"""# Relatório de Classificação de Gargalos de Rede (Etapa 5)
-
-Este relatório apresenta a identificação, quantificação e análise de impacto dos principais gargalos de rede sem fio (Wi-Fi) e de infraestrutura cabeada para os ambientes Ruckus e UniFi.
-
-> [!NOTE]
-> **Limitação do Escopo**: As conclusões apresentadas neste relatório são baseadas no cenário de rede observado durante o período de coleta. Os resultados sugerem tendências empíricas de comportamento do sistema e não devem ser generalizados como regras globais absolutas para todos os ambientes.
+    report_content = f"""# Classificação de Gargalos de Rede
 
 ## Limiares de Decisão Estabelecidos
 

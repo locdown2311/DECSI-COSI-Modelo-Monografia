@@ -194,12 +194,7 @@ def run_correlation_analysis(ruckus_path, unifi_path, output_dir):
             return f"{r:.4f}{sig}"
         return f"| **{rel}** | {fmt_val(row['Ruckus_R_P'], row['Ruckus_P_P'])} | {fmt_val(row['Ruckus_R_S'], row['Ruckus_P_S'])} | {int(row['Ruckus_N'])} | {fmt_val(row['UniFi_R_P'], row['UniFi_P_P'])} | {fmt_val(row['UniFi_R_S'], row['UniFi_P_S'])} | {int(row['UniFi_N'])} |"
 
-    report_content = f"""# Relatório de Análise de Correlações (Etapa 3)
-
-Este relatório apresenta e analisa os coeficientes de correlação de **Pearson (*r_p*)** e **Spearman (*r_s*)** e gera gráficos correspondentes para analisar quantitativamente o comportamento da telemetria das redes UniFi e Ruckus.
-
-> [!NOTE]
-> **Limitação do Escopo**: As discussões e conclusões apresentadas neste relatório baseiam-se estritamente no cenário e conjunto de dados observados durante o período de coleta. Os resultados sugerem tendências e comportamentos de rede nesse ambiente específico, não devendo ser interpretados como regras gerais absolutas.
+    report_content = f"""# Análise de Correlações
 
 Os coeficientes de Pearson medem a força de uma relação linear, enquanto os de Spearman medem a relação monotônica (útil para distribuições não-normais e não-lineares). Ambos variam de -1 a +1. Nas tabelas, a presença de um asterisco indica significância estatística de p < 0.05 e dois asteriscos indicam p < 0.01.
 

@@ -404,12 +404,7 @@ def run_statistical_analysis(ruckus_path, unifi_path, output_dir):
     media_tp_fg_rk = f"{row_fg_tp['Media_A']:.3f}"
     media_tp_fg_uf = f"{row_fg_tp['Media_B']:.3f}"
 
-    report_content = f"""# Relatório de Testes Estatísticos de Hipótese (Etapa 4)
-
-Este relatório apresenta os resultados dos testes estatísticos de significância e tamanho de efeito para analisar as diferenças observadas nas métricas de telemetria de rede Wi-Fi. 
-
-> [!NOTE]
-> **Limitação do Escopo**: As conclusões apresentadas neste relatório são válidas somente para o cenário e período observados. Os resultados sugerem padrões empíricos específicos do campus e não configuram verdades universais sobre o desempenho das marcas.
+    report_content = f"""# Testes Estatísticos de Hipótese
 
 {unifi_5g_notice}
 

@@ -248,12 +248,7 @@ def run_descriptive_analysis(ruckus_path, unifi_path, output_csv_path, output_re
         row_u = f"| **UniFi** | {display_name} | {reg_u} | {fmt(u['Média'])} | {fmt(u['Desvio Padrão'])} | {fmt(u['Mínimo'])} | {fmt(u['Q1 (25%)'])} | {fmt(u['Mediana (Q2)'])} | {fmt(u['Q3 (75%)'])} | {fmt(u['Máximo'])} |"
         return row_r + "\n" + row_u
         
-    report_content = f"""# Relatório de Estatística Descritiva (Etapa 1)
-
-Este relatório apresenta as métricas de estatística descritiva (média, mediana, desvio padrão, mínimo, máximo e quartis) para os principais parâmetros de rede dos datasets padronizados da Ruckus e da UniFi.
-
-> [!NOTE]
-> **Limitação do Escopo**: As conclusões e discussões apresentadas neste relatório baseiam-se estritamente no cenário e conjunto de dados observados durante o período de coleta. Os resultados sugerem tendências e comportamentos da rede nesse ambiente específico, não devendo ser generalizados como regras absolutas para todas as implantações das marcas.
+    report_content = f"""# Estatística Descritiva
 
 ## Tabela Geral de Estatísticas Descritivas
 

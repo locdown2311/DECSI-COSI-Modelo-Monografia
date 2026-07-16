@@ -96,12 +96,7 @@ def run_validation(ruckus_path, unifi_path, output_report_path, plots_dir):
     plt.close()
     
     # 7. Gerar Relatório Markdown
-    report_content = f"""# Relatório de Validação de Consistência dos Dados (Etapa 0)
-
-Este relatório descreve a validação e limpeza realizada nos datasets de telemetria das redes UniFi e Ruckus.
-
-> [!NOTE]
-> **Limitação do Escopo**: As conclusões e discussões apresentadas neste relatório baseiam-se estritamente no cenário e conjunto de dados observados durante o período de coleta. Os resultados sugerem tendências e comportamentos da rede nesse ambiente específico, não devendo ser generalizados como regras absolutas para todas as implantações das marcas.
+    report_content = f"""# Validação de Consistência dos Dados
 
 ## 1. Quantidade de Registros
 

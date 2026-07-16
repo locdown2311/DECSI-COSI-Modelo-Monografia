@@ -201,14 +201,7 @@ def generate_plots(ruckus_path, unifi_path, plots_dir):
     peak_rk_val = int(peak_rk_row['cliente (MAC)'])
     peak_uf_val = int(peak_uf_row['cliente (MAC)'])
     
-    report_content = f"""# Relatório de Visualização dos Dados (Etapa 2)
-
-Este relatório descreve as análises visuais e representações gráficas geradas na Etapa 2 para caracterização das redes sem fio da Ruckus e da UniFi. Os gráficos nos permitem identificar tendências de comportamento de sinal, alocação de espectro, densidade de clientes e desempenho comparativo de throughput e retransmissões por banda.
-
-> [!NOTE]
-> **Limitação do Escopo**: As conclusões e discussões apresentadas neste relatório baseiam-se estritamente no cenário e conjunto de dados observados durante o período de coleta. Os resultados sugerem tendências e comportamentos da rede nesse ambiente específico, não devendo ser generalizados como regras absolutas para todas as implantações das marcas.
-
----
+    report_content = f"""# Visualização dos Dados
 
 ## 1. Intensidade do Sinal por Fabricante
 
