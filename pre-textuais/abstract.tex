@@ -1,13 +1,7 @@
 % abstract em inglês
 \begin{resumo}[Abstract]
  \begin{otherlanguage*}{english}
-   This work presents a comparative and diagnostic analysis of the performance of heterogeneous enterprise Wi-Fi networks using physical and logical telemetry. 
-   The study is based on a dataset collected continuously over 18 days in a high-density university campus, covering two distinct network architectures (Ruckus Wireless and Ubiquiti UniFi), resulting in over 350,000 processed telemetry records. 
-   The proposed methodology involves a structured pipeline of data cleaning, standardization, statistical hypothesis testing, and heuristic and unsupervised classification of network bottlenecks. 
-   Non-parametric Mann-Whitney tests revealed statistically significant performance disparities ($p < 0.001$) between the 2.4~GHz and 5~GHz bands, as well as severe discrepancies in frame retransmission rates between manufacturers (UniFi averaging 22.1\% vs. Ruckus averaging 5.7\%). 
-   Bottleneck classification indicated that client throughput was severely degraded by link quality issues (up to 89.3\% throughput drop under weak signal) and roaming instability, which reduced Ruckus client throughput by 38.8\%. 
-   Finally, the K-Means clustering algorithm ($K=4$) was validated using Silhouette (0.3383) and Davies-Bouldin (0.7953) metrics for the Ruckus network, proving the effectiveness of segmenting Access Points into distinct operational profiles and detecting anomalies in the physical transmission medium. 
-   This research contributes a reproducible and scalable methodology for automated diagnosis and quality of service management in enterprise wireless networks.
+   This work presents a comparative performance analysis of corporate Wi-Fi networks (Ruckus and UniFi) using physical and logical telemetry. Based on an 18-day dataset collected in a high-density university campus, containing over 350,000 records, the study proposes a structured pipeline for data cleaning, statistical hypothesis testing, and heuristic and unsupervised bottleneck classification. Mann-Whitney tests revealed significant performance disparities ($p < 0.001$) between the 2.4~GHz and 5~GHz bands, and discrepant retransmission rates between manufacturers (UniFi averaging 22.1\% vs. Ruckus averaging 5.7\%). Bottleneck classification indicated that client throughput was severely attenuated by weak signal (up to 89.3\% throughput drop) and roaming instability, which reduced Ruckus client throughput by 38.8\%. The K-Means algorithm ($K=4$) was validated by Silhouette (0.3383) and Davies-Bouldin (0.7953) metrics to segment Access Points into operational profiles. This research contributes a reproducible methodology for automated bottleneck diagnosis in enterprise wireless networks.
 
    \vspace{\onelineskip}
 
