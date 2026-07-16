@@ -18,6 +18,12 @@ O estudo foi conduzido utilizando dados experimentais coletados na infraestrutur
 
 Essa coexistência de plataformas distintas no mesmo espaço físico-acadêmico constitui um ambiente ideal para o desenvolvimento de um pipeline analítico de comparação heterogênea.
 
+\subsection{Limitação de Escopo e Validade dos Resultados}
+\label{subsec:metodologia_escopo}
+
+As conclusões e discussões empíricas apresentadas nesta pesquisa baseiam-se estritamente no cenário físico e no conjunto de dados telemétricos observados durante o período de coleta na infraestrutura ativa do ICEA. Embora as discussões forneçam indicações valiosas e tendências fortes sobre o comportamento do sistema sem fio sob carregamento nominal de usuários reais, os resultados sugerem padrões empíricos específicos deste campus acadêmico e não devem ser generalizados de forma irrestrita como regras universais para todas as arquiteturas ou instalações das marcas estudadas.
+
+
 \section{Estratégia de Coleta de Dados}
 \label{sec:metodologia_coleta}
 
@@ -35,6 +41,45 @@ Os dados telemétricos coletados brutos apresentam incompatibilidades severas de
 	\item \textbf{Normalização de Timezones}: As estampas de tempo brutos da controladora UniFi são reportadas em UTC (fuso zero), enquanto o Ruckus registra dados no horário local. O pipeline converte e unifica todos os registros para o fuso local oficial de Brasília (UTC-3), permitindo correlações temporais diretas de carga diária;
 	\item \textbf{Compatibilização de Identificadores}: O pipeline realiza o mapeamento dos nomes físicos dos APs de cada fabricante. Para o Ruckus, os longos endereços MAC são simplificados no formato \texttt{RK-XXXX} (onde \texttt{XXXX} são os caracteres finais do MAC) para melhorar a legibilidade visual; os APs UniFi são indexados pelos seus nomes cadastrados na gerência (ex: \texttt{Guarita Entrada}, \texttt{Lab Redes});
 	\item \textbf{Mascaramento de Clientes}: Os endereços MAC dos clientes são anonimizados gerando hashes criptográficos unidirecionais, preservando a privacidade dos usuários em conformidade com as diretrizes da LGPD, mas mantendo a capacidade de identificar individualmente conexões repetidas do mesmo dispositivo.
+\end{enumerate}
+
+\section{Pipeline de Processamento e Análise de Dados}
+\label{sec:metodologia_pipeline}
+
+Para estruturar a transição dos registros brutos capturados até a geração dos resultados científicos finais, desenhou-se um pipeline de processamento e análise sequencial. O pipeline é executado a partir de scripts automatizados em Python, organizados nas seguintes etapas lógicas:
+
+\begin{enumerate}
+    \item \textbf{Coleta de Dados Telemétricos (Sensores e Servidores)}:
+    \begin{itemize}
+        \item \textbf{Rede Ruckus}: Consultas SNMP ocorrem ciclicamente a cada 5 minutos a partir de um servidor coletor dedicado, extraindo as MIBs telemétricas de rádio de cada rádio ativo. Simultaneamente, as controladoras SmartZone gravam em base de dados local as mensagens Syslog emitidas em tempo real pelos APs para registrar transições de conexões e eventos de associação;
+        \item \textbf{Rede UniFi}: Requisições REST HTTP são disparadas a cada 5 minutos direcionadas à API do servidor UniFi Controller, extraindo o estado detalhado dos APs cadastrados e seus clientes ativos associados.
+    \end{itemize}
+    \item \textbf{Consolidação dos Arquivos de Log (\texttt{unify\_logs.py})}:
+    Os arquivos diários em formato CSV extraídos de forma separada pelos servidores coletores de ambos os fabricantes são varridos, limpos em suas marcações de data iniciais e unificados em arquivos únicos consolidados de monitoramento de produção (gerando os logs históricos agregados).
+    \item \textbf{Diagnóstico de Qualidade e Integridade (\texttt{dataset\_validator.py})}:
+    Os registros históricos são submetidos a uma triagem de consistência. São medidos os intervalos de amostragem temporal para identificar possíveis quedas ou interrupções físicas de coleta nos servidores e quantificada a proporção de registros ausentes (\textit{missing data}) por variável.
+    \item \textbf{Padronização, Limpeza e Anonimização (\texttt{data\_standardizer.py})}:
+    Nesta etapa, o dataset consolidado é refinado por meio das seguintes operações:
+    \begin{itemize}
+        \item Remoção de instâncias corrompidas ou com identificadores físicos (MAC do AP ou Cliente) nulos;
+        \item Conversão e unificação de escalas físicas (sinal recebido convertido e normalizado para dBm, throughput estimado convertido incrementalmente para Mbps);
+        \item Anonimização criptográfica de privacidade dos MACs de clientes via algoritmo SHA-256, gerando hashes unidirecionais em conformidade com as diretrizes da LGPD;
+        \item Mapeamento lógico de identificadores, convertendo MACs de gerência do Ruckus para etiquetas legíveis simplificadas (\texttt{RK-XXXX}) e associando os APs UniFi aos seus respectivos nomes físicos cadastrados.
+    \end{itemize}
+    Ao final desta fase, os datasets finais padronizados são persistidos em disco.
+    \item \textbf{Estatística Descritiva e Visualização de Dados (\texttt{descriptive\_analyzer.py} e \texttt{visualizador\_dados.py})}:
+    Os dados limpos são processados para gerar as distribuições agregadas, calculando as médias, medianas, desvios padrão e quartis de todas as grandezas. São gerados os histogramas de frequência, boxplots de variáveis físicas por banda e os mapas de calor de distribuição temporal de clientes únicos.
+    \item \textbf{Análise de Correlação e Testes de Hipótese (\texttt{analisador\_correlacoes.py} e \texttt{analisador\_testes.py})}:
+    \begin{itemize}
+        \item São computados os coeficientes lineares (Pearson) e monotônicos (Spearman) cruzados entre todas as variáveis físicas;
+        \item Aplica-se amostragem aleatória uniforme de $5.000$ pontos nos datasets para executar o teste de normalidade de Shapiro-Wilk;
+        \item Diante da rejeição de normalidade, executa-se o teste não-paramétrico de Mann-Whitney para validação formal das hipóteses comparativas de throughput e sinal de rádio entre fabricantes e bandas de frequência, seguido do cálculo do tamanho de efeito.
+    \end{itemize}
+    \item \textbf{Classificação Heurística de Gargalos e Clusterização (\texttt{classificador\_gargalos.py})}:
+    \begin{itemize}
+        \item Cada linha telemétrica é avaliada sob os limiares de decisão de gargalo estabelecidos (G1 a G5) para quantificar as ocorrências;
+        \item O algoritmo de clusterização não supervisionada K-Means é treinado para os \textit{Access Points} ($K=4$), segmentando-os em grupos operacionais baseados em carga e qualidade de RF, e exportando as figuras finais de diagnóstico.
+    \end{itemize}
 \end{enumerate}
 
 \section{Definição das Métricas de Análise}
