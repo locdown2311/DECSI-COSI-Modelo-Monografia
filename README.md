@@ -47,7 +47,7 @@ pdflatex decsi-cosi-modelo-monografia.tex
 
 ---
 
-## ⚙️ Scripts de Processamento de Dados
+## Scripts de Processamento de Dados
 
 A documentação específica de como configurar o ambiente Python e executar os scripts de processamento de telemetria encontra-se detalhada no arquivo de ajuda exclusivo em:
-👉 **[monografia/scripts/README.md](scripts/README.md)**
+ **[monografia/scripts/README.md](scripts/README.md)**
