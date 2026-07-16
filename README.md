@@ -1,50 +1,53 @@
-# Modelo de Monografia do COSI/DECSI - v1.3.1
-___
+# Análise Comparativa Telemétrica de Desempenho e Gargalos em Redes Wi-Fi Corporativas: Ruckus vs. UniFi
 
-Este documento é um modelo de monografia para o **Curso de Sistemas de Informação (SI)**. Este curso é vinculado ao **[Departamento de Computação e Sistemas (DECSI)](http://decsi.ufop.br/)** do [Instituto de Ciências Exatas e Aplicadas (ICEA)](http://www.icea.ufop.br) da [Universidade Federal de Ouro Preto (UFOP)](http://www.ufop.br/). O modelo foi elaborado de acordo com a [Resolução n&#186; 012 do Colegiado de Sistemas de Informação (COSI)](/documentos/documentos/Resolucao-COSI-012-Trabalho-de-Conclusao-de-Curso-1-e-2-2-v20191217.pdf) de 7 de março de 2016 (com atualizações em 20 de março de 2018,  21 de outubro de 2018 e 17 de dezembro de 2019). Contribuições importantes ao modelo foram feitas pelo COSI e pela equipe da Biblioteca de João Monlevade.
-
-A primeira versão da classe e do modelo do DECSI foi desenvolvida pelo [Prof. Glauber Modolo Cabral](https://github.com/glaubersp). Em seguida, atualizações foram realizadas pelo aluno [Oto Braz](https://github.com/otobraz). As adequações às resoluções foram realizadas a partir das versões desenvolvidas por eles.
-
-Cursos e colegiados que **autorizaram** a utilização deste modelo:
-
-+ Colegiado de Engenharia de Computação (COEC) - a partir de Março/2019.
-
-Para a utilização deste documento em outros cursos **recomenda-se** a verificação junto ao colegiado em questão acerca do modelo apropriado.
-
-O modelo é uma versão personalizada da classe **abnTeX2** e utilizada de acordo como a licença associada ([LaTeX Project Public License v1.3c](https://www.latex-project.org/lppl/)). Informações sobre a classe **abnTeX2** podem ser obtidas no [site](http://www.abntex.net.br/) e no [Github](https://github.com/abntex/abntex2).
-
-Para facilitar a organização, os itens foram separados de acordo com a estrutura definida pela norma **ABNT NBR 14724:2011: _Informação e documentação - Trabalhos acadêmicos - Apresentação_**. Os grupos principais são _**pré-textuais**_, _**textuais**_ e _**pós-textuais**_, como apresentado a seguir:
-
-  + **pre-textuais** &rarr; dedicatoria, agradecimentos, epígrafe, resumos, dentre outros.
-  + **textuais** &rarr; capítulos da monografia.
-  + **pos-textuais** &rarr; apêndices e anexos.
-
-As demais pastas foram incluídas como apoio aos itens, além de conter arquivos complementares.
-
-  + **bib** &rarr; arquivo de referência bibliográfica - bibtex.
-  + **documentos** &rarr; resoluções COSI e normas.
-  + **config** &rarr; dados e pacotes.
-  + **img** &rarr; imagens e afins.
-
-**Atualizações:**
-
-  + 2019-03-12: v1.3
-    - Documento da Resolução COSI (version 20/03/2018, update 21/10/2018)
-    - Retirada da Ata de Defesa
-    - Criação do campo da disciplina do TCC [config/dados.tex](/config/dados.tex)
-    - Alteração do local do Termo de Responsabilidade. O documento está na penúltima página da monografia e não após a folha de aprovação, como nas versões anteriores.
-    - Inclusão da Declaração de Conformidade - última página da monografia.
-
-  + 2020-03-04: v1.3.1
-    - Retirada da Folha de aprovação - gerada a partir do SEI.
-    - Retirada do Termo de Responsabilidade (penúltima página); 
-    - Retidada da Declaração de Conformidade (última página).
+Este repositório contém o código LaTeX da monografia de Trabalho de Conclusão de Curso (TCC) apresentado ao Colegiado do Curso de Sistemas de Informação (COSI) do Departamento de Computação e Sistemas (DECSI) da Universidade Federal de Ouro Preto (UFOP), além de todos os scripts de processamento desenvolvidos para a análise.
 
 ---
 
-**Colegiado de Sistemas de Informação**  
-*Departamento de Computação e Sistemas  
-Instituto de Ciências Exatas e Aplicadas  
-Universidade Federal de Ouro Preto*
+## 📝 Resumo do Trabalho
+
+Este trabalho apresenta um estudo empírico comparativo de desempenho e uma classificação sistemática de gargalos operacionais entre duas redes Wi-Fi corporativas distintas (Ruckus Wireless e Ubiquiti UniFi) implantadas no campus universitário da UFOP. A análise baseia-se em dados reais de telemetria física (RSSI, ruído e retransmissões de pacotes) e telemetria lógica (clientes conectados e vazão de tráfego instantânea) coletados ao longo de 18 dias de monitoramento de produção.
+
+A metodologia abrange a padronização dos datasets, estatística descritiva, matrizes de correlação cruzada de Pearson e Spearman, testes estatísticos de hipóteses não-paramétricos (U de Mann-Whitney) e o agrupamento de Access Points via algoritmo de aprendizado de máquina não supervisionado K-Means para diagnóstico de rede.
 
 ---
+
+## 📂 Estrutura do Diretório da Monografia
+
+A estrutura do projeto LaTeX está organizada de acordo com as normas ABNT NBR 14724:2011 e os padrões do DECSI/UFOP:
+
+*   **`decsi-cosi-modelo-monografia.tex`**: Arquivo LaTeX principal a ser compilado.
+*   **`textuais/`**: Capítulos da monografia (Introdução, Revisão de Literatura, Metodologia, Coleta de Dados, Resultados de Estatística, Correlações, Testes e Gargalos, e Recomendações).
+*   **`pre-textuais/`**: Elementos como capa, folha de rosto, dedicatória, agradecimentos, resumos (português e inglês) e listas de ilustrações/tabelas.
+*   **`pos-textuais/`**:
+    *   `apendices/`: Contém os códigos de classificação de gargalos em Python (`apendice_b_classificador.tex`) e a relação detalhada dos scripts desenvolvidos (`apendice_c_scripts.tex`).
+    *   `anexos/`: Tabelas de especificações de OIDs SNMP e APIs.
+*   **`img/`**: Pasta contendo todos os gráficos de dispersão, histogramas, diagramas de caixa (boxplots), heatmaps e mapas de clusters gerados pelo pipeline de dados e incorporados ao texto.
+*   **`scripts/`**: Cópia dos scripts Python utilizados para rodar o pipeline completo de processamento (unificação de logs, padronização, análise de estatísticas, correlações, testes de hipóteses e classificação de gargalos).
+
+---
+
+## 🛠️ Instruções para Compilação do LaTeX
+
+O documento pode ser compilado localmente em qualquer distribuição LaTeX (como TeX Live ou MiKTeX) ou importado diretamente para plataformas online como o **Overleaf**.
+
+### Compilação Local via Linha de Comando:
+Recomenda-se utilizar o `latexmk` para gerenciar as dependências de referências bibliográficas de forma automática:
+```bash
+latexmk -pdf decsi-cosi-modelo-monografia.tex
+```
+
+Ou realize o ciclo clássico de compilação utilizando `pdflatex` e `bibtex`:
+```bash
+pdflatex decsi-cosi-modelo-monografia.tex
+bibtex decsi-cosi-modelo-monografia.aux
+pdflatex decsi-cosi-modelo-monografia.tex
+pdflatex decsi-cosi-modelo-monografia.tex
+```
+
+---
+
+## ⚙️ Scripts de Processamento de Dados
+
+A documentação específica de como configurar o ambiente Python e executar os scripts de processamento de telemetria encontra-se detalhada no arquivo de ajuda exclusivo em:
+👉 **[monografia/scripts/README.md](scripts/README.md)**
