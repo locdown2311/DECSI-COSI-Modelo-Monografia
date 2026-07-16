@@ -6,7 +6,7 @@ Este repositório contém o código LaTeX da monografia de Trabalho de Conclusã
 
 ## Resumo do Trabalho
 
-Este trabalho apresenta um estudo empírico comparativo de desempenho e uma classificação sistemática de gargalos operacionais entre duas redes Wi-Fi corporativas distintas (Ruckus Wireless e Ubiquiti UniFi) implantadas no campus universitário da UFOP. A análise baseia-se em dados reais de telemetria física (RSSI, ruído e retransmissões de pacotes) e telemetria lógica (clientes conectados e vazão de tráfego instantânea) coletados ao longo de 18 dias de monitoramento de produção.
+Este trabalho apresenta um estudo empírico comparativo de desempenho e uma classificação sistemática de gargalos operacionais entre duas redes Wi-Fi corporativas distintas (Ruckus Wireless e Ubiquiti UniFi) implantadas no campus universitário da UFOP. A análise baseia-se em dados reais de telemetria física (RSSI, ruído e retransmissões de pacotes) e telemetria lógica (clientes conectados e vazão de tráfego instantânea) coletados ao longo de 14 dias úteis de monitoramento de produção.
 
 A metodologia abrange a padronização dos datasets, estatística descritiva, matrizes de correlação cruzada de Pearson e Spearman, testes estatísticos de hipóteses não-paramétricos (U de Mann-Whitney) e o agrupamento de Access Points via algoritmo de aprendizado de máquina não supervisionado K-Means para diagnóstico de rede.
 

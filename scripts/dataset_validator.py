@@ -32,7 +32,7 @@ def run_validation(ruckus_path, unifi_path, output_report_path, plots_dir):
     dupes_removed_ruckus = count_orig_ruckus - count_clean_ruckus
     dupes_removed_unifi = count_orig_unifi - count_clean_unifi
     
-    # Salvar versões limpas (sobrescrever ou manter limpos)
+    # Salvar versões limpas
     df_ruckus_clean.to_csv(ruckus_path, index=False)
     df_unifi_clean.to_csv(unifi_path, index=False)
     
@@ -42,11 +42,16 @@ def run_validation(ruckus_path, unifi_path, output_report_path, plots_dir):
     
     min_ts_ruckus = df_ruckus_clean['timestamp'].min()
     max_ts_ruckus = df_ruckus_clean['timestamp'].max()
-    duration_ruckus = max_ts_ruckus - min_ts_ruckus
     
     min_ts_unifi = df_unifi_clean['timestamp'].min()
     max_ts_unifi = df_unifi_clean['timestamp'].max()
-    duration_unifi = max_ts_unifi - min_ts_unifi
+    
+    # Calcular dias úteis (segunda a sexta)
+    all_days_rk = pd.date_range(start=min_ts_ruckus.date(), end=max_ts_ruckus.date())
+    workdays_count_rk = len(all_days_rk[all_days_rk.dayofweek < 5])
+    
+    all_days_uf = pd.date_range(start=min_ts_unifi.date(), end=max_ts_unifi.date())
+    workdays_count_uf = len(all_days_uf[all_days_uf.dayofweek < 5])
     
     # 5. Percentual de dados ausentes
     missing_ruckus = df_ruckus_clean.isnull().mean() * 100
@@ -81,8 +86,6 @@ def run_validation(ruckus_path, unifi_path, output_report_path, plots_dir):
     # Gráfico 2: Mapa de Calor de Dados Ausentes
     fig, axes = plt.subplots(1, 2, figsize=(14, 6))
     
-    # Heatmap Ruckus (excluir colunas de string para visualização rápida ou usar amostragem)
-    # Mostra colunas com dados nulos
     sns.heatmap(df_ruckus_clean.isnull(), cbar=False, yticklabels=False, cmap='viridis', ax=axes[0])
     axes[0].set_title('Dados Ausentes - Ruckus', fontsize=12, fontweight='bold')
     
@@ -97,31 +100,31 @@ def run_validation(ruckus_path, unifi_path, output_report_path, plots_dir):
     
     # 7. Gerar Relatório Markdown
     report_content = f"""# Validação de Consistência dos Dados
-
+ 
 ## 1. Quantidade de Registros
-
+ 
 A tabela abaixo resume a quantidade de registros encontrados nos logs de telemetria antes e depois do processo de deduplicação (remoção de duplicados exatos).
-
+ 
 | Fabricante | Registros Originais | Registros Duplicados Removidos | Registros Limpos | % de Redundância |
 | :--- | :---: | :---: | :---: | :---: |
 | **Ruckus** | {count_orig_ruckus:,} | {dupes_removed_ruckus:,} | {count_clean_ruckus:,} | {(dupes_removed_ruckus / count_orig_ruckus * 100):.2f}% |
 | **UniFi** | {count_orig_unifi:,} | {dupes_removed_unifi:,} | {count_clean_unifi:,} | {(dupes_removed_unifi / count_orig_unifi * 100):.2f}% |
-
+ 
 *Nota: Registros duplicados ocorrem por sobreposição em polling repetido do coletor. A remoção evita viés nas análises estatísticas.*
-
+ 
 ## 2. Período Coberto pela Coleta
-
+ 
 | Fabricante | Data/Hora Inicial (Min) | Data/Hora Final (Max) | Duração Efetiva |
 | :--- | :---: | :---: | :---: |
-| **Ruckus** | {min_ts_ruckus.strftime('%d/%m/%Y %H:%M')} | {max_ts_ruckus.strftime('%d/%m/%Y %H:%M')} | {duration_ruckus} |
-| **UniFi** | {min_ts_unifi.strftime('%d/%m/%Y %H:%M')} | {max_ts_unifi.strftime('%d/%m/%Y %H:%M')} | {duration_unifi} |
-
-*Nota: Ambos os datasets cobrem o mesmo período temporal (de {min_ts_ruckus.strftime('%d/%m/%Y %H:%M')} a {max_ts_ruckus.strftime('%d/%m/%Y %H:%M')}), garantindo que os cenários de carga de rede sejam diretamente comparáveis.*
-
+| **Ruckus** | {min_ts_ruckus.strftime('%d/%m/%Y %H:%M')} | {max_ts_ruckus.strftime('%d/%m/%Y %H:%M')} | {workdays_count_rk} dias úteis |
+| **UniFi** | {min_ts_unifi.strftime('%d/%m/%Y %H:%M')} | {max_ts_unifi.strftime('%d/%m/%Y %H:%M')} | {workdays_count_uf} dias úteis |
+ 
+*Nota: Ambos os datasets cobrem o mesmo período temporal (de {min_ts_ruckus.strftime('%d/%m/%Y %H:%M')} a {max_ts_ruckus.strftime('%d/%m/%Y %H:%M')}, totalizando {workdays_count_rk} dias úteis de monitoramento efetivo após a exclusão de finais de semana), garantindo que os cenários de carga de rede sejam diretamente comparáveis.*
+ 
 ## 3. Dados Ausentes (Missing Values)
-
+ 
 O percentual de dados nulos ou ausentes para cada variável após a limpeza:
-
+ 
 | Coluna Padronizada | % Nulos Ruckus | % Nulos UniFi | Tipo de Dado |
 | :--- | :---: | :---: | :--- |
 | `timestamp` | {missing_ruckus['timestamp']:.2f}% | {missing_unifi['timestamp']:.2f}% | Datetime |
@@ -139,15 +142,15 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
 | `volume_tx_mb` | {missing_ruckus['volume_tx_mb']:.2f}% | {missing_unifi['volume_tx_mb']:.2f}% | Numérico |
 | `volume_rx_mb` | {missing_ruckus['volume_rx_mb']:.2f}% | {missing_unifi['volume_rx_mb']:.2f}% | Numérico |
 | `padrão` | {missing_ruckus['padrão']:.2f}% | {missing_unifi['padrão']:.2f}% | Categórico |
-
+ 
 ## 4. Tratamento de Valores Nulos
-
+ 
 *   **Link Speed no Ruckus**: A taxa de modulação física de TX (`link_speed_tx_mbps`) foi extraída com sucesso a partir do campo `throughput_rate` (em Kbps) nos logs de telemetria da controladora SmartZone. A taxa RX correspondente (`link_speed_rx_mbps`) não é informada nos logs brutos e é mantida como `NaN`.
 *   **Ruído (Noise) e Sinal (Signal) em Ruckus**: Alguns registros continham valores de sinal zerados ou vazios. Onde o sinal era -100 (vazio padrão) e SNR era 0, o ruído foi definido como NaN para evitar distorções de cálculo.
 *   **Valores Nulos na UniFi**: O dataset UniFi apresenta consistência total (0% de nulos nas métricas principais de telemetria).
-
+ 
 ## 5. Padronização das Unidades de Medida
-
+ 
 As colunas foram padronizadas da seguinte forma:
 1.  **Sinal e Ruído**: Potência medida em **dBm**.
 2.  **RSSI/SNR**: Medido em **dB** (ou índice relativo na UniFi).
@@ -155,11 +158,11 @@ As colunas foram padronizadas da seguinte forma:
 4.  **Volume de Dados**: Convertido em **MB** (Megabytes) acumulados por cliente no período de observação.
 5.  **Retransmissões**: Medidas em porcentagem (**%**) de pacotes retransmitidos.
 6.  **Link Speed**: Modulação de velocidade física convertida em **Mbps**.
-
+ 
 ## 6. Equivalência de Métricas (Mapeamento Ruckus vs UniFi)
-
+ 
 A tabela abaixo mostra a relação entre os campos extraídos de cada fabricante que representam as mesmas grandezas físicas:
-
+ 
 | Grandeza Física | Métrica Ruckus (Raw) | Métrica UniFi (Raw) | Coluna Padronizada Final |
 | :--- | :--- | :--- | :--- |
 | Potência do Sinal | `signal_rssi` | `signal` | `signal` (dBm) |
@@ -169,9 +172,9 @@ A tabela abaixo mostra a relação entre os campos extraídos de cada fabricante
 | Retransmissões | `tx_retries / (tx_pkts + tx_retries)` | `100 - (ccq / 10)` | `retransmissoes_pct` |
 | Volume Trafegado | `tx_bytes`, `rx_bytes` | `tx_bytes_r * uptime`, `rx_bytes_r * uptime` | `volume_tx_mb`, `volume_rx_mb` |
 | Modulação de Velocidade | `throughput_rate` | `tx_rate`, `rx_rate` | `link_speed_tx_mbps`, `link_speed_rx_mbps` |
-
+ 
 ## 7. Gráficos de Diagnóstico Gerados
-
+ 
 Os gráficos de validação foram salvos em:
 *   `diagnostico_temporal.png`: Mostra a atividade de registros ao longo do tempo de coleta.
 *   `diagnostico_dados_ausentes.png`: Mapa de calor identificando colunas com dados faltantes (especialmente Link Speed no Ruckus).
