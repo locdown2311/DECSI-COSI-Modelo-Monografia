@@ -22,7 +22,109 @@ A controladora física Ruckus SmartZone gerencia centralizadamente os Access Poi
 A controladora baseada em software UniFi Controller é instalada localmente no servidor de gerência para monitorar os rádios Ubiquiti das unidades de pesquisa e escritórios administrativos específicos. O UniFi Controller gerencia as configurações dos APs UniFi e disponibiliza os parâmetros físicos de rádio de cada cliente (como sinal RSSI e CCQ) por meio de um serviço HTTP API local estruturado em formato JSON.
 
 \subsection{Plataforma de Visualização (Grafana)}
-O Grafana é empregado pelos administradores do campus como plataforma de análise de dados operacionais em tempo real e visualização de métricas históricas. Ele consome dados de séries temporais das controladoras para alimentar painéis interativos que monitoram a quantidade de usuários ativos por setor, o consumo agregado de largura de banda e alertas de indisponibilidade de rádios.
+O Grafana é empregado nesse trabalho como plataforma de análise de dados operacionais em tempo real e visualização de métricas históricas. Ele consome dados de séries temporais das controladoras para alimentar painéis interativos que monitoram a quantidade de usuários ativos por setor, o consumo agregado de largura de banda e alertas de indisponibilidade de rádios.
+
+Para ilustrar o monitoramento operacional da infraestrutura, diversos painéis foram desenvolvidos e integrados à plataforma. A seguir, são apresentados os painéis organizados de acordo com os fabricantes Ruckus e UniFi:
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{img/grafana-ruckus-conexoes.png}
+		\caption{Clientes conectados ativamente}
+		\label{fig:ruckus_con_sub}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{img/grafana-ruckus-desconexoes.png}
+		\caption{Histórico de desconexões}
+		\label{fig:ruckus_desc_sub}
+	\end{subfigure}
+	\caption{Painéis do Grafana para conexões e desconexões históricas (Ruckus)}
+	\label{fig:grafana_ruckus_conexoes}
+	\fonte{Produzido pelos autores (2026).}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{img/grafana-ruckus-con-aps.png}
+		\caption{Visualização em pizza por AP}
+		\label{fig:ruckus_aps_sub1}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{img/grafana-ruckus-con-aps-2.png}
+		\caption{Visualização em linha temporal por AP}
+		\label{fig:ruckus_aps_sub2}
+	\end{subfigure}
+	\caption{Painéis do Grafana para conexões agregadas por Access Point (Ruckus)}
+	\label{fig:grafana_ruckus_aps}
+	\fonte{Produzido pelos autores (2026).}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{img/grafana-ruckus-2-5.png}
+		\caption{Divisão entre 2,4 GHz e 5 GHz}
+		\label{fig:ruckus_freq_sub}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{img/grafana-ruckus-banda.png}
+		\caption{Throughput médio por banda}
+		\label{fig:ruckus_banda_sub}
+	\end{subfigure}
+	\caption{Painéis do Grafana para distribuição de frequência e throughput (Ruckus)}
+	\label{fig:grafana_ruckus_bandas}
+	\fonte{Produzido pelos autores (2026).}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{img/grafana-ruckus-diagnostico.png}
+		\caption{Diagnóstico de conexões e canais}
+		\label{fig:ruckus_diag_sub}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{img/grafana-ruckus-heatmap.png}
+		\caption{Heatmap temporal de conexões}
+		\label{fig:ruckus_heat_sub}
+	\end{subfigure}
+	\caption{Painéis do Grafana para diagnóstico operacional e mapa de calor (Ruckus)}
+	\label{fig:grafana_ruckus_diagnostico}
+	\fonte{Produzido pelos autores (2026).}
+\end{figure}
+
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{img/grafana-unifi-conexoes.png}
+		\caption{Clientes conectados ativamente}
+		\label{fig:unifi_con_sub}
+	\end{subfigure}
+	\hfill
+	\begin{subfigure}[b]{0.48\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{img/grafana-unifi-consumo-usu.png}
+		\caption{Consumo acumulado por usuário}
+		\label{fig:unifi_cons_sub}
+	\end{subfigure}
+	\caption{Painéis do Grafana para conexões e consumo de tráfego (UniFi)}
+	\label{fig:grafana_unifi}
+	\fonte{Produzido pelos autores (2026).}
+\end{figure}
 
 \subsection{Scripts de Coleta Telemétrica}
 Os scripts coletores ativos foram codificados em linguagem Python e agendados para execução periódica no servidor de gerência. Os coletores utilizam a biblioteca \texttt{pysnmp} para interrogar periodicamente as OIDs da Ruckus Wireless e requisições HTTP autenticadas via biblioteca \texttt{requests} para consumir dados em JSON da API UniFi, gravando os logs brutos estruturados diariamente em disco.

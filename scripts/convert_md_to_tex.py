@@ -43,7 +43,8 @@ def clean_heading_title(title):
 
 def format_number_br(text):
     # 1. Substituir milhares com vírgula por marcador temporário: ex: 285,181 -> 285_TEMP_DOT_181
-    text = re.sub(r'(\d+),(\d{3})', r'\1_TEMP_DOT_\2', text)
+    # Usamos (?!\d) para evitar casar números decimais com 4 casas após a vírgula (ex: 0,3383)
+    text = re.sub(r'(\d+),(\d{3})(?!\d)', r'\1_TEMP_DOT_\2', text)
     
     # 2. Substituir decimais com ponto por vírgula: ex: -67.4 -> -67,4
     text = re.sub(r'(\d+)\.(\d+)', r'\1,\2', text)
