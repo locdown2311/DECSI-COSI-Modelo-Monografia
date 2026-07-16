@@ -2,14 +2,12 @@
 \setlength{\absparsep}{18pt} % ajusta o espaçamento dos parágrafos do resumo
 
 \begin{resumo}
- Segundo a \citeonline[3.1-3.2]{NBR6028:2003}, o resumo deve ressaltar o
- objetivo, o método, os resultados e as conclusões do documento. A ordem e a extensão
- destes itens dependem do tipo de resumo (informativo ou indicativo) e do
- tratamento que cada item recebe no documento original. O resumo deve ser
- precedido da referência do documento, com exceção do resumo inserido no
- próprio documento. (\ldots) As palavras-chave devem figurar logo abaixo do
- resumo, antecedidas da expressão Palavras-chave:, separadas entre si por
- ponto e finalizadas também por ponto.
+ Este trabalho apresenta uma análise comparativa e diagnóstica do desempenho de redes Wi-Fi empresariais heterogêneas utilizando telemetria física e lógica. 
+ O estudo baseia-se em um dataset coletado continuamente ao longo de 18 dias em um campus universitário de alta densidade de usuários, englobando duas arquiteturas de rede distintas (Ruckus Wireless e Ubiquiti UniFi), resultando em mais de 350 mil registros de telemetria processados. 
+ A metodologia proposta envolve um pipeline estruturado de limpeza, padronização, testes estatísticos de hipóteses e classificação heurística e não-supervisionada de gargalos de rede. 
+ Testes não-paramétricos de Mann-Whitney revelaram disparidades de desempenho estatisticamente significativas ($p < 0,001$) entre as bandas de 2,4~GHz e 5~GHz, além de divergências de taxas de retransmissão entre os fabricantes (UniFi com média de 22,1\% vs. Ruckus com 5,7\%). A classificação de gargalos indicou que o throughput dos clientes foi severamente atenuado por problemas de sinal de enlace (degradação de até 89,3\% na vazão sob sinal fraco) e instabilidade de roaming, que reduziu o throughput médio dos clientes do Ruckus em 38,8\%. 
+ Por fim, o algoritmo de agrupamento K-Means ($K=4$) foi validado por meio das métricas de Silhueta (0,3383) e Davies-Bouldin (0,7953) para a rede Ruckus, comprovando a eficácia da segmentação de Access Points em perfis operacionais distintos e a detecção de anomalias no meio físico de transmissão.
+  A pesquisa contribui com uma metodologia reprodutível e escalável para o diagnóstico automatizado e gerenciamento de qualidade de serviço em redes sem fio corporativas.
 
- \textbf{Palavras-chaves}: latex. abntex. editoração de texto.
+ \textbf{Palavras-chave}: Telemetria de Rede. Wi-Fi Corporativo. K-Means. Análise Estatística. Diagnóstico de Gargalos.
 \end{resumo}
