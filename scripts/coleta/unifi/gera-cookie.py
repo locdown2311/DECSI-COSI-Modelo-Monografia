@@ -4,12 +4,12 @@ import urllib3
 # Desativa avisos de SSL
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
-base_url = "https://200.239.152.81:8443"
+base_url = "https://IPMAQUINA:8443"
 login_url = f"{base_url}/api/login"
 
 payload = {
-    "username": "igortcc",
-    "password": "Igorcg23.",
+    "username": "USUARIO",
+    "password": "SENHA",
     "strict": True
 }
 
