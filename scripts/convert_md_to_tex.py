@@ -42,13 +42,16 @@ def clean_heading_title(title):
     return title.strip()
 
 def format_number_br(text):
-    # 1. Substituir milhares formatados com vírgula americana: ex: 285,181 -> 285.181
-    text = re.sub(r'\b(\d+),(\d{3})\b', r'\1.\2', text)
+    # 1. Substituir milhares com vírgula por marcador temporário: ex: 285,181 -> 285_TEMP_DOT_181
+    text = re.sub(r'(\d+),(\d{3})', r'\1_TEMP_DOT_\2', text)
     
-    # 2. Substituir decimais formatados com ponto: ex: -67.4 -> -67,4
+    # 2. Substituir decimais com ponto por vírgula: ex: -67.4 -> -67,4
     text = re.sub(r'(\d+)\.(\d+)', r'\1,\2', text)
     
-    # 3. Restaurar nomes próprios como 802.11
+    # 3. Restaurar o marcador temporário para ponto
+    text = text.replace('_TEMP_DOT_', '.')
+    
+    # 4. Restaurar nomes próprios como 802.11
     text = text.replace('802,11', '802.11')
     
     return text
