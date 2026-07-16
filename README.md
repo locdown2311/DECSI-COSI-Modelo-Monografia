@@ -4,7 +4,7 @@ Este repositório contém o código LaTeX da monografia de Trabalho de Conclusã
 
 ---
 
-## 📝 Resumo do Trabalho
+## Resumo do Trabalho
 
 Este trabalho apresenta um estudo empírico comparativo de desempenho e uma classificação sistemática de gargalos operacionais entre duas redes Wi-Fi corporativas distintas (Ruckus Wireless e Ubiquiti UniFi) implantadas no campus universitário da UFOP. A análise baseia-se em dados reais de telemetria física (RSSI, ruído e retransmissões de pacotes) e telemetria lógica (clientes conectados e vazão de tráfego instantânea) coletados ao longo de 18 dias de monitoramento de produção.
 
@@ -12,7 +12,7 @@ A metodologia abrange a padronização dos datasets, estatística descritiva, ma
 
 ---
 
-## 📂 Estrutura do Diretório da Monografia
+## Estrutura do Diretório da Monografia
 
 A estrutura do projeto LaTeX está organizada de acordo com as normas ABNT NBR 14724:2011 e os padrões do DECSI/UFOP:
 
@@ -27,7 +27,7 @@ A estrutura do projeto LaTeX está organizada de acordo com as normas ABNT NBR 1
 
 ---
 
-## 🛠️ Instruções para Compilação do LaTeX
+## Instruções para Compilação do LaTeX
 
 O documento pode ser compilado localmente em qualquer distribuição LaTeX (como TeX Live ou MiKTeX) ou importado diretamente para plataformas online como o **Overleaf**.
 
