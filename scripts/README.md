@@ -68,7 +68,7 @@ A execução do processamento segue uma sequência lógica estrita. Você pode r
 
 ---
 
-## 🏃 Como Rodar
+## 📦 Como Rodar
 
 Para executar o pipeline de ponta a ponta e regerar todos os resultados, tabelas CSV e gráficos, posicione-se no diretório base do projeto e execute:
 
