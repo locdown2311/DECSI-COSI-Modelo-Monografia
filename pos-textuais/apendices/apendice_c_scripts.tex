@@ -7,17 +7,19 @@ Este apêndice descreve a estrutura de scripts desenvolvida para a ingestão, li
 
 Todo o código-fonte correspondente e as instruções detalhadas de configuração do ambiente de execução estão disponíveis publicamente no repositório do projeto hospedado no GitHub, acessível por meio do seguinte endereço:
 \begin{center}
-    \url{https://github.com/SEU_USUARIO/SEU_REPOSITORIO}
+    \url{https://github.com/locdown2311/DECSI-COSI-Modelo-Monografia/tree/v2/scripts}
 \end{center}
 
 Abaixo são detalhados os principais scripts do pipeline executados para a consolidação dos resultados apresentados nesta monografia:
 
 \begin{enumerate}
     \item \textbf{\texttt{unify\_logs.py}}: Consolida os arquivos de log diários gerados pelas controladoras em um único arquivo bruto unificado para cada fabricante, aplicando filtros iniciais de integridade de data.
-    \item \textbf{\texttt{standardizer.py}}: Realiza a limpeza de registros inválidos (como MACs vazios ou instâncias sem leitura), converte as grandezas para escalas físicas comuns (e.g., potência de sinal recebido em dBm e vazão em Mbps) e mapeia os nomes legíveis dos Access Points cadastrados.
+    \item \textbf{\texttt{dataset\_validator.py}}: Realiza o diagnóstico inicial de qualidade de dados brutos consolidados, identificando falhas de amostragem temporal, taxas de medições incompletas e preenchendo ou descartando registros corrompidos.
+    \item \textbf{\texttt{data\_standardizer.py}}: Realiza a limpeza fina de registros inválidos (como MACs vazios ou instâncias sem leitura), converte as grandezas para escalas físicas comuns (e.g., potência de sinal recebido em dBm e vazão em Mbps) e mapeia os nomes legíveis dos Access Points cadastrados.
     \item \textbf{\texttt{descriptive\_analyzer.py}}: Executa o cálculo das estatísticas descritivas básicas (médias, medianas, quartis e desvios padrão) de todos os parâmetros físicos e plota histogramas e diagramas de caixa (\textit{boxplots}) comparativos.
+    \item \textbf{\texttt{visualizador\_dados.py}}: Gera gráficos temporais de distribuição de clientes únicos ao longo dos dias e os mapas de calor de densidade horária de dispositivos associados por fabricante.
     \item \textbf{\texttt{analisador\_correlacoes.py}}: Computa as matrizes de correlação cruzada usando os coeficientes de Pearson e Spearman, gerando os mapas de calor gerais e gráficos de dispersão específicos entre variáveis críticas.
     \item \textbf{\texttt{analisador\_testes.py}}: Aplica os testes de normalidade de Shapiro-Wilk e de significância estatística U de Mann-Whitney para validação das hipóteses, acompanhado do cálculo do tamanho de efeito operacional (\textit{effect size} $r$ e $d$).
-    \item \textbf{\texttt{classificador\_gargalos.py}}: Executa a classificação heurística de gargalos operacionais de rede (G1 a G5), executa o agrupamento de Access Points via algoritmo K-Means e gera os gráficos correspondentes de distribuição de carga.
+    \item \textbf{\texttt{classificador\_gargalos.py}}: Executa a classificação heurística de gargalos operacionais de rede (G1 a G5), realiza o agrupamento de Access Points via algoritmo K-Means e gera os gráficos correspondentes de distribuição de carga.
     \item \textbf{\texttt{run\_pipeline.py}}: Script orquestrador central que executa todo o pipeline de processamento na sequência lógica correta, gerando as tabelas em CSV e convertendo os relatórios finais.
 \end{enumerate}
