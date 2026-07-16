@@ -98,28 +98,132 @@ As métricas de telemetria física foram consolidadas e parametrizadas. Dentre e
 	onde $n \ge 2$ representa o número de dispositivos ativos e $x_i$ é a taxa de throughput individual obtida pelo cliente $i$ (Mbps). O índice varia estritamente no intervalo $[1/n, 1.0]$. Um valor de $J = 1.0$ representa equidade perfeita, enquanto valores próximos de $1/n$ sinalizam monopolização do canal de RF por poucos clientes (\textit{airtime starvation}).
 \end{itemize}
 
+\subsection{Modelagem e Justificativa dos Limiares de Gargalos (G1 a G5)}
+\label{subsec:metodologia_gargalos_justificativa}
+
+Para classificar e quantificar os fatores de perda de desempenho de forma automatizada no pipeline de dados, implementou-se um classificador heurístico baseado em limiares de decisão definidos na literatura de redes de computadores e nas diretrizes técnicas de fabricantes líderes do setor (como Cisco, Apple e Ruckus Wireless):
+
+\begin{enumerate}
+    \item \textbf{G1 – Baixa Qualidade de Enlace (Sinal recebido $< -75$~dBm)}: O limiar físico de $-75$~dBm representa a transição crítica de cobertura para níveis marginais ou instáveis em redes 802.11 corporativas, conforme diretrizes de planejamento de RF da Cisco Systems \cite{cisco2020design}. Acima de $-70$~dBm, garante-se uma relação sinal-ruído (SNR) estável para modulações de alto throughput. Abaixo de $-75$~dBm, a atenuação do sinal no ar reduz o SNR para patamares críticos (próximos de 10 a 15 dB). Esta degradação física eleva de forma exponencial a taxa de erro de bit (BER), forçando os rádios a usarem esquemas de modulação de baixa velocidade (como BPSK ou QPSK). Sob o protocolo 802.11 \cite{gast2005}, quadros corrompidos falham na validação de CRC (\textit{Cyclic Redundancy Check}) e não são confirmados com pacotes de confirmação (ACK) pelo receptor, o que obriga o transmissor a retransmiti-los sucessivamente, gerando picos na taxa de retransmissão de quadros.
+    
+    \item \textbf{G2 – Congestionamento do Meio Físico (Clientes por AP $\ge 15$)}: O padrão Wi-Fi baseia-se no protocolo de acesso ao meio CSMA/CA \cite{gast2005}, no qual os dispositivos realizam escuta de canal e aguardam tempos aleatórios de recuo (\textit{backoff}) para evitar colisões. À medida que a quantidade de clientes concorrentes associados ao mesmo rádio físico cresce, a probabilidade de colisões aéreas simultâneas escala exponencialmente, conforme modelado matematicamente por Bianchi \cite{bianchi2000}. O limiar de $\ge 15$ clientes conectados e ativos simultaneamente no mesmo AP é adotado como ponto de transição onde o tempo de canal livre (\textit{airtime}) começa a ser disputado, gerando latência e perda de capacidade útil global do rádio.
+    
+    \item \textbf{G3 – Interferência / SNR Ruim (Ruído $> -90$~dBm OU SNR $< 20$~dB com sinal $\ge -75$~dBm)}: A decodificação lógica de modulações de alta taxa de transferência (como QAM-64 ou superior) exige um SNR mínimo saudável (geralmente $\ge 20$~dB) \cite{gast2005}. Mesmo que o sinal físico bruto seja considerado forte (sinal $\ge -75$~dBm), a presença de ruído de fundo elevado (ruído $> -90$~dBm) gerado por interferências de co-canal ou fontes não-Wi-Fi (como Bluetooth, fornos de micro-ondas e telefones sem fio operando na banda comum de 2,4~GHz) corrompe a recepção lógica, inviabilizando modulações rápidas e provocando retransmissões frequentes.
+    
+    \item \textbf{G4 – Instabilidade de Roaming (Mudança de AP $> 5$ vezes no intervalo diário)}: O trânsito excessivo de um mesmo dispositivo cliente entre diferentes Access Points em um curto período (efeito conhecido na literatura como \textit{ping-pong effect}) \cite{gast2005} costuma ser desencadeado por instabilidades locais de cobertura ou sombreamento de RF. Como cada transição de AP exige procedimentos de desassociação, re-autenticação WPA2/WPA3 e atualizações de tabelas de roteamento na controladora, o tráfego de dados útil do usuário é interrompido temporariamente a cada troca de rádio, degradando a taxa de vazão média obtida.
+    
+    \item \textbf{G5 – Gargalo Cabeado (Throughput agregado do AP $\ge 90$~Mbps)}: Os pontos de acesso mais antigos ou conectados a switches de legado possuem portas de uplink cabeado do tipo Fast Ethernet, cujo limite de transmissão física nominal é limitado a 100~Mbps. Descontando-se os cabeçalhos de controle das camadas de rede e transporte (TCP/IP), a taxa de throughput agregado útil máxima e real de dados situa-se em torno de 90 a 95~Mbps. Quando o tráfego somado de todos os clientes sem fio atinge o patamar de $\ge 90$~Mbps, a interface física cabeada de uplink entra em saturação de cabo, impedindo que os clientes consumam mais banda mesmo que o enlace sem fio de rádio possua capacidade aérea excedente.
+\end{enumerate}
+
 \section{Estratégia de Análise Estatística}
 \label{sec:metodologia_estrategia}
 
-O pipeline de análise quantitativa é dividido em três blocos metodológicos principais:
-\begin{enumerate}
-	\item \textbf{Análise Exploratória e de Correlação}: Verificação do comportamento das variáveis numéricas calculando os coeficientes de correlação de Pearson ($r_p$) para relações lineares e de Spearman ($r_s$) para relações monotônicas não-lineares, permitindo cruzar parâmetros como sinal físico, ruído e retransmissões;
-	\item \textbf{Testes Estatísticos de Comparação}: Para testar formalmente se as diferenças observadas entre fabricantes e bandas de frequência são estatisticamente significativas, aplica-se primeiramente o teste de Shapiro-Wilk para avaliar a normalidade das distribuições. Como as métricas físicas de rede Wi-Fi não seguem uma distribuição normal, emprega-se o teste não-paramétrico U de Mann-Whitney para comparar as medianas corporativas;
-	\item \textbf{Agrupamento Não-Supervisionado (K-Means)}: Para mapear o perfil operacional dos rádios sem vieses de limiares manuais, implementou-se a clusterização via algoritmo \textit{K-Means} com $K=4$ grupos para classificar os APs no espaço métrico multidimensional das variáveis consolidada do rádio $j$:
-	
-	\begin{equation}
-	\label{eq:features_kmeans_metodologia}
-	X_j = \{ C_j, T_j, S_j, R_j \}
-	\end{equation}
+O pipeline de análise quantitativa da pesquisa está estruturado sobre métodos de inferência estatística indutiva e análise exploratória multivariada. O objetivo é assegurar o rigor científico na validação das hipóteses de rede e fundamentar de forma estatística o comportamento operacional dos Access Points de ambos os fabricantes.
 
-	onde:
-	\begin{itemize}
-		\item $C_j$ representa a média de dispositivos clientes conectados simultaneamente ao rádio $j$;
-		\item $T_j$ representa a média de vazão agregada (\textit{throughput}) do rádio $j$, mensurada em Mbps;
-		\item $S_j$ representa a média de potência de sinal físico recebido (\textit{signal}) no rádio $j$, medida em dBm;
-		\item $R_j$ representa a média da taxa de retransmissão de quadros de dados físicos no rádio $j$, expressa em percentual.
-	\end{itemize}
+\subsection{Coeficientes de Correlação de Pearson e Spearman}
+\label{subsec:metodologia_correlacao_teoria}
+
+Para mensurar a força e o sentido da associação entre os parâmetros de radiofrequência e vazão de tráfego dos clientes, aplicaram-se dois tipos distintos de coeficientes de correlação:
+
+\begin{enumerate}
+    \item \textbf{Coeficiente de Correlação Linear de Pearson ($r_p$)}: Avalia a força de uma relação linear entre duas variáveis contínuas $X$ e $Y$. A estatística é dada pela Equação~\ref{eq:pearson_formula}:
+    
+    \begin{equation}
+    \label{eq:pearson_formula}
+    r_p = \frac{\sum_{i=1}^{N} (X_i - \bar{X})(Y_i - \bar{Y})}{\sqrt{\sum_{i=1}^{N} (X_i - \bar{X})^2 \sum_{i=1}^{N} (Y_i - \bar{Y})^2}}
+    \end{equation}
+    
+    O coeficiente de Pearson pressupõe a existência de linearidade, variáveis intervalares contínuas e distribuição normal conjunta das variáveis. Como desvantagem principal, o coeficiente de Pearson apresenta alta sensibilidade a pontos atípicos (\textit{outliers}), os quais podem distorcer o coeficiente mesmo sob a vigência de dependência monotônica não-linear.
+
+    \item \textbf{Coeficiente de Correlação de Postos de Spearman ($r_s$)}: Trata-se de uma métrica não-paramétrica que mede a intensidade e o sentido de uma relação monotônica (crescente ou decrescente, não necessariamente linear) entre duas variáveis. A formulação é baseada nos postos (\textit{ranks}) de ordenação dos dados, conforme definido pela Equação~\ref{eq:spearman_formula}:
+    
+    \begin{equation}
+    \label{eq:spearman_formula}
+    r_s = 1 - \frac{6 \sum_{i=1}^{N} d_i^2}{N(N^2 - 1)}
+    \end{equation}
+    
+    onde $d_i = \mathrm{rg}(X_i) - \mathrm{rg}(Y_i)$ representa a diferença entre os postos das observações pareadas de $X$ e $Y$. O coeficiente de Spearman é robusto na presença de valores atípicos e não exige o pressuposto de normalidade dos dados, sendo a métrica ideal para caracterizar grandezas telemétricas com distribuições altamente assimétricas ou relações limitadas por limites operacionais físicos (como a relação exponencial do sinal de rádio e o throughput).
 \end{enumerate}
+
+\subsection{Pressupostos de Normalidade e Escolha de Testes Comparativos}
+\label{subsec:metodologia_normalidade_teoria}
+
+Antes de aplicar qualquer inferência comparativa entre as médias e distribuições de throughput e sinal físico das sub-redes ou bandas de frequência, faz-se necessário testar o pressuposto de gaussianidade dos dados:
+
+\begin{itemize}
+    \item \textbf{Teste de Normalidade de Shapiro-Wilk}: Avalia a hipótese nula ($H_0$) de que uma amostra provém de uma população normalmente distribuída. O teste calcula a estatística $W$ por meio da Equação~\ref{eq:shapiro_formula}:
+    
+    \begin{equation}
+    \label{eq:shapiro_formula}
+    W = \frac{\left( \sum_{i=1}^{n} a_i X_{(i)} \right)^2}{\sum_{i=1}^{n} (X_i - \bar{X})^2}
+    \end{equation}
+    
+    onde $X_{(i)}$ é o $i$-ésimo menor valor ordenado da amostra e os pesos $a_i$ derivam da covariância de estatísticas de ordem normais. Adotou-se o nível de significância de $\alpha = 0,05$. Caso o p-valor obtido seja menor que $\alpha$, a hipótese nula de normalidade é formalmente rejeitada. Dado o tamanho amostral massivo desta pesquisa ($N > 350.000$), o teste de Shapiro-Wilk foi aplicado a subamostras aleatórias uniformes representativas de $5.000$ observações (conforme limites computacionais da modelagem de Shapiro-Wilk).
+\end{itemize}
+
+Se a normalidade dos dados fosse confirmada, o teste paramétrico \textbf{Teste t de Welch} (uma variante do teste t de Student para duas amostras independentes com variâncias populacionais desiguais) seria utilizado para comparar as médias. A estatística $t$ de Welch é definida por:
+
+\begin{equation}
+\label{eq:welch_formula}
+t = \frac{\bar{X}_A - \bar{X}_B}{\sqrt{\frac{s_A^2}{n_A} + \frac{s_B^2}{n_B}}}
+\end{equation}
+
+onde $\bar{X}$, $s$ e $n$ são a média amostral, desvio padrão amostral e tamanho da amostra dos grupos $A$ e $B$. A aplicação desse teste paramétrico, contudo, é invalidada quando as amostras violam gravemente os pressupostos de normalidade. Grandezas de rede Wi-Fi como throughput e retransmissões exibem forte assimetria à direita (com alta concentração de registros nulos de ociosidade) e múltiplos picos localizados, tornando os testes paramétricos propensos a erros graves de inferência.
+
+\subsection{Teste U de Mann-Whitney e Cálculo do Tamanho do Efeito}
+\label{subsec:metodologia_mann_whitney_teoria}
+
+Diante da constatação da não-normalidade generalizada das grandezas telemétricas, a alternativa correta e robusta é a adoção de testes não-paramétricos de postos independentes:
+
+\begin{itemize}
+    \item \textbf{Teste U de Mann-Whitney (ou Wilcoxon Rank-Sum)}: Utilizado para comparar se as distribuições de dois grupos independentes diferem significativamente. O teste ordena de forma unificada os dados de ambos os grupos e calcula a estatística de postos para cada grupo ($U_A$ e $U_B$), conforme as Equações~\ref{eq:mann_whitney_1} e~\ref{eq:mann_whitney_2}:
+    
+    \begin{equation}
+    \label{eq:mann_whitney_1}
+    U_A = n_A n_B + \frac{n_A(n_A + 1)}{2} - R_A
+    \end{equation}
+    
+    \begin{equation}
+    \label{eq:mann_whitney_2}
+    U_B = n_A n_B + \frac{n_B(n_B + 1)}{2} - R_B
+    \end{equation}
+    
+    onde $n_A$ e $n_B$ representam o tamanho amostral de cada grupo e $R_A$ e $R_B$ representam a soma dos postos atribuídos a cada observação correspondente. A estatística de teste final é definida pelo menor valor entre os postos ($U = \min(U_A, U_B)$). O teste avalia se a probabilidade de uma amostra retirada aleatoriamente de um grupo ser maior do que uma amostra retirada do outro grupo é igual a $0,5$ (hipótese nula de igualdade distribucional).
+\end{itemize}
+
+Em pesquisas aplicadas que envolvem dados de tráfego massivos (como o dataset de monitoramento contínuo deste estudo com centenas de milhares de linhas), o poder estatístico dos testes inferenciais aproxima-se de $1,0$. Nessas circunstâncias, diferenças numéricas insignificantes na prática (por exemplo, uma diferença infinitesimal no throughput ou RSSI médio) resultam inevitavelmente em p-valores menores do que $0,001$, induzindo a erros de interpretação sobre a relevância prática dos achados. 
+
+Para contornar o efeito do tamanho amostral sobre o p-valor, utilizou-se a estatística do \textbf{Tamanho do Efeito (\textit{Effect Size})}. A magnitude de efeito do teste de Mann-Whitney é quantificada pela correlação bisserial de postos (\textit{rank-biserial correlation} $r$), derivada da estatística padronizada normalizada $Z$ do teste de hipótese, conforme denotado na Equação~\ref{eq:effect_size_formula}:
+
+\begin{equation}
+\label{eq:effect_size_formula}
+r = \frac{|Z|}{\sqrt{N}}
+\end{equation}
+
+onde $N$ representa o número total de amostras dos dois grupos agregados ($N = n_A + n_B$). Os coeficientes resultantes são classificados segundo a classificação de Cohen para interpretação de relevância prática de rede:
+\begin{itemize}
+    \item $|r| \ge 0,1$: tamanho de efeito pequeno (pouco impacto prático no dia a dia da rede);
+    \item $|r| \ge 0,3$: tamanho de efeito médio (relevância operacional perceptível);
+    \item $|r| \ge 0,5$: tamanho de efeito grande (impacto prático dominante na infraestrutura).
+\end{itemize}
+
+\subsection{Agrupamento Não-Supervisionado (K-Means)}
+\label{subsec:metodologia_kmeans_teoria}
+
+Para mapear de forma objetiva o perfil operacional dos rádios sem vieses de limiares de decisão manuais, implementou-se a clusterização via algoritmo \textit{K-Means} com $K=4$ grupos para classificar os APs no espaço métrico multidimensional das variáveis consolidada do rádio $j$:
+
+\begin{equation}
+\label{eq:features_kmeans_metodologia}
+X_j = \{ C_j, T_j, S_j, R_j \}
+\end{equation}
+
+onde:
+\begin{itemize}
+    \item $C_j$ representa a média de dispositivos clientes conectados simultaneamente ao rádio $j$;
+    \item $T_j$ representa a média de vazão agregada (\textit{throughput}) do rádio $j$, mensurada em Mbps;
+    \item $S_j$ representa a média de potência de sinal físico recebido (\textit{signal}) no rádio $j$, medida em dBm;
+    \item $R_j$ representa a média da taxa de retransmissão de quadros de dados físicos no rádio $j$, expressa em percentual.
+\end{itemize}
 
 \section{Hipóteses de Pesquisa}
 \label{sec:metodologia_hipoteses}
