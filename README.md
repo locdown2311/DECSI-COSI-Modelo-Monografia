@@ -1,4 +1,4 @@
-# Análise Comparativa Telemétrica de Desempenho e Gargalos em Redes Wi-Fi Corporativas: Ruckus vs. UniFi
+# Caracterização de gargalos em redes 802.11 em ambientes de alta densidade: estudo de caso em WLAN universitária.
 
 Este repositório contém o código LaTeX da monografia de Trabalho de Conclusão de Curso (TCC) apresentado ao Colegiado do Curso de Sistemas de Informação (COSI) do Departamento de Computação e Sistemas (DECSI) da Universidade Federal de Ouro Preto (UFOP), além de todos os scripts de processamento desenvolvidos para a análise.
 
