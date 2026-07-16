@@ -8,8 +8,7 @@ Este relatório descreve a validação e limpeza realizada nos datasets de telem
 
 A tabela abaixo resume a quantidade de registros encontrados nos logs de telemetria antes e depois do processo de deduplicação (remoção de duplicados exatos).
 
-
-\begin{table}[htb]
+\begin{table}[H]
 \IBGEtab{%
   \caption{Quantidade de Registros}%
   \label{tab:data_validacao_de_dados_1}%
@@ -28,12 +27,12 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
   \fonte{Produzido pelos autores.}%
 }
 \end{table}
+
 \textit{Nota: Registros duplicados ocorrem por sobreposição em polling repetido do coletor. A remoção evita viés nas análises estatísticas.}
 
 \subsection{Período Coberto pela Coleta}
 
-
-\begin{table}[htb]
+\begin{table}[H]
 \IBGEtab{%
   \caption{Período Coberto pela Coleta}%
   \label{tab:data_validacao_de_dados_2}%
@@ -52,26 +51,16 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
   \fonte{Produzido pelos autores.}%
 }
 \end{table}
+
 \textit{Nota: Ambos os datasets cobrem o mesmo período temporal (de 23/06/2026 00:00 a 10/07/2026 23:55), garantindo que os cenários de carga de rede sejam diretamente comparáveis.}
 
 \subsection{Dados Ausentes (Missing Values)}
 
 O percentual de dados nulos ou ausentes para cada variável após a limpeza:
 
-
-\subsection{Tratamento de Valores Nulos}
-
-\begin{itemize}
-  \item \textbf{Link Speed no Ruckus}: A taxa de modulação física de TX (`link\_speed\_tx\_mbps`) foi extraída com sucesso a partir do campo `throughput\_rate` (em Kbps) nos logs de telemetria da controladora SmartZone. A taxa RX correspondente (`link\_speed\_rx\_mbps`) não é informada nos logs brutos e é mantida como `NaN`.
-  \item \textbf{Ruído (Noise) e Sinal (Signal) em Ruckus}: Alguns registros continham valores de sinal zerados ou vazios. Onde o sinal era -100 (vazio padrão) e SNR era 0, o ruído foi definido como NaN para evitar distorções de cálculo.
-  \item \textbf{Valores Nulos na UniFi}: O dataset UniFi apresenta consistência total (0\% de nulos nas métricas principais de telemetria).
-
-\end{itemize}
-\subsection{Padronização das Unidades de Medida}
-
-\begin{table}[htb]
+\begin{table}[H]
 \IBGEtab{%
-  \caption{Padronização das Unidades de Medida}%
+  \caption{Dados Ausentes (Missing Values)}%
   \label{tab:data_validacao_de_dados_3}%
 }{%
   \resizebox{\textwidth}{!}{%
@@ -101,6 +90,17 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
   \fonte{Produzido pelos autores.}%
 }
 \end{table}
+
+\subsection{Tratamento de Valores Nulos}
+
+\begin{itemize}
+  \item \textbf{Link Speed no Ruckus}: A taxa de modulação física de TX (`link\_speed\_tx\_mbps`) foi extraída com sucesso a partir do campo `throughput\_rate` (em Kbps) nos logs de telemetria da controladora SmartZone. A taxa RX correspondente (`link\_speed\_rx\_mbps`) não é informada nos logs brutos e é mantida como `NaN`.
+  \item \textbf{Ruído (Noise) e Sinal (Signal) em Ruckus}: Alguns registros continham valores de sinal zerados ou vazios. Onde o sinal era -100 (vazio padrão) e SNR era 0, o ruído foi definido como NaN para evitar distorções de cálculo.
+  \item \textbf{Valores Nulos na UniFi}: O dataset UniFi apresenta consistência total (0\% de nulos nas métricas principais de telemetria).
+
+\end{itemize}
+\subsection{Padronização das Unidades de Medida}
+
 As colunas foram padronizadas da seguinte forma:
 \begin{enumerate}
   \item \textbf{Sinal e Ruído}: Potência medida em \textbf{dBm}.
@@ -115,8 +115,7 @@ As colunas foram padronizadas da seguinte forma:
 
 A tabela abaixo mostra a relação entre os campos extraídos de cada fabricante que representam as mesmas grandezas físicas:
 
-
-\begin{table}[htb]
+\begin{table}[H]
 \IBGEtab{%
   \caption{Equivalência de Métricas (Mapeamento Ruckus vs UniFi)}%
   \label{tab:data_validacao_de_dados_4}%

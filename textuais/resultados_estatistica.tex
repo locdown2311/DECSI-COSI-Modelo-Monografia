@@ -6,42 +6,9 @@ Este relatório apresenta as métricas de estatística descritiva (média, media
 
 \subsection{Tabela Geral de Estatísticas Descritivas}
 
-
-\subsection{Principais Descobertas e Comparações}
-
-\begin{enumerate}
-  \item \textbf{Intensidade do Sinal (Signal)}:
-  \begin{itemize}
-    \item O sinal físico real (em dBm) pode ser comparado diretamente.
-    \item Valores medianos e quartis mostram a cobertura de sinal observada para os clientes conectados de cada fabricante.
-\end{itemize}
-  \item \textbf{Throughput vs Volume}:
-  \begin{itemize}
-    \item \textbf{Throughput} representa a taxa instantânea calculada durante as atividades (Mbps).
-    \item \textbf{Volume} representa a transferência acumulada total no período de conexão dos clientes (MB).
-    \item Note que a UniFi tem menor número de amostras, mas o comportamento estatístico da taxa de transferência e do volume calculado segue uma escala e distribuição coerentes com os dados de produção do Ruckus.
-\end{itemize}
-  \item \textbf{Qualidade de Enlace e Retransmissões}:
-  \begin{itemize}
-    \item A taxa de retransmissões do Ruckus é derivada da proporção de pacotes TX de retransmissão sobre o total de tentativas.
-    \item A taxa de retransmissões da UniFi é estimada a partir da métrica CCQ (Client Connection Quality), sendo `100 - CCQ/10`.
-\end{itemize}
-  \item \textbf{Link Speed}:
-  \begin{itemize}
-    \item A velocidade física negociada no download (TX Link Speed) está disponível para ambos os fabricantes (extraída de `throughput\_rate` no Ruckus e de `tx\_rate` na UniFi). A velocidade física de upload (RX) é exclusiva da UniFi.
-    \item O Ruckus negocia taxas físicas médias significativamente maiores (média de 164.95 Mbps contra 64.37 Mbps da UniFi).
-\end{itemize}
-  \item \textbf{Índice de Equidade da Rede (Jain's Fairness Index)}:
-  \begin{itemize}
-    \item Mede o compartilhamento de throughput entre os clientes conectados simultaneamente (com pelo menos 2 usuários ativos).
-    \item Valores de média e mediana próximos de 1.0 indicam partilha equilibrada, enquanto valores próximos de 0 sugerem monopolização da banda por poucos dispositivos.
-    \item Os resultados indicam um compartilhamento de recursos que pode ser estatisticamente comparado para avaliar a qualidade de serviço de cada marca.
-
-\end{itemize}
-\end{enumerate}
-\begin{table}[htb]
+\begin{table}[H]
 \IBGEtab{%
-  \caption{Principais Descobertas e Comparações}%
+  \caption{Tabela Geral de Estatísticas Descritivas}%
   \label{tab:data_estatistica_descritiva_1}%
 }{%
   \resizebox{\textwidth}{!}{%
@@ -80,3 +47,36 @@ Este relatório apresenta as métricas de estatística descritiva (média, media
   \fonte{Produzido pelos autores.}%
 }
 \end{table}
+
+\subsection{Principais Descobertas e Comparações}
+
+\begin{enumerate}
+  \item \textbf{Intensidade do Sinal (Signal)}:
+  \begin{itemize}
+    \item O sinal físico real (em dBm) pode ser comparado diretamente.
+    \item Valores medianos e quartis mostram a cobertura de sinal observada para os clientes conectados de cada fabricante.
+\end{itemize}
+  \item \textbf{Throughput vs Volume}:
+  \begin{itemize}
+    \item \textbf{Throughput} representa a taxa instantânea calculada durante as atividades (Mbps).
+    \item \textbf{Volume} representa a transferência acumulada total no período de conexão dos clientes (MB).
+    \item Note que a UniFi tem menor número de amostras, mas o comportamento estatístico da taxa de transferência e do volume calculado segue uma escala e distribuição coerentes com os dados de produção do Ruckus.
+\end{itemize}
+  \item \textbf{Qualidade de Enlace e Retransmissões}:
+  \begin{itemize}
+    \item A taxa de retransmissões do Ruckus é derivada da proporção de pacotes TX de retransmissão sobre o total de tentativas.
+    \item A taxa de retransmissões da UniFi é estimada a partir da métrica CCQ (Client Connection Quality), sendo `100 - CCQ/10`.
+\end{itemize}
+  \item \textbf{Link Speed}:
+  \begin{itemize}
+    \item A velocidade física negociada no download (TX Link Speed) está disponível para ambos os fabricantes (extraída de `throughput\_rate` no Ruckus e de `tx\_rate` na UniFi). A velocidade física de upload (RX) é exclusiva da UniFi.
+    \item O Ruckus negocia taxas físicas médias significativamente maiores (média de 164.95 Mbps contra 64.37 Mbps da UniFi).
+\end{itemize}
+  \item \textbf{Índice de Equidade da Rede (Jain's Fairness Index)}:
+  \begin{itemize}
+    \item Mede o compartilhamento de throughput entre os clientes conectados simultaneamente (com pelo menos 2 usuários ativos).
+    \item Valores de média e mediana próximos de 1.0 indicam partilha equilibrada, enquanto valores próximos de 0 sugerem monopolização da banda por poucos dispositivos.
+    \item Os resultados indicam um compartilhamento de recursos que pode ser estatisticamente comparado para avaliar a qualidade de serviço de cada marca.
+
+\end{itemize}
+\end{enumerate}

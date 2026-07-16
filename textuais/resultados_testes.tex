@@ -4,20 +4,19 @@ Este relatório apresenta os resultados dos testes estatísticos de significânc
 
 \textbf{Limitação do Escopo}: As conclusões apresentadas neste relatório são válidas somente para o cenário e período observados. Os resultados sugerem padrões empíricos específicos do campus e não configuram verdades universais sobre o desempenho das marcas.
 
-
-\textbf{Limitação do Dataset da UniFi}:
-> O conjunto de dados brutos da UniFi contém \textbf{apenas conexões ativas na banda de 2,4 GHz} (N=2275). Não foram registradas coletas de clientes na banda de 5 GHz. Consequentemente:
-> 1. O teste comparativo de bandas (2,4 GHz vs 5 GHz) para a \textbf{UniFi} foi pulado por falta de dados.
-> 2. O teste comparativo de fabricantes em \textbf{5 GHz} foi classificado como \textit{Dados Insuficientes} e omitido dos plots.
+\begin{itemize}
+  \item \textbf{Limitação do Dataset da UniFi}:
+    O conjunto de dados brutos da UniFi contém \textbf{apenas conexões ativas na banda de 2,4 GHz} ($N = 36180$). Não foram registradas coletas de clientes na banda de 5 GHz. Consequentemente, o teste comparativo de bandas (2,4 GHz vs 5 GHz) para a \textbf{UniFi} foi omitido por falta de amostras de 5 GHz, e a comparação de fabricantes em \textbf{5 GHz} foi classificada como \textit{Dados Insuficientes} e omitida das visualizações correspondentes.
 
 
+\end{itemize}
 \subsection{Metodologia Aplicada}
 
 \begin{enumerate}
   \item \textbf{Verificação de Normalidade}:
   \begin{itemize}
     \item Utilizou-se o teste de \textbf{Shapiro-Wilk} (`scipy.stats.shapiro`).
-    \item Devido ao tamanho elevado das amostras (N > 27.000 no Ruckus), aplicou-se uma amostragem aleatória uniforme de 5.000 pontos para realizar o teste de forma válida (já que o teste é limitado a N <= 5.000).
+    \item Devido ao tamanho elevado das amostras ($N = 318074$ no Ruckus e $N = 36180$ na UniFi), aplicou-se uma amostragem aleatória uniforme de 5.000 pontos para realizar o teste de forma válida (já que o teste é limitado a $N \le 5.000$).
     \item \textbf{Resultado Geral}: Para todas as métricas analisadas (Retransmissões, RSSI/Sinal e Throughput), a hipótese nula de normalidade foi \textbf{rejeitada} (p < 0.001, indicando que as amostras \textbf{não} seguem uma distribuição normal).
 \end{itemize}
   \item \textbf{Escolha do Teste de Hipótese}:
@@ -35,8 +34,7 @@ Este relatório apresenta os resultados dos testes estatísticos de significânc
 \end{enumerate}
 \subsection{Tabela Consolidada de Testes de Hipótese}
 
-
-\begin{table}[htb]
+\begin{table}[H]
 \IBGEtab{%
   \caption{Tabela Consolidada de Testes de Hipótese}%
   \label{tab:data_testes_hipotese_1}%
@@ -69,6 +67,7 @@ Este relatório apresenta os resultados dos testes estatísticos de significânc
   \fonte{Produzido pelos autores.}%
 }
 \end{table}
+
 \textit{Nota sobre a Tabela Consolidada}: Os resultados sugerem diferenças estatisticamente significativas para a maioria das métricas comparadas (p < 0.05), com exceção do Sinal Físico comparado em 2.4 GHz entre Ruckus e UniFi (p = 0.4176), que indica comportamento estatisticamente semelhante nesse cenário. Os coeficientes de tamanho de efeito (\textit{r}) indicam magnitudes variadas, sugerindo que os desvios mais proeminentes localizam-se nas taxas de retransmissão e nas potências de sinal entre bandas, enquanto as diferenças de throughput sustentado e equidade apresentam efeitos sob a ótica amostral deste ambiente específico.
 
 Em termos práticos de rede, essas diferenças observadas sugerem as seguintes implicações:
@@ -146,9 +145,7 @@ Em termos práticos de rede, essas diferenças observadas sugerem as seguintes i
 
 A tabela abaixo apresenta os mesmos testes estatísticos em formato expandido, contendo os resultados individuais de verificação de normalidade (Shapiro-Wilk), o tipo de teste selecionado (U de Mann-Whitney ou Teste t) e o valor bruto calculado da estatística de teste.
 
-
-
-\begin{table}[htb]
+\begin{table}[H]
 \IBGEtab{%
   \caption{Apêndice: Tabela Detalhada de Testes de Hipótese (Reserva)}%
   \label{tab:data_testes_hipotese_2}%
@@ -181,3 +178,4 @@ A tabela abaixo apresenta os mesmos testes estatísticos em formato expandido, c
   \fonte{Produzido pelos autores.}%
 }
 \end{table}
+
