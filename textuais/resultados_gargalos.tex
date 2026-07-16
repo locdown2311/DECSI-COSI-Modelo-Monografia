@@ -3,9 +3,9 @@
 \subsection{Limiares de Decisão Estabelecidos}
 
 \begin{enumerate}
-  \item \textbf{G1: Baixa Qualidade de Enlace}: Potência física de sinal recebido pelo AP (`signal`) < `-75 dBm`.
+  \item \textbf{G1: Baixa Qualidade de Enlace}: Potência física de sinal recebido pelo AP (\texttt{signal}) < \texttt{-75 dBm}.
   \item \textbf{G2: Congestionamento do Meio}: Número de clientes simultâneos conectados no mesmo AP e minuto >= 15.
-  \item \textbf{G3: Interferência / SNR Ruim}: Ruído de fundo (`noise`) > `-90 dBm` ou SNR < `20 dB` em clientes com bom sinal (>= -75 dBm).
+  \item \textbf{G3: Interferência / SNR Ruim}: Ruído de fundo (\texttt{noise}) > \texttt{-90 dBm} ou SNR < \texttt{20 dB} em clientes com bom sinal (>= -75 dBm).
   \item \textbf{G4: Instabilidade de Roaming}: Clientes (MAC) que registraram > 5 trocas de AP no período de observação.
   \item \textbf{G5: Gargalo Cabeado (FE)}: Throughput de tráfego agregado sustentado do AP >= 90 Mbps (limite de interface Fast Ethernet de 100 Mbps).
 
@@ -23,18 +23,18 @@
       \toprule
       Fabricante & Categoria de Gargalo & Amostras (N) & Porcentagem (\%) & Throughput Cliente (Méd/Med) [Mbps] & Retransmissões (Méd/Med) [\%] \\
       \midrule
-      \textbf{Ruckus} & G1: Baixa Qualidade de Enlace & 138,128 & 43.43\% & 0.521 / 0.131 & 5.44\% / 0.00\% \\
-      \textbf{UniFi} & G1: Baixa Qualidade de Enlace & 9,776 & 27.02\% & 0.035 / 0.000 & 35.42\% / 25.90\% \\
-      \textbf{Ruckus} & G2: Congestionamento do Meio & 151,240 & 47.55\% & 0.513 / 0.132 & 4.74\% / 0.00\% \\
-      \textbf{UniFi} & G2: Congestionamento do Meio & 948 & 2.62\% & 0.253 / 0.003 & 23.13\% / 16.30\% \\
-      \textbf{Ruckus} & G3: Interferência / SNR Ruim & 0 & 0.00\% & 0.000 / 0.000 & 0.00\% / 0.00\% \\
-      \textbf{UniFi} & G3: Interferência / SNR Ruim & 418 & 1.16\% & 0.110 / 0.000 & 33.24\% / 33.95\% \\
-      \textbf{Ruckus} & G4: Instabilidade de Roaming & 297,832 & 93.64\% & 0.465 / 0.117 & 5.83\% / 0.00\% \\
-      \textbf{UniFi} & G4: Instabilidade de Roaming & 24,282 & 67.11\% & 0.262 / 0.000 & 20.03\% / 11.90\% \\
-      \textbf{Ruckus} & G5: Gargalo Cabeado (FE) & 33 & 0.01\% & 6.219 / 0.144 & 2.11\% / 0.75\% \\
-      \textbf{UniFi} & G5: Gargalo Cabeado (FE) & 0 & 0.00\% & 0.000 / 0.000 & 0.00\% / 0.00\% \\
-      \textbf{Ruckus} & Sem Gargalos & 5,386 & 1.69\% & 0.759 / 0.129 & 3.37\% / 0.00\% \\
-      \textbf{UniFi} & Sem Gargalos & 7,622 & 21.07\% & 0.327 / 0.002 & 19.94\% / 10.60\% \\
+      \textbf{Ruckus} & G1: Baixa Qualidade de Enlace & 138,128 & 43,43\% & 0,521 / 0,131 & 5,44\% / 0,00\% \\
+      \textbf{UniFi} & G1: Baixa Qualidade de Enlace & 9,776 & 27,02\% & 0,035 / 0,000 & 35,42\% / 25,90\% \\
+      \textbf{Ruckus} & G2: Congestionamento do Meio & 151,240 & 47,55\% & 0,513 / 0,132 & 4,74\% / 0,00\% \\
+      \textbf{UniFi} & G2: Congestionamento do Meio & 948 & 2,62\% & 0,253 / 0,003 & 23,13\% / 16,30\% \\
+      \textbf{Ruckus} & G3: Interferência / SNR Ruim & 0 & 0,00\% & 0,000 / 0,000 & 0,00\% / 0,00\% \\
+      \textbf{UniFi} & G3: Interferência / SNR Ruim & 418 & 1,16\% & 0,110 / 0,000 & 33,24\% / 33,95\% \\
+      \textbf{Ruckus} & G4: Instabilidade de Roaming & 297,832 & 93,64\% & 0,465 / 0,117 & 5,83\% / 0,00\% \\
+      \textbf{UniFi} & G4: Instabilidade de Roaming & 24,282 & 67,11\% & 0,262 / 0,000 & 20,03\% / 11,90\% \\
+      \textbf{Ruckus} & G5: Gargalo Cabeado (FE) & 33 & 0,01\% & 6,219 / 0,144 & 2,11\% / 0,75\% \\
+      \textbf{UniFi} & G5: Gargalo Cabeado (FE) & 0 & 0,00\% & 0,000 / 0,000 & 0,00\% / 0,00\% \\
+      \textbf{Ruckus} & Sem Gargalos & 5,386 & 1,69\% & 0,759 / 0,129 & 3,37\% / 0,00\% \\
+      \textbf{UniFi} & Sem Gargalos & 7,622 & 21,07\% & 0,327 / 0,002 & 19,94\% / 10,60\% \\
       \bottomrule
     \end{tabular}%
   }%
@@ -60,29 +60,29 @@ Abaixo são apresentados os perfis consolidados de carga e desempenho de cada Ac
       \toprule
       Access Point & Amostras (N) & Clientes Médios (Pico) & Throughput Agregado Médio (Max) [Mbps] & Sinal Médio [dBm] & Retransmissões Médias [\%] & Throughput Médio p/ Cliente [Mbps] & Equidade Média (Jain) & Perfil Operacional (Cluster) \\
       \midrule
-      \textbf{RK-fea0} & 29,623 & 24.3 (max 64) & 16.804 (max 111.108) & -75.7 & 3.84\% & 0.652 & 0.2901 & Grupo A: Muito Carregado \\
-      \textbf{RK-0d40} & 27,534 & 21.9 (max 49) & 11.907 (max 54.074) & -75.9 & 4.11\% & 0.541 & 0.3015 & Grupo A: Muito Carregado \\
-      \textbf{RK-4050} & 21,673 & 18.2 (max 46) & 9.382 (max 32.117) & -73.0 & 4.78\% & 0.506 & 0.3355 & Grupo C: Carga Moderada \\
-      \textbf{RK-35c0} & 18,292 & 15.4 (max 36) & 9.316 (max 57.785) & -74.2 & 7.03\% & 0.590 & 0.3526 & Grupo C: Carga Moderada \\
-      \textbf{RK-2fd0} & 16,839 & 16.2 (max 42) & 9.206 (max 44.516) & -74.4 & 3.43\% & 0.565 & 0.3602 & Grupo C: Carga Moderada \\
-      \textbf{RK-27d0} & 29,993 & 21.5 (max 49) & 8.688 (max 37.443) & -75.9 & 6.61\% & 0.406 & 0.3191 & Grupo C: Carga Moderada \\
-      \textbf{RK-efe0} & 20,773 & 13.4 (max 37) & 7.379 (max 56.451) & -65.4 & 4.58\% & 0.593 & 0.3875 & Grupo B: Pouco Utilizado \\
-      \textbf{RK-51f0} & 25,769 & 16.6 (max 41) & 6.371 (max 43.787) & -74.7 & 6.03\% & 0.375 & 0.3617 & Grupo C: Carga Moderada \\
-      \textbf{RK-1e40} & 9,718 & 13.1 (max 39) & 6.002 (max 58.898) & -73.7 & 6.23\% & 0.448 & 0.3980 & Grupo C: Carga Moderada \\
-      \textbf{RK-9660} & 14,906 & 13.6 (max 35) & 5.966 (max 39.558) & -73.5 & 5.18\% & 0.452 & 0.3623 & Grupo C: Carga Moderada \\
-      \textbf{RK-3180} & 11,739 & 11.6 (max 35) & 5.220 (max 53.483) & -74.9 & 4.38\% & 0.426 & 0.3983 & Grupo C: Carga Moderada \\
-      \textbf{RK-1060} & 12,139 & 10.8 (max 26) & 4.546 (max 40.216) & -75.0 & 4.00\% & 0.429 & 0.3807 & Grupo C: Carga Moderada \\
-      \textbf{RK-7090} & 9,436 & 8.7 (max 25) & 4.152 (max 28.851) & -72.7 & 7.05\% & 0.450 & 0.3791 & Grupo B: Pouco Utilizado \\
-      \textbf{RK-42a0} & 8,095 & 7.5 (max 28) & 4.140 (max 34.312) & -70.4 & 5.05\% & 0.534 & 0.4815 & Grupo B: Pouco Utilizado \\
-      \textbf{RK-0780} & 1,483 & 15.7 (max 29) & 3.805 (max 17.069) & -69.5 & 4.04\% & 0.236 & 0.3267 & Grupo B: Pouco Utilizado \\
-      \textbf{RK-1730} & 16,230 & 9.4 (max 26) & 3.719 (max 29.586) & -74.4 & 7.09\% & 0.489 & 0.4117 & Grupo C: Carga Moderada \\
-      \textbf{RK-e8a0} & 12,498 & 11.6 (max 31) & 3.662 (max 61.206) & -72.9 & 5.71\% & 0.376 & 0.3967 & Grupo C: Carga Moderada \\
-      \textbf{RK-3b10} & 3,091 & 8.1 (max 17) & 3.210 (max 40.003) & -75.0 & 9.77\% & 0.382 & 0.4645 & Grupo D: Baixa Qualidade de Sinal \\
-      \textbf{RK-1c10} & 7,749 & 7.1 (max 22) & 3.105 (max 31.876) & -74.9 & 8.88\% & 0.428 & 0.4628 & Grupo D: Baixa Qualidade de Sinal \\
-      \textbf{RK-f3f0} & 7,771 & 4.4 (max 13) & 2.505 (max 47.419) & -72.1 & 7.40\% & 0.554 & 0.4864 & Grupo B: Pouco Utilizado \\
-      \textbf{RK-3440} & 8,298 & 9.5 (max 34) & 2.126 (max 19.643) & -77.4 & 11.92\% & 0.227 & 0.3813 & Grupo D: Baixa Qualidade de Sinal \\
-      \textbf{RK-5fe0} & 3,391 & 3.8 (max 11) & 1.547 (max 25.742) & -72.9 & 12.73\% & 0.383 & 0.5024 & Grupo D: Baixa Qualidade de Sinal \\
-      \textbf{RK-dcd0} & 1,034 & 3.4 (max 8) & 0.839 (max 8.827) & -79.3 & 12.91\% & 0.255 & 0.4665 & Grupo D: Baixa Qualidade de Sinal \\
+      \textbf{RK-fea0} & 29,623 & 24,3 (max 64) & 16,804 (max 111,108) & -75,7 & 3,84\% & 0,652 & 0,2901 & Grupo A: Muito Carregado \\
+      \textbf{RK-0d40} & 27,534 & 21,9 (max 49) & 11,907 (max 54,074) & -75,9 & 4,11\% & 0,541 & 0,3015 & Grupo A: Muito Carregado \\
+      \textbf{RK-4050} & 21,673 & 18,2 (max 46) & 9,382 (max 32,117) & -73,0 & 4,78\% & 0,506 & 0,3355 & Grupo C: Carga Moderada \\
+      \textbf{RK-35c0} & 18,292 & 15,4 (max 36) & 9,316 (max 57,785) & -74,2 & 7,03\% & 0,590 & 0,3526 & Grupo C: Carga Moderada \\
+      \textbf{RK-2fd0} & 16,839 & 16,2 (max 42) & 9,206 (max 44,516) & -74,4 & 3,43\% & 0,565 & 0,3602 & Grupo C: Carga Moderada \\
+      \textbf{RK-27d0} & 29,993 & 21,5 (max 49) & 8,688 (max 37,443) & -75,9 & 6,61\% & 0,406 & 0,3191 & Grupo C: Carga Moderada \\
+      \textbf{RK-efe0} & 20,773 & 13,4 (max 37) & 7,379 (max 56,451) & -65,4 & 4,58\% & 0,593 & 0,3875 & Grupo B: Pouco Utilizado \\
+      \textbf{RK-51f0} & 25,769 & 16,6 (max 41) & 6,371 (max 43,787) & -74,7 & 6,03\% & 0,375 & 0,3617 & Grupo C: Carga Moderada \\
+      \textbf{RK-1e40} & 9,718 & 13,1 (max 39) & 6,002 (max 58,898) & -73,7 & 6,23\% & 0,448 & 0,3980 & Grupo C: Carga Moderada \\
+      \textbf{RK-9660} & 14,906 & 13,6 (max 35) & 5,966 (max 39,558) & -73,5 & 5,18\% & 0,452 & 0,3623 & Grupo C: Carga Moderada \\
+      \textbf{RK-3180} & 11,739 & 11,6 (max 35) & 5,220 (max 53,483) & -74,9 & 4,38\% & 0,426 & 0,3983 & Grupo C: Carga Moderada \\
+      \textbf{RK-1060} & 12,139 & 10,8 (max 26) & 4,546 (max 40,216) & -75,0 & 4,00\% & 0,429 & 0,3807 & Grupo C: Carga Moderada \\
+      \textbf{RK-7090} & 9,436 & 8,7 (max 25) & 4,152 (max 28,851) & -72,7 & 7,05\% & 0,450 & 0,3791 & Grupo B: Pouco Utilizado \\
+      \textbf{RK-42a0} & 8,095 & 7,5 (max 28) & 4,140 (max 34,312) & -70,4 & 5,05\% & 0,534 & 0,4815 & Grupo B: Pouco Utilizado \\
+      \textbf{RK-0780} & 1,483 & 15,7 (max 29) & 3,805 (max 17,069) & -69,5 & 4,04\% & 0,236 & 0,3267 & Grupo B: Pouco Utilizado \\
+      \textbf{RK-1730} & 16,230 & 9,4 (max 26) & 3,719 (max 29,586) & -74,4 & 7,09\% & 0,489 & 0,4117 & Grupo C: Carga Moderada \\
+      \textbf{RK-e8a0} & 12,498 & 11,6 (max 31) & 3,662 (max 61,206) & -72,9 & 5,71\% & 0,376 & 0,3967 & Grupo C: Carga Moderada \\
+      \textbf{RK-3b10} & 3,091 & 8,1 (max 17) & 3,210 (max 40,003) & -75,0 & 9,77\% & 0,382 & 0,4645 & Grupo D: Baixa Qualidade de Sinal \\
+      \textbf{RK-1c10} & 7,749 & 7,1 (max 22) & 3,105 (max 31,876) & -74,9 & 8,88\% & 0,428 & 0,4628 & Grupo D: Baixa Qualidade de Sinal \\
+      \textbf{RK-f3f0} & 7,771 & 4,4 (max 13) & 2,505 (max 47,419) & -72,1 & 7,40\% & 0,554 & 0,4864 & Grupo B: Pouco Utilizado \\
+      \textbf{RK-3440} & 8,298 & 9,5 (max 34) & 2,126 (max 19,643) & -77,4 & 11,92\% & 0,227 & 0,3813 & Grupo D: Baixa Qualidade de Sinal \\
+      \textbf{RK-5fe0} & 3,391 & 3,8 (max 11) & 1,547 (max 25,742) & -72,9 & 12,73\% & 0,383 & 0,5024 & Grupo D: Baixa Qualidade de Sinal \\
+      \textbf{RK-dcd0} & 1,034 & 3,4 (max 8) & 0,839 (max 8,827) & -79,3 & 12,91\% & 0,255 & 0,4665 & Grupo D: Baixa Qualidade de Sinal \\
       \bottomrule
     \end{tabular}%
   }%
@@ -103,23 +103,23 @@ Abaixo são apresentados os perfis consolidados de carga e desempenho de cada Ac
       \toprule
       Access Point & Amostras (N) & Clientes Médios (Pico) & Throughput Agregado Médio (Max) [Mbps] & Sinal Médio [dBm] & Retransmissões Médias [\%] & Throughput Médio p/ Cliente [Mbps] & Equidade Média (Jain) & Perfil Operacional (Cluster) \\
       \midrule
-      \textbf{Lab Redes} & 7,546 & 7.8 (max 21) & 1.819 (max 34.705) & -67.7 & 23.70\% & 0.190 & 0.2779 & Grupo A: Muito Carregado \\
-      \textbf{Guarita Entrada} & 6,331 & 4.7 (max 15) & 1.709 (max 14.020) & -68.0 & 32.66\% & 0.462 & 0.3185 & Grupo A: Muito Carregado \\
-      \textbf{Lab Expressao} & 2,452 & 6.2 (max 15) & 1.422 (max 13.302) & -63.4 & 20.37\% & 0.178 & 0.3276 & Grupo A: Muito Carregado \\
-      \textbf{A-315} & 1,282 & 3.3 (max 11) & 0.920 (max 20.086) & -65.2 & 10.15\% & 0.334 & 0.4160 & Grupo D: Baixa Retransmissão / Estável \\
-      \textbf{A-201} & 1,877 & 2.3 (max 7) & 0.900 (max 15.183) & -63.4 & 17.90\% & 0.420 & 0.4853 & Grupo D: Baixa Retransmissão / Estável \\
-      \textbf{A400-1} & 2,095 & 2.8 (max 9) & 0.863 (max 16.116) & -66.3 & 19.78\% & 0.263 & 0.4379 & Grupo D: Baixa Retransmissão / Estável \\
-      \textbf{C-304 Rack} & 2,189 & 3.3 (max 11) & 0.832 (max 34.293) & -65.0 & 19.08\% & 0.270 & 0.4265 & Grupo D: Baixa Retransmissão / Estável \\
-      \textbf{A400-Rack} & 1,421 & 2.3 (max 6) & 0.666 (max 36.024) & -64.6 & 13.88\% & 0.283 & 0.5165 & Grupo D: Baixa Retransmissão / Estável \\
-      \textbf{A-301} & 1,171 & 2.4 (max 6) & 0.485 (max 15.280) & -63.9 & 13.43\% & 0.243 & 0.4769 & Grupo D: Baixa Retransmissão / Estável \\
-      \textbf{A100-recepçao} & 1,566 & 1.7 (max 5) & 0.480 (max 8.115) & -67.2 & 14.66\% & 0.246 & 0.5282 & Grupo D: Baixa Retransmissão / Estável \\
-      \textbf{A-200 rack} & 1,356 & 1.9 (max 6) & 0.349 (max 9.792) & -68.6 & 17.07\% & 0.162 & 0.4960 & Grupo B: Pouco Utilizado \\
-      \textbf{PICO-H-100} & 753 & 1.7 (max 6) & 0.296 (max 8.336) & -42.5 & 39.67\% & 0.130 & 0.4879 & Grupo C: Alta Retransmissão \\
-      \textbf{C-300-rack} & 612 & 1.8 (max 5) & 0.261 (max 26.486) & -66.1 & 11.57\% & 0.215 & 0.4827 & Grupo D: Baixa Retransmissão / Estável \\
-      \textbf{A101-Novo} & 3,350 & 2.4 (max 7) & 0.212 (max 14.172) & -69.1 & 21.61\% & 0.092 & 0.4883 & Grupo B: Pouco Utilizado \\
-      \textbf{Biblioteca-2} & 1,729 & 2.0 (max 8) & 0.167 (max 8.738) & -74.1 & 19.55\% & 0.074 & 0.5107 & Grupo B: Pouco Utilizado \\
-      \textbf{Pico-D200} & 226 & 1.2 (max 3) & 0.087 (max 4.730) & -66.7 & 28.02\% & 0.074 & 0.5759 & Grupo B: Pouco Utilizado \\
-      \textbf{PICOH-206} & 224 & 1.1 (max 2) & 0.038 (max 0.942) & -66.7 & 18.97\% & 0.037 & 0.6380 & Grupo B: Pouco Utilizado \\
+      \textbf{Lab Redes} & 7,546 & 7,8 (max 21) & 1,819 (max 34,705) & -67,7 & 23,70\% & 0,190 & 0,2779 & Grupo A: Muito Carregado \\
+      \textbf{Guarita Entrada} & 6,331 & 4,7 (max 15) & 1,709 (max 14,020) & -68,0 & 32,66\% & 0,462 & 0,3185 & Grupo A: Muito Carregado \\
+      \textbf{Lab Expressao} & 2,452 & 6,2 (max 15) & 1,422 (max 13,302) & -63,4 & 20,37\% & 0,178 & 0,3276 & Grupo A: Muito Carregado \\
+      \textbf{A-315} & 1,282 & 3,3 (max 11) & 0,920 (max 20,086) & -65,2 & 10,15\% & 0,334 & 0,4160 & Grupo D: Baixa Retransmissão / Estável \\
+      \textbf{A-201} & 1,877 & 2,3 (max 7) & 0,900 (max 15,183) & -63,4 & 17,90\% & 0,420 & 0,4853 & Grupo D: Baixa Retransmissão / Estável \\
+      \textbf{A400-1} & 2,095 & 2,8 (max 9) & 0,863 (max 16,116) & -66,3 & 19,78\% & 0,263 & 0,4379 & Grupo D: Baixa Retransmissão / Estável \\
+      \textbf{C-304 Rack} & 2,189 & 3,3 (max 11) & 0,832 (max 34,293) & -65,0 & 19,08\% & 0,270 & 0,4265 & Grupo D: Baixa Retransmissão / Estável \\
+      \textbf{A400-Rack} & 1,421 & 2,3 (max 6) & 0,666 (max 36,024) & -64,6 & 13,88\% & 0,283 & 0,5165 & Grupo D: Baixa Retransmissão / Estável \\
+      \textbf{A-301} & 1,171 & 2,4 (max 6) & 0,485 (max 15,280) & -63,9 & 13,43\% & 0,243 & 0,4769 & Grupo D: Baixa Retransmissão / Estável \\
+      \textbf{A100-recepçao} & 1,566 & 1,7 (max 5) & 0,480 (max 8,115) & -67,2 & 14,66\% & 0,246 & 0,5282 & Grupo D: Baixa Retransmissão / Estável \\
+      \textbf{A-200 rack} & 1,356 & 1,9 (max 6) & 0,349 (max 9,792) & -68,6 & 17,07\% & 0,162 & 0,4960 & Grupo B: Pouco Utilizado \\
+      \textbf{PICO-H-100} & 753 & 1,7 (max 6) & 0,296 (max 8,336) & -42,5 & 39,67\% & 0,130 & 0,4879 & Grupo C: Alta Retransmissão \\
+      \textbf{C-300-rack} & 612 & 1,8 (max 5) & 0,261 (max 26,486) & -66,1 & 11,57\% & 0,215 & 0,4827 & Grupo D: Baixa Retransmissão / Estável \\
+      \textbf{A101-Novo} & 3,350 & 2,4 (max 7) & 0,212 (max 14,172) & -69,1 & 21,61\% & 0,092 & 0,4883 & Grupo B: Pouco Utilizado \\
+      \textbf{Biblioteca-2} & 1,729 & 2,0 (max 8) & 0,167 (max 8,738) & -74,1 & 19,55\% & 0,074 & 0,5107 & Grupo B: Pouco Utilizado \\
+      \textbf{Pico-D200} & 226 & 1,2 (max 3) & 0,087 (max 4,730) & -66,7 & 28,02\% & 0,074 & 0,5759 & Grupo B: Pouco Utilizado \\
+      \textbf{PICOH-206} & 224 & 1,1 (max 2) & 0,038 (max 0,942) & -66,7 & 18,97\% & 0,037 & 0,6380 & Grupo B: Pouco Utilizado \\
       \bottomrule
     \end{tabular}%
   }%
@@ -141,23 +141,23 @@ Abaixo são apresentados os perfis consolidados de carga e desempenho de cada Ac
 \begin{enumerate}
   \item \textbf{Baixa Qualidade de Enlace (G1)}:
   \begin{itemize}
-    \item Afeta \textbf{43.43\%} das amostras na Ruckus e \textbf{27.02\%} na UniFi. Esse perfil elevado indica que uma porção considerável dos usuários se posicionou nas bordas de cobertura ou em zonas de sombra do sinal Wi-Fi.
+    \item Afeta \textbf{43,43\%} das amostras na Ruckus e \textbf{27,02\%} na UniFi. Esse perfil elevado indica que uma porção considerável dos usuários se posicionou nas bordas de cobertura ou em zonas de sombra do sinal Wi-Fi.
 \end{itemize}
   \item \textbf{Congestionamento do Meio (G2)}:
   \begin{itemize}
-    \item A Ruckus registrou \textbf{47.55\%} de suas amostras sob congestionamento (APs com 15 ou mais clientes simultâneos), enquanto a UniFi teve apenas \textbf{2.62\%} sob essa condição. Essa discrepância confirma que a rede Ruckus atende ao intenso adensamento de usuários.
+    \item A Ruckus registrou \textbf{47,55\%} de suas amostras sob congestionamento (APs com 15 ou mais clientes simultâneos), enquanto a UniFi teve apenas \textbf{2,62\%} sob essa condição. Essa discrepância confirma que a rede Ruckus atende ao intenso adensamento de usuários.
 \end{itemize}
   \item \textbf{Interferência (G3)}:
   \begin{itemize}
-    \item Este gargalo teve incidência nula na Ruckus (\textbf{0.00\%}) e ínfima na UniFi (\textbf{1.16\%}) sob os critérios rigorosos avaliados de forma isolada, indicando que os cenários de alta retransmissão estão fundamentalmente vinculados à fraca qualidade de sinal ou ao excessivo congestionamento e trocas de AP.
+    \item Este gargalo teve incidência nula na Ruckus (\textbf{0,00\%}) e ínfima na UniFi (\textbf{1,16\%}) sob os critérios rigorosos avaliados de forma isolada, indicando que os cenários de alta retransmissão estão fundamentalmente vinculados à fraca qualidade de sinal ou ao excessivo congestionamento e trocas de AP.
 \end{itemize}
   \item \textbf{Instabilidade de Roaming (G4)}:
   \begin{itemize}
-    \item Afetou massivos \textbf{93.64\%} dos registros de Ruckus e \textbf{67.11\%} de UniFi. Dispositivos móveis realizam abundantes transições ou persistem conectados a APs distantes (\textit{sticky clients}), evidenciando o gargalo mais disseminado da infraestrutura corporativa do campus.
+    \item Afetou massivos \textbf{93,64\%} dos registros de Ruckus e \textbf{67,11\%} de UniFi. Dispositivos móveis realizam abundantes transições ou persistem conectados a APs distantes (\textit{sticky clients}), evidenciando o gargalo mais disseminado da infraestrutura corporativa do campus.
 \end{itemize}
   \item \textbf{Limitação de Infraestrutura Cabeada (G5)}:
   \begin{itemize}
-    \item Virtualmente nula (\textbf{0.01\%} na Ruckus e \textbf{0.00\%} na UniFi). O tráfego não saturou de forma crônica as portas Fast Ethernet, indicando que o gargalo de \textit{backhaul} cabeado não é a atual limitação de desempenho.
+    \item Virtualmente nula (\textbf{0,01\%} na Ruckus e \textbf{0,00\%} na UniFi). O tráfego não saturou de forma crônica as portas Fast Ethernet, indicando que o gargalo de \textit{backhaul} cabeado não é a atual limitação de desempenho.
 
 
 \end{itemize}
@@ -174,11 +174,11 @@ Abaixo são apresentados os perfis consolidados de carga e desempenho de cada Ac
 \end{figure}
 
 \begin{itemize}
-  \item \textbf{Padrão de Throughput (Sem Gargalos)}: Sob condições ideais ("Sem Gargalos"), o throughput médio por cliente foi de `0.759 Mbps` no Ruckus e `0.327 Mbps` no UniFi.
-  \item \textbf{Consequência de Baixa Qualidade de Sinal (G1)}: No Ruckus, a vazão média manteve-se em `0.521 Mbps` (redução de 31.3\% em relação ao ideal). Já na UniFi, a vazão despencou para `0.035 Mbps` (redução severa de 89.3\%), demonstrando o alto impacto da atenuação física sobre o desempenho dos clientes.
-  \item \textbf{Consequência de Congestionamento (G2)}: A vazão média manteve-se em `0.513 Mbps` no Ruckus e registrou queda na UniFi para `0.253 Mbps` (redução de 22.6\% em relação à condição ideal), refletindo o efeito do compartilhamento de tempo de transmissão aérea (CSMA/CA).
-  \item \textbf{Consequência de Interferência (G3)}: Não houve registros isolados suficientes no Ruckus (incidência de 0.00\%), enquanto a UniFi registrou queda significativa da vazão média para `0.110 Mbps` (redução de 66.4\% em relação ao ideal).
-  \item \textbf{Consequência de Instabilidade de Roaming (G4)}: O throughput médio de clientes afetados por roaming frequente foi de `0.465 Mbps` no Ruckus (queda de 38.8\% em relação ao ideal) e `0.262 Mbps` no UniFi.
+  \item \textbf{Padrão de Throughput (Sem Gargalos)}: Sob condições ideais ("Sem Gargalos"), o throughput médio por cliente foi de \texttt{0.759 Mbps} no Ruckus e \texttt{0.327 Mbps} no UniFi.
+  \item \textbf{Consequência de Baixa Qualidade de Sinal (G1)}: No Ruckus, a vazão média manteve-se em \texttt{0.521 Mbps} (redução de 31,3\% em relação ao ideal). Já na UniFi, a vazão despencou para \texttt{0.035 Mbps} (redução severa de 89,3\%), demonstrando o alto impacto da atenuação física sobre o desempenho dos clientes.
+  \item \textbf{Consequência de Congestionamento (G2)}: A vazão média manteve-se em \texttt{0.513 Mbps} no Ruckus e registrou queda na UniFi para \texttt{0.253 Mbps} (redução de 22,6\% em relação à condição ideal), refletindo o efeito do compartilhamento de tempo de transmissão aérea (CSMA/CA).
+  \item \textbf{Consequência de Interferência (G3)}: Não houve registros isolados suficientes no Ruckus (incidência de 0,00\%), enquanto a UniFi registrou queda significativa da vazão média para \texttt{0.110 Mbps} (redução de 66,4\% em relação ao ideal).
+  \item \textbf{Consequência de Instabilidade de Roaming (G4)}: O throughput médio de clientes afetados por roaming frequente foi de \texttt{0.465 Mbps} no Ruckus (queda de 38,8\% em relação ao ideal) e \texttt{0.262 Mbps} no UniFi.
 
 \end{itemize}
 \subsubsection{Impacto nas Retransmissões}
@@ -191,17 +191,17 @@ Abaixo são apresentados os perfis consolidados de carga e desempenho de cada Ac
 \end{figure}
 
 \begin{itemize}
-  \item \textbf{Padrão Esperado (Sem Gargalos)}: Sob condições ideais, as taxas médias de retransmissão situaram-se em `3.37\%` na Ruckus e `19.94\%` na UniFi.
-  \item \textbf{Consequência de Baixa Qualidade de Sinal (G1)}: Sob sinal fraco, a taxa de retransmissão no Ruckus subiu levemente para `5.44\%` (aumento de 61.5\% em relação ao ideal). Na UniFi, contudo, observou-se a maior elevação registrada, alcançando `35.42\%` (um aumento de 77.6\% em relação ao ideal), comprovando a degradação da integridade de quadros em enlaces atenuados.
-  \item \textbf{Consequência de Congestionamento (G2)}: A taxa de retransmissão manteve-se estável na Ruckus (`4.74\%`) e na UniFi (`23.13\%`), indicando que a concorrência pelo meio não foi a causa primária para o aumento direto de retransmissões.
-  \item \textbf{Consequência de Interferência (G3)}: Sem registros isolados na Ruckus, a UniFi registrou taxa de retransmissão elevada em `33.24\%` (aumento de 66.7\% em relação ao ideal), o que evidencia a ocorrência de colisões provocadas por ruído de RF.
-  \item \textbf{Consequência de Instabilidade de Roaming (G4)}: A taxa no Ruckus variou ligeiramente para `5.83\%` (aumento de 73.2\% em relação ao ideal), enquanto a UniFi registrou taxa média de `20.03\%`.
+  \item \textbf{Padrão Esperado (Sem Gargalos)}: Sob condições ideais, as taxas médias de retransmissão situaram-se em \texttt{3.37\%} na Ruckus e \texttt{19.94\%} na UniFi.
+  \item \textbf{Consequência de Baixa Qualidade de Sinal (G1)}: Sob sinal fraco, a taxa de retransmissão no Ruckus subiu levemente para \texttt{5.44\%} (aumento de 61,5\% em relação ao ideal). Na UniFi, contudo, observou-se a maior elevação registrada, alcançando \texttt{35.42\%} (um aumento de 77,6\% em relação ao ideal), comprovando a degradação da integridade de quadros em enlaces atenuados.
+  \item \textbf{Consequência de Congestionamento (G2)}: A taxa de retransmissão manteve-se estável na Ruckus (\texttt{4.74\%}) e na UniFi (\texttt{23.13\%}), indicando que a concorrência pelo meio não foi a causa primária para o aumento direto de retransmissões.
+  \item \textbf{Consequência de Interferência (G3)}: Sem registros isolados na Ruckus, a UniFi registrou taxa de retransmissão elevada em \texttt{33.24\%} (aumento de 66,7\% em relação ao ideal), o que evidencia a ocorrência de colisões provocadas por ruído de RF.
+  \item \textbf{Consequência de Instabilidade de Roaming (G4)}: A taxa no Ruckus variou ligeiramente para \texttt{5.83\%} (aumento de 73,2\% em relação ao ideal), enquanto a UniFi registrou taxa média de \texttt{20.03\%}.
 
 
 \end{itemize}
 \subsection{Clusterização e Perfil Operacional dos Access Points (K-Means)}
 
-Para agrupar os Access Points com comportamentos operacionais semelhantes e gerar um mapa de diagnóstico útil, aplicou-se o algoritmo de aprendizado de máquina \textbf{K-Means} (com $K=4$ clusters para cada fabricante). A clusterização baseou-se na aplicação do algoritmo com normalização prévia das variáveis por meio do `StandardScaler` para evitar que a diferença de escalas (como potência de sinal em dBm vs clientes em unidades) distorcesse as distâncias euclidianas. O valor de $K=4$ foi escolhido para segmentar os rádios de cada fabricante em categorias nítidas de comportamento operacional, permitindo contrastar o desempenho sob carga ativa contra cenários de isolamento físico ou degradação. As variáveis utilizadas para a clusterização foram: média de clientes, throughput agregado médio do AP, sinal físico médio e taxa média de retransmissões.
+Para agrupar os Access Points com comportamentos operacionais semelhantes e gerar um mapa de diagnóstico útil, aplicou-se o algoritmo de aprendizado de máquina \textbf{K-Means} (com $K=4$ clusters para cada fabricante). A clusterização baseou-se na aplicação do algoritmo com normalização prévia das variáveis por meio do \texttt{StandardScaler} para evitar que a diferença de escalas (como potência de sinal em dBm vs clientes em unidades) distorcesse as distâncias euclidianas. O valor de $K=4$ foi escolhido para segmentar os rádios de cada fabricante em categorias nítidas de comportamento operacional, permitindo contrastar o desempenho sob carga ativa contra cenários de isolamento físico ou degradação. As variáveis utilizadas para a clusterização foram: média de clientes, throughput agregado médio do AP, sinal físico médio e taxa média de retransmissões.
 
 Os centróides e perfis detalhados resultantes de cada cluster são discutidos a seguir:
 
@@ -217,10 +217,10 @@ Os centróides e perfis detalhados resultantes de cada cluster são discutidos a
       \toprule
       Perfil Operacional (Cluster) & Média Clientes & Throughput Agregado Médio [Mbps] & Sinal Médio [dBm] & Retransmissões Médias [\%] \\
       \midrule
-      \textbf{Grupo A: Muito Carregado} & 23.10 & 14.356 & -75.8 & 3.98\% \\
-      \textbf{Grupo B: Pouco Utilizado} & 9.96 & 4.396 & -70.0 & 5.62\% \\
-      \textbf{Grupo C: Carga Moderada} & 14.37 & 6.552 & -74.2 & 5.50\% \\
-      \textbf{Grupo D: Baixa Qualidade de Sinal} & 6.39 & 2.166 & -75.9 & 11.24\% \\
+      \textbf{Grupo A: Muito Carregado} & 23,10 & 14,356 & -75,8 & 3,98\% \\
+      \textbf{Grupo B: Pouco Utilizado} & 9,96 & 4,396 & -70,0 & 5,62\% \\
+      \textbf{Grupo C: Carga Moderada} & 14,37 & 6,552 & -74,2 & 5,50\% \\
+      \textbf{Grupo D: Baixa Qualidade de Sinal} & 6,39 & 2,166 & -75,9 & 11,24\% \\
       \bottomrule
     \end{tabular}%
   }%
@@ -230,10 +230,10 @@ Os centróides e perfis detalhados resultantes de cada cluster são discutidos a
 \end{table}
 
 \begin{itemize}
-  \item \textbf{Grupo A: Muito Carregado}: Representa os access points que operam sob intensa demanda de usuários (média de `23.10` clientes conectados e pico de tráfego agregado médio de `14.356 Mbps`). Apesar de operar sob alta concorrência de canal e sinal físico médio de `-75.8 dBm`, este grupo apresenta a menor taxa de retransmissão de toda a rede Ruckus (média de `3.98\%`). Isso demonstra o desempenho altamente eficiente do agendamento de pacotes e mitigação de colisões da arquitetura Ruckus sob forte carga.
-  \item \textbf{Grupo B: Pouco Utilizado}: Constituído por APs com baixo volume de tráfego (média de `4.396 Mbps`) e baixa concorrência (média de `9.96` clientes). O sinal físico médio é excelente (média de `-70.0 dBm`) e as retransmissões mantêm-se estáveis em `5.62\%`, representando pontos de ociosidade operacional na rede corporativa.
-  \item \textbf{Grupo C: Carga Moderada}: Representa o perfil operacional típico nominal de RF da rede no campus (média de `14.37` clientes e throughput agregado médio de `6.552 Mbps`). Apresenta sinal médio de `-74.2 dBm` e taxa de retransmissão saudável de `5.50\%`.
-  \item \textbf{Grupo D: Baixa Qualidade de Sinal}: Caracteriza os rádios severamente limitados pela qualidade física de recepção de sinal (média de `-75.9 dBm`). O baixo tráfego agregado registrado (`2.166 Mbps`) é reflexo não da ociosidade (média de `6.39` clientes), mas da elevada taxa de retransmissão de quadros (`11.24\%`), que aponta perda de pacotes frequente e atenuação física no enlace.
+  \item \textbf{Grupo A: Muito Carregado}: Representa os access points que operam sob intensa demanda de usuários (média de \texttt{23.10} clientes conectados e pico de tráfego agregado médio de \texttt{14.356 Mbps}). Apesar de operar sob alta concorrência de canal e sinal físico médio de \texttt{-75.8 dBm}, este grupo apresenta a menor taxa de retransmissão de toda a rede Ruckus (média de \texttt{3.98\%}). Isso demonstra o desempenho altamente eficiente do agendamento de pacotes e mitigação de colisões da arquitetura Ruckus sob forte carga.
+  \item \textbf{Grupo B: Pouco Utilizado}: Constituído por APs com baixo volume de tráfego (média de \texttt{4.396 Mbps}) e baixa concorrência (média de \texttt{9.96} clientes). O sinal físico médio é excelente (média de \texttt{-70.0 dBm}) e as retransmissões mantêm-se estáveis em \texttt{5.62\%}, representando pontos de ociosidade operacional na rede corporativa.
+  \item \textbf{Grupo C: Carga Moderada}: Representa o perfil operacional típico nominal de RF da rede no campus (média de \texttt{14.37} clientes e throughput agregado médio de \texttt{6.552 Mbps}). Apresenta sinal médio de \texttt{-74.2 dBm} e taxa de retransmissão saudável de \texttt{5.50\%}.
+  \item \textbf{Grupo D: Baixa Qualidade de Sinal}: Caracteriza os rádios severamente limitados pela qualidade física de recepção de sinal (média de \texttt{-75.9 dBm}). O baixo tráfego agregado registrado (\texttt{2.166 Mbps}) é reflexo não da ociosidade (média de \texttt{6.39} clientes), mas da elevada taxa de retransmissão de quadros (\texttt{11.24\%}), que aponta perda de pacotes frequente e atenuação física no enlace.
 
 \end{itemize}
 \subsubsection{Perfis de Rádios UniFi}
@@ -248,10 +248,10 @@ Os centróides e perfis detalhados resultantes de cada cluster são discutidos a
       \toprule
       Perfil Operacional (Cluster) & Média Clientes & Throughput Agregado Médio [Mbps] & Sinal Médio [dBm] & Retransmissões Médias [\%] \\
       \midrule
-      \textbf{Grupo A: Muito Carregado} & 6.25 & 1.650 & -66.4 & 25.58\% \\
-      \textbf{Grupo B: Pouco Utilizado} & 1.69 & 0.171 & -69.1 & 21.04\% \\
-      \textbf{Grupo C: Alta Retransmissão} & 1.72 & 0.296 & -42.5 & 39.67\% \\
-      \textbf{Grupo D: Baixa Retransmissão / Estável} & 2.49 & 0.676 & -65.2 & 15.06\% \\
+      \textbf{Grupo A: Muito Carregado} & 6,25 & 1,650 & -66,4 & 25,58\% \\
+      \textbf{Grupo B: Pouco Utilizado} & 1,69 & 0,171 & -69,1 & 21,04\% \\
+      \textbf{Grupo C: Alta Retransmissão} & 1,72 & 0,296 & -42,5 & 39,67\% \\
+      \textbf{Grupo D: Baixa Retransmissão / Estável} & 2,49 & 0,676 & -65,2 & 15,06\% \\
       \bottomrule
     \end{tabular}%
   }%
@@ -261,10 +261,10 @@ Os centróides e perfis detalhados resultantes de cada cluster são discutidos a
 \end{table}
 
 \begin{itemize}
-  \item \textbf{Grupo A: Muito Carregado}: Engloba os APs da rede UniFi com maior atividade relativa (média de `6.25` clientes e throughput agregado médio de `1.650 Mbps`). O sinal médio é saudável (`-66.4 dBm`), mas a taxa de retransmissões média é elevada (`25.58\%`), indicando forte contenção do meio de transmissão sob concorrência na banda saturada de 2,4 GHz.
-  \item \textbf{Grupo B: Pouco Utilizado}: É o maior cluster em número de APs na UniFi, ilustrando sua ociosidade (média de `1.69` clientes e vazão de tráfego irrisória de `0.171 Mbps`). As retransmissões médias situam-se em `21.04\%`, valor induzido pelo ruído de fundo permanente do espectro.
-  \item \textbf{Grupo C: Alta Retransmissão}: Mapeia rádios com comportamento anômalo: excelente intensidade de sinal físico (média de `-42.5 dBm`, indicando proximidade imediata dos dispositivos), porém com taxa crítica de retransmissão de `39.67\%`. Esse padrão sugere interferência severa de canais adjacentes ou co-canal no espectro saturado de 2,4 GHz, ou desbalanceamento de potência de transmissão entre o AP e o cliente.
-  \item \textbf{Grupo D: Baixa Retransmissão / Estável}: Representa os rádios UniFi operando em condições de melhor estabilidade de RF (média de `2.49` clientes e sinal médio de `-65.2 dBm`). Alcança a menor taxa de retransmissão média registrada para a UniFi (`15.06\%`), validando a estabilidade do enlace sob baixa concorrência.
+  \item \textbf{Grupo A: Muito Carregado}: Engloba os APs da rede UniFi com maior atividade relativa (média de \texttt{6.25} clientes e throughput agregado médio de \texttt{1.650 Mbps}). O sinal médio é saudável (\texttt{-66.4 dBm}), mas a taxa de retransmissões média é elevada (\texttt{25.58\%}), indicando forte contenção do meio de transmissão sob concorrência na banda saturada de 2,4 GHz.
+  \item \textbf{Grupo B: Pouco Utilizado}: É o maior cluster em número de APs na UniFi, ilustrando sua ociosidade (média de \texttt{1.69} clientes e vazão de tráfego irrisória de \texttt{0.171 Mbps}). As retransmissões médias situam-se em \texttt{21.04\%}, valor induzido pelo ruído de fundo permanente do espectro.
+  \item \textbf{Grupo C: Alta Retransmissão}: Mapeia rádios com comportamento anômalo: excelente intensidade de sinal físico (média de \texttt{-42.5 dBm}, indicando proximidade imediata dos dispositivos), porém com taxa crítica de retransmissão de \texttt{39.67\%}. Esse padrão sugere interferência severa de canais adjacentes ou co-canal no espectro saturado de 2,4 GHz, ou desbalanceamento de potência de transmissão entre o AP e o cliente.
+  \item \textbf{Grupo D: Baixa Retransmissão / Estável}: Representa os rádios UniFi operando em condições de melhor estabilidade de RF (média de \texttt{2.49} clientes e sinal médio de \texttt{-65.2 dBm}). Alcança a menor taxa de retransmissão média registrada para a UniFi (\texttt{15.06\%}), validando a estabilidade do enlace sob baixa concorrência.
 
 \end{itemize}
 \subsubsection{Gráficos de Dispersão dos Clusters de APs}

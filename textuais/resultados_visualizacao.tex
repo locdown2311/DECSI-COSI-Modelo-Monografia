@@ -13,8 +13,8 @@ O boxplot de sinal físico por fabricante apresenta a distribuição e os quarti
 \end{figure}
 
 \begin{itemize}
-  \item \textbf{Ruckus}: Média de `-73.89 dBm`, Mediana `-75.00 dBm`.
-  \item \textbf{UniFi}: Média de `-66.56 dBm`, Mediana `-68.00 dBm`.
+  \item \textbf{Ruckus}: Média de \texttt{-73.89 dBm}, Mediana \texttt{-75.00 dBm}.
+  \item \textbf{UniFi}: Média de \texttt{-66.56 dBm}, Mediana \texttt{-68.00 dBm}.
   \item Os resultados sugerem uma cobertura de sinal física coerente para os clientes de ambas as marcas no cenário analisado, com a maioria das amostras se situando em uma faixa saudável de RF.
 
 \end{itemize}
@@ -45,8 +45,8 @@ O histograma de utilização de canais apresenta a contagem de registros em cada
 \end{figure}
 
 \begin{itemize}
-  \item \textbf{2.4 GHz}: Ambas as marcas concentram o tráfego nos canais não sobrepostos `1`, `6` e `11`, validando as boas práticas de planejamento de RF adotadas no campus.
-  \item \textbf{5 GHz}: A Ruckus apresenta uma alocação de espectro mais ampla e distribuída (como canais `36`, `52`, `60`, `104`, `112`, `120`, `128`, `149`), o que reduz interferência co-canal em células adjacentes.
+  \item \textbf{2,4 GHz}: Ambas as marcas concentram o tráfego nos canais não sobrepostos \texttt{1}, \texttt{6} e \texttt{11}, validando as boas práticas de planejamento de RF adotadas no campus.
+  \item \textbf{5 GHz}: A Ruckus apresenta uma alocação de espectro mais ampla e distribuída (como canais \texttt{36}, \texttt{52}, \texttt{60}, \texttt{104}, \texttt{112}, \texttt{120}, \texttt{128}, \texttt{149}), o que reduz interferência co-canal em células adjacentes.
 
 
 \end{itemize}
@@ -70,7 +70,7 @@ Este histograma ilustra a densidade de clientes associados simultaneamente a cad
 \subsection{Análise de Desempenho e Qualidade de Enlace por Banda}
 
 \subsubsection{Throughput por Banda}
-O boxplot compara o consumo de throughput entre as bandas de 2.4 GHz e 5 GHz.
+O boxplot compara o consumo de throughput entre as bandas de 2,4 GHz e 5 GHz.
 
 \begin{figure}[H]
   \centering
@@ -80,7 +80,7 @@ O boxplot compara o consumo de throughput entre as bandas de 2.4 GHz e 5 GHz.
 \end{figure}
 
 \begin{itemize}
-  \item Como esperado teoricamente, a banda de \textbf{5 GHz} oferece vazão e capacidade física superior para ambas as marcas, superando a banda de \textbf{2.4 GHz} que possui limitações inerentes de modulação e largura de canal.
+  \item Como esperado teoricamente, a banda de \textbf{5 GHz} oferece vazão e capacidade física superior para ambas as marcas, superando a banda de \textbf{2,4 GHz} que possui limitações inerentes de modulação e largura de canal.
 
 \end{itemize}
 \subsubsection{Retransmissões por Banda}
@@ -94,7 +94,7 @@ O boxplot compara a ocorrência de retransmissões físicas ou estimadas.
 \end{figure}
 
 \begin{itemize}
-  \item A banda de \textbf{2.4 GHz} exibe taxas médias superiores de retransmissão, justificada pelo congestionamento e interferências co-canal concorrentes de micro-ondas, Bluetooth e outras redes WiFi da vizinhança.
+  \item A banda de \textbf{2,4 GHz} exibe taxas médias superiores de retransmissão, justificada pelo congestionamento e interferências co-canal concorrentes de micro-ondas, Bluetooth e outras redes WiFi da vizinhança.
 
 
 \end{itemize}
@@ -110,7 +110,7 @@ Este gráfico apresenta a soma da vazão ativa de todos os clientes associados a
 \end{figure}
 
 \begin{itemize}
-  \item \textbf{Ruckus (AP MAC Simplificado)}: Apresenta maior amplitude e níveis superiores de vazão somada (vários APs superando médias de 5 a 10 Mbps de tráfego agregado ativo, com picos de consumo expressivos). Para melhor visualização, os endereços MAC longos do Ruckus foram simplificados no formato `RK-XXXX` (onde `XXXX` são os 4 dígitos finais do MAC).
+  \item \textbf{Ruckus (AP MAC Simplificado)}: Apresenta maior amplitude e níveis superiores de vazão somada (vários APs superando médias de 5 a 10 Mbps de tráfego agregado ativo, com picos de consumo expressivos). Para melhor visualização, os endereços MAC longos do Ruckus foram simplificados no formato \texttt{RK-XXXX} (onde \texttt{XXXX} são os 4 dígitos finais do MAC).
   \item \textbf{UniFi (AP Nome)}: Mostra distribuições de vazão agregada concentradas próximas de zero (com médias inferiores a 2 Mbps). Isso indica que a maioria dos APs da UniFi operaram com carga de dados muito baixa durante o período amostrado, corroborando a ociosidade do ambiente.
 
 

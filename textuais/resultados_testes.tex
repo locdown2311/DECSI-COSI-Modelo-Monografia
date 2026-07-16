@@ -11,19 +11,19 @@
 \begin{enumerate}
   \item \textbf{Verificação de Normalidade}:
   \begin{itemize}
-    \item Utilizou-se o teste de \textbf{Shapiro-Wilk} (`scipy.stats.shapiro`).
-    \item Devido ao tamanho elevado das amostras ($N = 318074$ no Ruckus e $N = 36180$ na UniFi), aplicou-se uma amostragem aleatória uniforme de 5.000 pontos para realizar o teste de forma válida (já que o teste é limitado a $N \le 5.000$).
-    \item \textbf{Resultado Geral}: Para todas as métricas analisadas (Retransmissões, RSSI/Sinal e Throughput), a hipótese nula de normalidade foi \textbf{rejeitada} (p < 0.001, indicando que as amostras \textbf{não} seguem uma distribuição normal).
+    \item Utilizou-se o teste de \textbf{Shapiro-Wilk} (\texttt{scipy.stats.shapiro}).
+    \item Devido ao tamanho elevado das amostras ($N = 318074$ no Ruckus e $N = 36180$ na UniFi), aplicou-se uma amostragem aleatória uniforme de 5,000 pontos para realizar o teste de forma válida (já que o teste é limitado a $N \le 5,000$).
+    \item \textbf{Resultado Geral}: Para todas as métricas analisadas (Retransmissões, RSSI/Sinal e Throughput), a hipótese nula de normalidade foi \textbf{rejeitada} ($p < 0,001$, indicando que as amostras \textbf{não} seguem uma distribuição normal).
 \end{itemize}
   \item \textbf{Escolha do Teste de Hipótese}:
   \begin{itemize}
-    \item Como as amostras são não-normais, aplicou-se o teste não-paramétrico \textbf{U de Mann-Whitney} (`scipy.stats.mannwhitneyu`) para comparar as distribuições de dois grupos independentes (nível de significância alpha = 0.05).
+    \item Como as amostras são não-normais, aplicou-se o teste não-paramétrico \textbf{U de Mann-Whitney} (\texttt{scipy.stats.mannwhitneyu}) para comparar as distribuições de dois grupos independentes (nível de significância alpha = 0,05).
 \end{itemize}
   \item \textbf{Tamanho do Efeito (Effect Size)}:
   \begin{itemize}
     \item Para o teste U de Mann-Whitney, calculou-se o tamanho de efeito baseado no coeficiente de correlação de rank da distribuição normal padrão aproximada: \textit{r} = |Z| / sqrt(N).
-    \item Critérios de magnitude para \textit{r}: |\textit{r}| >= 0.1 indica efeito pequeno; |\textit{r}| >= 0.3 efeito médio; |\textit{r}| >= 0.5 efeito grande.
-    \item Para o Teste t de Welch (se aplicável), calculou-se o Cohen's d: |\textit{d}| >= 0.2 pequeno; |\textit{d}| >= 0.5 médio; |\textit{d}| >= 0.8 grande.
+    \item Critérios de magnitude para \textit{r}: |\textit{r}| >= 0,1 indica efeito pequeno; |\textit{r}| >= 0,3 efeito médio; |\textit{r}| >= 0,5 efeito grande.
+    \item Para o Teste t de Welch (se aplicável), calculou-se o Cohen's d: |\textit{d}| >= 0,2 pequeno; |\textit{d}| >= 0,5 médio; |\textit{d}| >= 0,8 grande.
 
 
 \end{itemize}
@@ -40,19 +40,19 @@
       \toprule
       Métrica & Comparação (A vs B) & Amostras (N\_A vs N\_B) & Média/Mediana (A vs B) & P-valor & Tam. Efeito (r / d) & Signif.? \\
       \midrule
-      \textbf{RSSI} & RK 2.4G vs RK 5G & 74,701 vs 210,480 & -67.4/-68.0 vs -76.2/-77.0 & p < 0.001 (\textsuperscript{***}) & 0.3685 & \textbf{Sim} \\
-      \textbf{Retransmissões} & RK 2.4G vs RK 5G & 85,679 vs 232,395 & 15.8/3.6 vs 2.0/0.0 & p < 0.001 (\textsuperscript{***}) & 0.5247 & \textbf{Sim} \\
-      \textbf{Throughput} & RK 2.4G vs RK 5G & 85,679 vs 232,395 & 0.3/0.1 vs 0.6/0.2 & p < 0.001 (\textsuperscript{***}) & 0.1625 & \textbf{Sim} \\
-      \textbf{RSSI} & UF 2.4G vs UF 5G & 36,180 vs 0 & N/A & N/A & N/A & \textbf{Insuf.} \\
-      \textbf{Retransmissões} & UF 2.4G vs UF 5G & 36,180 vs 0 & N/A & N/A & N/A & \textbf{Insuf.} \\
-      \textbf{Throughput} & UF 2.4G vs UF 5G & 36,180 vs 0 & N/A & N/A & N/A & \textbf{Insuf.} \\
-      \textbf{Sinal Físico (dBm)} & Ruckus vs UniFi & 285,181 vs 36,180 & -73.9/-75.0 vs -66.6/-68.0 & p < 0.001 (\textsuperscript{***}) & 0.1807 & \textbf{Sim} \\
-      \textbf{Retransmissões} & Ruckus vs UniFi & 318,074 vs 36,180 & 5.7/0.0 vs 22.1/13.0 & p < 0.001 (\textsuperscript{***}) & 0.3581 & \textbf{Sim} \\
-      \textbf{Throughput} & Ruckus vs UniFi & 318,074 vs 36,180 & 0.5/0.1 vs 0.3/0.0 & p < 0.001 (\textsuperscript{***}) & 0.3253 & \textbf{Sim} \\
-      \textbf{Índice de Equidade (Jain)} & Ruckus vs UniFi & 3,873 vs 2,187 & 0.4/0.3 vs 0.2/0.1 & p < 0.001 (\textsuperscript{***}) & 0.4711 & \textbf{Sim} \\
-      \textbf{Sinal Físico (dBm)} & RK 2.4G vs UF 2.4G & 74,701 vs 36,180 & -67.4/-68.0 vs -66.6/-68.0 & p < 0.001 (\textsuperscript{***}) & 0.0184 & \textbf{Sim} \\
-      \textbf{Retransmissões} & RK 2.4G vs UF 2.4G & 85,679 vs 36,180 & 15.8/3.6 vs 22.1/13.0 & p < 0.001 (\textsuperscript{***}) & 0.2156 & \textbf{Sim} \\
-      \textbf{Throughput} & RK 2.4G vs UF 2.4G & 85,679 vs 36,180 & 0.3/0.1 vs 0.3/0.0 & p < 0.001 (\textsuperscript{***}) & 0.4352 & \textbf{Sim} \\
+      \textbf{RSSI} & RK 2,4G vs RK 5G & 74,701 vs 210,480 & -67,4/-68,0 vs -76,2/-77,0 & $p < 0,001$ (\textsuperscript{***}) & 0,3685 & \textbf{Sim} \\
+      \textbf{Retransmissões} & RK 2,4G vs RK 5G & 85,679 vs 232,395 & 15,8/3,6 vs 2,0/0,0 & $p < 0,001$ (\textsuperscript{***}) & 0,5247 & \textbf{Sim} \\
+      \textbf{Throughput} & RK 2,4G vs RK 5G & 85,679 vs 232,395 & 0,3/0,1 vs 0,6/0,2 & $p < 0,001$ (\textsuperscript{***}) & 0,1625 & \textbf{Sim} \\
+      \textbf{RSSI} & UF 2,4G vs UF 5G & 36,180 vs 0 & N/A & N/A & N/A & \textbf{Insuf.} \\
+      \textbf{Retransmissões} & UF 2,4G vs UF 5G & 36,180 vs 0 & N/A & N/A & N/A & \textbf{Insuf.} \\
+      \textbf{Throughput} & UF 2,4G vs UF 5G & 36,180 vs 0 & N/A & N/A & N/A & \textbf{Insuf.} \\
+      \textbf{Sinal Físico (dBm)} & Ruckus vs UniFi & 285,181 vs 36,180 & -73,9/-75,0 vs -66,6/-68,0 & $p < 0,001$ (\textsuperscript{***}) & 0,1807 & \textbf{Sim} \\
+      \textbf{Retransmissões} & Ruckus vs UniFi & 318,074 vs 36,180 & 5,7/0,0 vs 22,1/13,0 & $p < 0,001$ (\textsuperscript{***}) & 0,3581 & \textbf{Sim} \\
+      \textbf{Throughput} & Ruckus vs UniFi & 318,074 vs 36,180 & 0,5/0,1 vs 0,3/0,0 & $p < 0,001$ (\textsuperscript{***}) & 0,3253 & \textbf{Sim} \\
+      \textbf{Índice de Equidade (Jain)} & Ruckus vs UniFi & 3,873 vs 2,187 & 0,4/0,3 vs 0,2/0,1 & $p < 0,001$ (\textsuperscript{***}) & 0,4711 & \textbf{Sim} \\
+      \textbf{Sinal Físico (dBm)} & RK 2,4G vs UF 2,4G & 74,701 vs 36,180 & -67,4/-68,0 vs -66,6/-68,0 & $p < 0,001$ (\textsuperscript{***}) & 0,0184 & \textbf{Sim} \\
+      \textbf{Retransmissões} & RK 2,4G vs UF 2,4G & 85,679 vs 36,180 & 15,8/3,6 vs 22,1/13,0 & $p < 0,001$ (\textsuperscript{***}) & 0,2156 & \textbf{Sim} \\
+      \textbf{Throughput} & RK 2,4G vs UF 2,4G & 85,679 vs 36,180 & 0,3/0,1 vs 0,3/0,0 & $p < 0,001$ (\textsuperscript{***}) & 0,4352 & \textbf{Sim} \\
       \textbf{Sinal Físico (dBm)} & RK 5G vs UF 5G & 210,480 vs 0 & N/A & N/A & N/A & \textbf{Insuf.} \\
       \textbf{Retransmissões} & RK 5G vs UF 5G & 232,395 vs 0 & N/A & N/A & N/A & \textbf{Insuf.} \\
       \textbf{Throughput} & RK 5G vs UF 5G & 232,395 vs 0 & N/A & N/A & N/A & \textbf{Insuf.} \\
@@ -64,7 +64,7 @@
 }
 \end{table}
 
-\textit{Nota sobre a Tabela Consolidada}: Os resultados sugerem diferenças estatisticamente significativas para a maioria das métricas comparadas (p < 0.05), com exceção do Sinal Físico comparado em 2.4 GHz entre Ruckus e UniFi (p = 0.4176), que indica comportamento estatisticamente semelhante nesse cenário. Os coeficientes de tamanho de efeito (\textit{r}) indicam magnitudes variadas, sugerindo que os desvios mais proeminentes localizam-se nas taxas de retransmissão e nas potências de sinal entre bandas, enquanto as diferenças de throughput sustentado e equidade apresentam efeitos sob a ótica amostral deste ambiente específico.
+\textit{Nota sobre a Tabela Consolidada}: Os resultados sugerem diferenças estatisticamente significativas para a maioria das métricas comparadas ($p < 0,05$), com exceção do Sinal Físico comparado em 2,4 GHz entre Ruckus e UniFi ($p = 0,4176$), que indica comportamento estatisticamente semelhante nesse cenário. Os coeficientes de tamanho de efeito (\textit{r}) indicam magnitudes variadas, sugerindo que os desvios mais proeminentes localizam-se nas taxas de retransmissão e nas potências de sinal entre bandas, enquanto as diferenças de throughput sustentado e equidade apresentam efeitos sob a ótica amostral deste ambiente específico.
 
 Em termos práticos de rede, essas diferenças observadas sugerem as seguintes implicações:
 \begin{enumerate}
@@ -90,9 +90,9 @@ Em termos práticos de rede, essas diferenças observadas sugerem as seguintes i
   \label{fig:01_ruckus_bandas_comparacao_png}
 \end{figure}
 \begin{itemize}
-  \item \textbf{RSSI}: A diferença é altamente significativa (p < 0.001) com tamanho de efeito médio-grande (\textit{r} = 0.3685). A mediana em 2,4 GHz é de `-68.0 dBm` contra `-77.0 dBm` em 5 GHz, refletindo a física de atenuação do sinal de 5 GHz.
-  \item \textbf{Retransmissões}: Diferença estatisticamente significativa (p < 0.001) com tamanho de efeito pequeno (\textit{r} = 0.5247). O 2,4 GHz possui retransmissões médias de `15.83\%` contra `1.98\%` do 5 GHz, condizente com a poluição de espectro na frequência mais baixa.
-  \item \textbf{Throughput}: Diferença estatisticamente significativa (p < 0.001) com tamanho de efeito muito pequeno (\textit{r} = 0.1625). O throughput médio em 5 GHz (`0.568 Mbps`) mostra-se superior ao de 2,4 GHz (`0.265 Mbps`).
+  \item \textbf{RSSI}: A diferença é altamente significativa ($p < 0,001$) com tamanho de efeito médio-grande (\textit{r} = 0,3685). A mediana em 2,4 GHz é de \texttt{-68.0 dBm} contra \texttt{-77.0 dBm} em 5 GHz, refletindo a física de atenuação do sinal de 5 GHz.
+  \item \textbf{Retransmissões}: Diferença estatisticamente significativa ($p < 0,001$) com tamanho de efeito pequeno (\textit{r} = 0,5247). O 2,4 GHz possui retransmissões médias de \texttt{15.83\%} contra \texttt{1.98\%} do 5 GHz, condizente com a poluição de espectro na frequência mais baixa.
+  \item \textbf{Throughput}: Diferença estatisticamente significativa ($p < 0,001$) com tamanho de efeito muito pequeno (\textit{r} = 0,1625). O throughput médio em 5 GHz (\texttt{0.568 Mbps}) mostra-se superior ao de 2,4 GHz (\texttt{0.265 Mbps}).
 
   \item \textbf{UniFi}: Omitido devido à indisponibilidade de conexões em 5 GHz na telemetria da UniFi.
 
@@ -111,15 +111,15 @@ Em termos práticos de rede, essas diferenças observadas sugerem as seguintes i
   \label{fig:03_fabricantes_geral_comparacao_png}
 \end{figure}
 \begin{itemize}
-  \item \textbf{Sinal Físico (dBm)}: A UniFi registrou mediana de sinal físico de `-68.0 dBm` enquanto a Ruckus registrou `-75.0 dBm`, diferença significativa (p < 0.001) com tamanho de efeito pequeno (\textit{r} = 0.1807). Isso indica que, na média, os dispositivos UniFi monitorados estavam localizados mais próximos dos APs.
-  \item \textbf{Retransmissões}: A diferença é altamente significativa (p < 0.001) com tamanho de efeito grande (\textit{r} = 0.3581). A UniFi apresenta média de `22.13\%` contra `5.71\%` do Ruckus. Esta disparidade indica a influência da metodologia de medição: a UniFi estima a retransmissão indiretamente com base no CCQ do firmware, enquanto a Ruckus monitora estritamente a taxa de quadros físicos retransmitidos no rádio.
-  \item \textbf{Throughput}: A Ruckus registrou throughput médio de `0.487 Mbps` contra `0.253 Mbps` da UniFi, com diferença estatisticamente significativa (p < 0.001) e tamanho de efeito médio (\textit{r} = 0.3253). Os resultados sugerem que a rede Ruckus escoou uma taxa superior de dados por cliente no cenário coletado.
-  \item \textbf{Índice de Equidade (Jain)}: A comparação da equidade de compartilhamento de throughput entre os clientes conectados simultaneamente revelou diferença estatisticamente significativa (p < 0.001) com tamanho de efeito pequeno-médio (\textit{r} = 0.4711). A Ruckus registrou equidade média de `0.3506` e mediana de `0.2693`, enquanto a UniFi obteve média de `0.1889` e mediana de `0.1405`. Isso sugere tendências distintas no balanceamento de carga entre os clientes ativos de cada fabricante.
+  \item \textbf{Sinal Físico (dBm)}: A UniFi registrou mediana de sinal físico de \texttt{-68.0 dBm} enquanto a Ruckus registrou \texttt{-75.0 dBm}, diferença significativa ($p < 0,001$) com tamanho de efeito pequeno (\textit{r} = 0,1807). Isso indica que, na média, os dispositivos UniFi monitorados estavam localizados mais próximos dos APs.
+  \item \textbf{Retransmissões}: A diferença é altamente significativa ($p < 0,001$) com tamanho de efeito grande (\textit{r} = 0,3581). A UniFi apresenta média de \texttt{22.13\%} contra \texttt{5.71\%} do Ruckus. Esta disparidade indica a influência da metodologia de medição: a UniFi estima a retransmissão indiretamente com base no CCQ do firmware, enquanto a Ruckus monitora estritamente a taxa de quadros físicos retransmitidos no rádio.
+  \item \textbf{Throughput}: A Ruckus registrou throughput médio de \texttt{0.487 Mbps} contra \texttt{0.253 Mbps} da UniFi, com diferença estatisticamente significativa ($p < 0,001$) e tamanho de efeito médio (\textit{r} = 0,3253). Os resultados sugerem que a rede Ruckus escoou uma taxa superior de dados por cliente no cenário coletado.
+  \item \textbf{Índice de Equidade (Jain)}: A comparação da equidade de compartilhamento de throughput entre os clientes conectados simultaneamente revelou diferença estatisticamente significativa ($p < 0,001$) com tamanho de efeito pequeno-médio (\textit{r} = 0,4711). A Ruckus registrou equidade média de \texttt{0.3506} e mediana de \texttt{0.2693}, enquanto a UniFi obteve média de \texttt{0.1889} e mediana de \texttt{0.1405}. Isso sugere tendências distintas no balanceamento de carga entre os clientes ativos de cada fabricante.
 
 \end{itemize}
-\paragraph{Comparações por Banda de 2.4 GHz (Isolado)}
+\paragraph{Comparações por Banda de 2,4 GHz (Isolado)}
 \begin{itemize}
-  \item \textbf{Visualização 2.4 GHz}:
+  \item \textbf{Visualização 2,4 GHz}:
 \end{itemize}
 \begin{figure}[H]
   \centering
@@ -128,7 +128,7 @@ Em termos práticos de rede, essas diferenças observadas sugerem as seguintes i
   \label{fig:04_fabricantes_24ghz_comparacao_png}
 \end{figure}
 \begin{itemize}
-  \item As tendências observadas no cenário geral se mantêm na frequência isolada de 2,4 GHz: o sinal recebido na UniFi apresenta-se melhor (p < 0.001), o throughput médio na Ruckus é superior (p < 0.001) e a taxa de retransmissões baseada no CCQ na UniFi mostra-se consideravelmente maior (p < 0.001).
+  \item As tendências observadas no cenário geral se mantêm na frequência isolada de 2,4 GHz: o sinal recebido na UniFi apresenta-se melhor ($p < 0,001$), o throughput médio na Ruckus é superior ($p < 0,001$) e a taxa de retransmissões baseada no CCQ na UniFi mostra-se consideravelmente maior ($p < 0,001$).
 
 \end{itemize}
 \paragraph{Comparações por Banda de 5 GHz (Isolado)}
@@ -151,22 +151,22 @@ A tabela abaixo apresenta os mesmos testes estatísticos em formato expandido, c
       \toprule
       Métrica & Grupo A & Grupo B & Média/Mediana A & Média/Mediana B & Normal A/B & Teste Aplicado & Estatística & P-valor & Tam. Efeito (r / d) & Diferença Significativa? \\
       \midrule
-      \textbf{RSSI} & Ruckus 2.4G & Ruckus 5G & -67.406 / -68.000 & -76.188 / -77.000 & Não/Não & Mann-Whitney U & 11665444861.50 & p < 0.001 (\textsuperscript{***}) & 0.3685 & \textbf{Sim} \\
-      \textbf{Retransmissões} & Ruckus 2.4G & Ruckus 5G & 15.831 / 3.580 & 1.976 / 0.000 & Não/Não & Mann-Whitney U & 16754100055.50 & p < 0.001 (\textsuperscript{***}) & 0.5247 & \textbf{Sim} \\
-      \textbf{Throughput} & Ruckus 2.4G & Ruckus 5G & 0.265 / 0.060 & 0.568 / 0.156 & Não/Não & Mann-Whitney U & 7849841155.00 & p < 0.001 (\textsuperscript{***}) & 0.1625 & \textbf{Sim} \\
-      \textbf{RSSI} & UniFi 2.4G & UniFi 5G & 29.234 / 28.000 & N/A & N/A/N/A & Nenhum (Dados Insuficientes) & N/A & N/A & N/A & \textbf{Dados Insuficientes} \\
-      \textbf{Retransmissões} & UniFi 2.4G & UniFi 5G & 22.130 / 12.950 & N/A & N/A/N/A & Nenhum (Dados Insuficientes) & N/A & N/A & N/A & \textbf{Dados Insuficientes} \\
-      \textbf{Throughput} & UniFi 2.4G & UniFi 5G & 0.253 / 0.000 & N/A & N/A/N/A & Nenhum (Dados Insuficientes) & N/A & N/A & N/A & \textbf{Dados Insuficientes} \\
-      \textbf{Sinal Físico (dBm)} & Ruckus & UniFi & -73.888 / -75.000 & -66.556 / -68.000 & Não/Não & Mann-Whitney U & 3455773157.50 & p < 0.001 (\textsuperscript{***}) & 0.1807 & \textbf{Sim} \\
-      \textbf{Retransmissões} & Ruckus & UniFi & 5.708 / 0.000 & 22.130 / 12.950 & Não/Não & Mann-Whitney U & 1825482700.50 & p < 0.001 (\textsuperscript{***}) & 0.3581 & \textbf{Sim} \\
-      \textbf{Throughput} & Ruckus & UniFi & 0.487 / 0.119 & 0.253 / 0.000 & Não/Não & Mann-Whitney U & 9322766931.00 & p < 0.001 (\textsuperscript{***}) & 0.3253 & \textbf{Sim} \\
-      \textbf{Índice de Equidade (Jain)} & Ruckus & UniFi & 0.351 / 0.269 & 0.189 / 0.140 & Não/Não & Mann-Whitney U & 6633616.50 & p < 0.001 (\textsuperscript{***}) & 0.4711 & \textbf{Sim} \\
-      \textbf{Sinal Físico (dBm)} & Ruckus 2.4G & UniFi 2.4G & -67.406 / -68.000 & -66.556 / -68.000 & Não/Não & Mann-Whitney U & 1320719853.00 & p < 0.001 (\textsuperscript{***}) & 0.0184 & \textbf{Sim} \\
-      \textbf{Retransmissões} & Ruckus 2.4G & UniFi 2.4G & 15.831 / 3.580 & 22.130 / 12.950 & Não/Não & Mann-Whitney U & 1127598536.50 & p < 0.001 (\textsuperscript{***}) & 0.2156 & \textbf{Sim} \\
-      \textbf{Throughput} & Ruckus 2.4G & UniFi 2.4G & 0.265 / 0.060 & 0.253 / 0.000 & Não/Não & Mann-Whitney U & 2402401044.00 & p < 0.001 (\textsuperscript{***}) & 0.4352 & \textbf{Sim} \\
-      \textbf{Sinal Físico (dBm)} & Ruckus 5G & UniFi 5G & -76.188 / -77.000 & N/A & N/A/N/A & Nenhum (Dados Insuficientes) & N/A & N/A & N/A & \textbf{Dados Insuficientes} \\
-      \textbf{Retransmissões} & Ruckus 5G & UniFi 5G & 1.976 / 0.000 & N/A & N/A/N/A & Nenhum (Dados Insuficientes) & N/A & N/A & N/A & \textbf{Dados Insuficientes} \\
-      \textbf{Throughput} & Ruckus 5G & UniFi 5G & 0.568 / 0.156 & N/A & N/A/N/A & Nenhum (Dados Insuficientes) & N/A & N/A & N/A & \textbf{Dados Insuficientes} \\
+      \textbf{RSSI} & Ruckus 2,4G & Ruckus 5G & -67,406 / -68,000 & -76,188 / -77,000 & Não/Não & Mann-Whitney U & 11665444861,50 & $p < 0,001$ (\textsuperscript{***}) & 0,3685 & \textbf{Sim} \\
+      \textbf{Retransmissões} & Ruckus 2,4G & Ruckus 5G & 15,831 / 3,580 & 1,976 / 0,000 & Não/Não & Mann-Whitney U & 16754100055,50 & $p < 0,001$ (\textsuperscript{***}) & 0,5247 & \textbf{Sim} \\
+      \textbf{Throughput} & Ruckus 2,4G & Ruckus 5G & 0,265 / 0,060 & 0,568 / 0,156 & Não/Não & Mann-Whitney U & 7849841155,00 & $p < 0,001$ (\textsuperscript{***}) & 0,1625 & \textbf{Sim} \\
+      \textbf{RSSI} & UniFi 2,4G & UniFi 5G & 29,234 / 28,000 & N/A & N/A/N/A & Nenhum (Dados Insuficientes) & N/A & N/A & N/A & \textbf{Dados Insuficientes} \\
+      \textbf{Retransmissões} & UniFi 2,4G & UniFi 5G & 22,130 / 12,950 & N/A & N/A/N/A & Nenhum (Dados Insuficientes) & N/A & N/A & N/A & \textbf{Dados Insuficientes} \\
+      \textbf{Throughput} & UniFi 2,4G & UniFi 5G & 0,253 / 0,000 & N/A & N/A/N/A & Nenhum (Dados Insuficientes) & N/A & N/A & N/A & \textbf{Dados Insuficientes} \\
+      \textbf{Sinal Físico (dBm)} & Ruckus & UniFi & -73,888 / -75,000 & -66,556 / -68,000 & Não/Não & Mann-Whitney U & 3455773157,50 & $p < 0,001$ (\textsuperscript{***}) & 0,1807 & \textbf{Sim} \\
+      \textbf{Retransmissões} & Ruckus & UniFi & 5,708 / 0,000 & 22,130 / 12,950 & Não/Não & Mann-Whitney U & 1825482700,50 & $p < 0,001$ (\textsuperscript{***}) & 0,3581 & \textbf{Sim} \\
+      \textbf{Throughput} & Ruckus & UniFi & 0,487 / 0,119 & 0,253 / 0,000 & Não/Não & Mann-Whitney U & 9322766931,00 & $p < 0,001$ (\textsuperscript{***}) & 0,3253 & \textbf{Sim} \\
+      \textbf{Índice de Equidade (Jain)} & Ruckus & UniFi & 0,351 / 0,269 & 0,189 / 0,140 & Não/Não & Mann-Whitney U & 6633616,50 & $p < 0,001$ (\textsuperscript{***}) & 0,4711 & \textbf{Sim} \\
+      \textbf{Sinal Físico (dBm)} & Ruckus 2,4G & UniFi 2,4G & -67,406 / -68,000 & -66,556 / -68,000 & Não/Não & Mann-Whitney U & 1320719853,00 & $p < 0,001$ (\textsuperscript{***}) & 0,0184 & \textbf{Sim} \\
+      \textbf{Retransmissões} & Ruckus 2,4G & UniFi 2,4G & 15,831 / 3,580 & 22,130 / 12,950 & Não/Não & Mann-Whitney U & 1127598536,50 & $p < 0,001$ (\textsuperscript{***}) & 0,2156 & \textbf{Sim} \\
+      \textbf{Throughput} & Ruckus 2,4G & UniFi 2,4G & 0,265 / 0,060 & 0,253 / 0,000 & Não/Não & Mann-Whitney U & 2402401044,00 & $p < 0,001$ (\textsuperscript{***}) & 0,4352 & \textbf{Sim} \\
+      \textbf{Sinal Físico (dBm)} & Ruckus 5G & UniFi 5G & -76,188 / -77,000 & N/A & N/A/N/A & Nenhum (Dados Insuficientes) & N/A & N/A & N/A & \textbf{Dados Insuficientes} \\
+      \textbf{Retransmissões} & Ruckus 5G & UniFi 5G & 1,976 / 0,000 & N/A & N/A/N/A & Nenhum (Dados Insuficientes) & N/A & N/A & N/A & \textbf{Dados Insuficientes} \\
+      \textbf{Throughput} & Ruckus 5G & UniFi 5G & 0,568 / 0,156 & N/A & N/A/N/A & Nenhum (Dados Insuficientes) & N/A & N/A & N/A & \textbf{Dados Insuficientes} \\
       \bottomrule
     \end{tabular}%
   }%
