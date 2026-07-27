@@ -13,6 +13,8 @@
 \end{enumerate}
 \subsection{Tabela Geral de Ocorrência e Impacto de Gargalos}
 
+A Tabela Geral de Ocorrência apresenta as taxas e consequências físicas associadas a cada tipo de gargalo detectado de forma isolada ao longo do monitoramento de produção.
+
 \begin{table}[H]
 \IBGEtab{%
   \caption{Tabela Geral de Ocorrência e Impacto de Gargalos}%
@@ -131,25 +133,20 @@ Abaixo são apresentados os perfis consolidados de carga e desempenho de cada Ac
 
 \subsection{Análise de Distribuição e Frequência}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{img/distribuicao_gargalos.png}
-  \caption{Distribuição de Gargalos}
-  \label{fig:distribuicao_gargalos_png}
-\end{figure}
+O histograma geral ilustra as taxas percentuais de ocorrência de cada tipo de gargalo. Os resultados sugerem disparidades sistemáticas entre as marcas decorrentes do posicionamento físico dos APs e da ocupação do campus.
 
 \begin{enumerate}
   \item \textbf{Baixa Qualidade de Enlace (G1)}:
   \begin{itemize}
-    \item Afeta \textbf{43,43\%} das amostras na Ruckus e \textbf{27,02\%} na UniFi. Esse perfil elevado indica que uma porção considerável dos usuários se posicionou nas bordas de cobertura ou em zonas de sombra do sinal Wi-Fi.
+    \item Afeta \textbf{43,43\%} das amostras na Ruckus e \textbf{27,02\%} na UniFi. Esse perfil elevado indica que uma porção considerável dos usuários se posicionou nas bordas de cobertura ou em zonas de sombra de sinal Wi-Fi nas dependências do campus.
 \end{itemize}
   \item \textbf{Congestionamento do Meio (G2)}:
   \begin{itemize}
-    \item A Ruckus registrou \textbf{47,55\%} de suas amostras sob congestionamento (APs com 15 ou mais clientes simultâneos), enquanto a UniFi teve apenas \textbf{2,62\%} sob essa condição. Essa discrepância confirma que a rede Ruckus atende ao intenso adensamento de usuários.
+    \item A Ruckus registrou \textbf{47,55\%} de suas amostras sob congestionamento (APs com 15 ou mais clientes simultâneos), enquanto a UniFi teve apenas \textbf{2,62\%} sob essa condição. Essa discrepância é consistente com o fato de a rede Ruckus atender a setores de maior fluxo de estudantes, suportando forte densidade.
 \end{itemize}
   \item \textbf{Interferência (G3)}:
   \begin{itemize}
-    \item Este gargalo teve incidência nula na Ruckus (\textbf{0,00\%}) e ínfima na UniFi (\textbf{1,16\%}) sob os critérios rigorosos avaliados de forma isolada, indicando que os cenários de alta retransmissão estão fundamentalmente vinculados à fraca qualidade de sinal ou ao excessivo congestionamento e trocas de AP.
+    \item Este gargalo teve incidência nula na Ruckus (\textbf{0,00\%}) e ínfima na UniFi (\textbf{1,16\%}) sob os critérios rigorosos avaliados de forma isolada, sugerindo que os cenários de alta retransmissão estão fundamentalmente vinculados à fraca qualidade de sinal ou ao excessivo congestionamento e trocas de AP.
 \end{itemize}
   \item \textbf{Instabilidade de Roaming (G4)}:
   \begin{itemize}
@@ -166,16 +163,9 @@ Abaixo são apresentados os perfis consolidados de carga e desempenho de cada Ac
 
 \subsubsection{Impacto no Throughput}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{img/impacto_throughput.png}
-  \caption{Impacto no Throughput}
-  \label{fig:impacto_throughput_png}
-\end{figure}
-
 \begin{itemize}
   \item \textbf{Padrão de Throughput (Sem Gargalos)}: Sob condições ideais ("Sem Gargalos"), o throughput médio por cliente foi de \texttt{0.759 Mbps} no Ruckus e \texttt{0.327 Mbps} no UniFi.
-  \item \textbf{Consequência de Baixa Qualidade de Sinal (G1)}: No Ruckus, a vazão média manteve-se em \texttt{0.521 Mbps} (redução de 31,3\% em relação ao ideal). Já na UniFi, a vazão despencou para \texttt{0.035 Mbps} (redução severa de 89,3\%), demonstrando o alto impacto da atenuação física sobre o desempenho dos clientes.
+  \item \textbf{Consequência de Baixa Qualidade de Sinal (G1)}: No Ruckus, a vazão média manteve-se em \texttt{0.521 Mbps} (redução de 31,3\% em relação ao ideal). Já na UniFi, a vazão despencou para \texttt{0.035 Mbps} (redução severa de 89,3\%), sugerindo o alto impacto da atenuação física sobre o desempenho prático dos clientes.
   \item \textbf{Consequência de Congestionamento (G2)}: A vazão média manteve-se em \texttt{0.513 Mbps} no Ruckus e registrou queda na UniFi para \texttt{0.253 Mbps} (redução de 22,6\% em relação à condição ideal), refletindo o efeito do compartilhamento de tempo de transmissão aérea (CSMA/CA).
   \item \textbf{Consequência de Interferência (G3)}: Não houve registros isolados suficientes no Ruckus (incidência de 0,00\%), enquanto a UniFi registrou queda significativa da vazão média para \texttt{0.110 Mbps} (redução de 66,4\% em relação ao ideal).
   \item \textbf{Consequência de Instabilidade de Roaming (G4)}: O throughput médio de clientes afetados por roaming frequente foi de \texttt{0.465 Mbps} no Ruckus (queda de 38,8\% em relação ao ideal) e \texttt{0.262 Mbps} no UniFi.
@@ -183,17 +173,10 @@ Abaixo são apresentados os perfis consolidados de carga e desempenho de cada Ac
 \end{itemize}
 \subsubsection{Impacto nas Retransmissões}
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{img/impacto_retransmissoes.png}
-  \caption{Impacto nas Retransmissões}
-  \label{fig:impacto_retransmissoes_png}
-\end{figure}
-
 \begin{itemize}
   \item \textbf{Padrão Esperado (Sem Gargalos)}: Sob condições ideais, as taxas médias de retransmissão situaram-se em \texttt{3.37\%} na Ruckus e \texttt{19.94\%} na UniFi.
-  \item \textbf{Consequência de Baixa Qualidade de Sinal (G1)}: Sob sinal fraco, a taxa de retransmissão no Ruckus subiu levemente para \texttt{5.44\%} (aumento de 61,5\% em relação ao ideal). Na UniFi, contudo, observou-se a maior elevação registrada, alcançando \texttt{35.42\%} (um aumento de 77,6\% em relação ao ideal), comprovando a degradação da integridade de quadros em enlaces atenuados.
-  \item \textbf{Consequência de Congestionamento (G2)}: A taxa de retransmissão manteve-se estável na Ruckus (\texttt{4.74\%}) e na UniFi (\texttt{23.13\%}), indicando que a concorrência pelo meio não foi a causa primária para o aumento direto de retransmissões.
+  \item \textbf{Consequência de Baixa Qualidade de Sinal (G1)}: Sob sinal fraco, a taxa de retransmissão no Ruckus subiu levemente para \texttt{5.44\%} (aumento de 61,5\% em relação ao ideal). Na UniFi, contudo, observou-se a maior elevação registrada, alcançando \texttt{35.42\%} (um aumento de 77,6\% em relação ao ideal), indicando a degradação da integridade de quadros em enlaces atenuados.
+  \item \textbf{Consequência de Congestionamento (G2)}: A taxa de retransmissão manteve-se estável na Ruckus (\texttt{4.74\%}) e na UniFi (\texttt{23.13\%}), sugerindo que a concorrência pelo meio não foi a causa primária para o aumento direto de retransmissões.
   \item \textbf{Consequência de Interferência (G3)}: Sem registros isolados na Ruckus, a UniFi registrou taxa de retransmissão elevada em \texttt{33.24\%} (aumento de 66,7\% em relação ao ideal), o que evidencia a ocorrência de colisões provocadas por ruído de RF.
   \item \textbf{Consequência de Instabilidade de Roaming (G4)}: A taxa no Ruckus variou ligeiramente para \texttt{5.83\%} (aumento de 73,2\% em relação ao ideal), enquanto a UniFi registrou taxa média de \texttt{20.03\%}.
 
@@ -236,10 +219,10 @@ As variáveis utilizadas para a clusterização foram: média de clientes, throu
 \end{table}
 
 \begin{itemize}
-  \item \textbf{Grupo A: Muito Carregado}: Representa os access points que operam sob intensa demanda de usuários (média de \texttt{23.10} clientes conectados e pico de tráfego agregado médio de \texttt{14.356 Mbps}). Apesar de operar sob alta concorrência de canal e sinal físico médio de \texttt{-75.8 dBm}, este grupo apresenta a menor taxa de retransmissão de toda a rede Ruckus (média de \texttt{3.98\%}). Isso demonstra o desempenho altamente eficiente do agendamento de pacotes e mitigação de colisões da arquitetura Ruckus sob forte carga.
+  \item \textbf{Grupo A: Muito Carregado}: Representa os access points que operam sob intensa demanda de usuários (como \texttt{RK-fea0} e \texttt{RK-0d40}, com média de \texttt{23.10} clientes conectados e pico de tráfego agregado médio de \texttt{14.356 Mbps}). Apesar de operar sob alta concorrência de canal e sinal físico médio atenuado de \texttt{-75.8 dBm} (Gargalo G2), este grupo apresenta a menor taxa de retransmissão de toda a rede Ruckus (média de \texttt{3.98\%}). Este comportamento sugere o desempenho eficiente das tecnologias dinâmicas de filtragem espacial da Ruckus. A ação prática sugerida para estes APs visa aliviar a contenção de tempo aéreo (\textit{airtime}) por meio da ativação do direcionamento de banda (\textit{Band Steering}) e regras de balanceamento de carga ativo nas controladoras (Seção 6,2).
   \item \textbf{Grupo B: Pouco Utilizado}: Constituído por APs com baixo volume de tráfego (média de \texttt{4.396 Mbps}) e baixa concorrência (média de \texttt{9.96} clientes). O sinal físico médio é excelente (média de \texttt{-70.0 dBm}) e as retransmissões mantêm-se estáveis em \texttt{5.62\%}, representando pontos de ociosidade operacional na rede corporativa.
-  \item \textbf{Grupo C: Carga Moderada}: Representa o perfil operacional típico nominal de RF da rede no campus (média de \texttt{14.37} clientes e throughput agregado médio de \texttt{6.552 Mbps}). Apresenta sinal médio de \texttt{-74.2 dBm} e taxa de retransmissão saudável de \texttt{5.50\%}.
-  \item \textbf{Grupo D: Baixa Qualidade de Sinal}: Caracteriza os rádios severamente limitados pela qualidade física de recepção de sinal (média de \texttt{-75.9 dBm}). O baixo tráfego agregado registrado (\texttt{2.166 Mbps}) é reflexo não da ociosidade (média de \texttt{6.39} clientes), mas da elevada taxa de retransmissão de quadros (\texttt{11.24\%}), que aponta perda de pacotes frequente e atenuação física no enlace.
+  \item \textbf{Grupo C: Carga Moderada}: Representa o perfil operacional típico nominal de RF da rede no campus (como os APs \texttt{RK-4050} e \texttt{RK-51f0}, com média de \texttt{14.37} clientes e throughput agregado médio de \texttt{6.552 Mbps}). Apresenta sinal médio de \texttt{-74.2 dBm} e taxa de retransmissão saudável de \texttt{5.50\%}.
+  \item \textbf{Grupo D: Baixa Qualidade de Sinal}: Caracteriza os rádios severamente limitados pela qualidade física de recepção de sinal (como o AP \texttt{RK-3440} e \texttt{RK-dcd0}, com sinal médio degradado de \texttt{-75.9 dBm}). O baixo tráfego agregado registrado (\texttt{2.166 Mbps}) é consequência direta da elevada taxa de retransmissão de quadros (\texttt{11.24\%}), caracterizando o Gargalo G1. A ação recomendada para resolver este problema envolve o reposicionamento físico do AP para remover barreiras de atenuação e redimensionar a cobertura de rádio local (Seção 6,1).
 
 \end{itemize}
 \subsubsection{Perfis de Rádios UniFi}
@@ -267,15 +250,13 @@ As variáveis utilizadas para a clusterização foram: média de clientes, throu
 \end{table}
 
 \begin{itemize}
-  \item \textbf{Grupo A: Muito Carregado}: Engloba os APs da rede UniFi com maior atividade relativa (média de \texttt{6.25} clientes e throughput agregado médio de \texttt{1.650 Mbps}). O sinal médio é saudável (\texttt{-66.4 dBm}), mas a taxa de retransmissões média é elevada (\texttt{25.58\%}), indicando forte contenção do meio de transmissão sob concorrência na banda saturada de 2,4 GHz.
-  \item \textbf{Grupo B: Pouco Utilizado}: É o maior cluster em número de APs na UniFi, ilustrando sua ociosidade (média de \texttt{1.69} clientes e vazão de tráfego irrisória de \texttt{0.171 Mbps}). As retransmissões médias situam-se em \texttt{21.04\%}, valor induzido pelo ruído de fundo permanente do espectro.
-  \item \textbf{Grupo C: Alta Retransmissão}: Mapeia rádios com comportamento anômalo: excelente intensidade de sinal físico (média de \texttt{-42.5 dBm}, indicando proximidade imediata dos dispositivos), porém com taxa crítica de retransmissão de \texttt{39.67\%}. Esse padrão sugere interferência severa de canais adjacentes ou co-canal no espectro saturado de 2,4 GHz, ou desbalanceamento de potência de transmissão entre o AP e o cliente.
-  \item \textbf{Grupo D: Baixa Retransmissão / Estável}: Representa os rádios UniFi operando em condições de melhor estabilidade de RF (média de \texttt{2.49} clientes e sinal médio de \texttt{-65.2 dBm}). Alcança a menor taxa de retransmissão média registrada para a UniFi (\texttt{15.06\%}), validando a estabilidade do enlace sob baixa concorrência.
+  \item \textbf{Grupo A: Muito Carregado}: Engloba os APs da rede UniFi com maior atividade relativa (como \texttt{Lab Redes} e \texttt{Guarita Entrada}, com média de \texttt{6.25} clientes e throughput agregado médio de \texttt{1.650 Mbps}). O sinal médio é saudável (\texttt{-66.4 dBm}), mas a taxa de retransmissões média é elevada (\texttt{25.58\%}), sugerindo contenção severa no espectro saturado de 2,4~GHz e colisões decorrentes do CSMA/CA (Gargalo G2). Ação prática: desativar rádios 2,4~GHz redundantes e planejar a distribuição de canais estáticos não-sobrepostos (Seção 6,3).
+  \item \textbf{Grupo B: Pouco Utilizado}: É o maior cluster em número de APs na UniFi (como \texttt{A101-Novo} e \texttt{Biblioteca-2}), ilustrando sua ociosidade (média de \texttt{1.69} clientes e vazão de tráfego irrisória de \texttt{0.171 Mbps}). As retransmissões médias situam-se em \texttt{21.04\%}, valor induzido pelo ruído de fundo permanente do espectro.
+  \item \textbf{Grupo C: Alta Retransmissão}: Mapeia rádios com comportamento anômalo: excelente intensidade de sinal físico (AP \texttt{PICO-H-100}, com média de \texttt{-42.5 dBm}, indicando proximidade imediata dos dispositivos), porém com taxa crítica de retransmissão de \texttt{39.67\%}. Esse padrão sugere interferência severa de canais adjacentes ou desbalanceamento de potência de transmissão entre o AP e o cliente (onde o AP transmite com potência máxima e escuta o sinal fraco do cliente móvel, gerando perda de pacotes no upload). Ação prática: reduzir a potência de transmissão do AP e fixar manualmente o canal de operação (Seção 6,3).
+  \item \textbf{Grupo D: Baixa Retransmissão / Estável}: Representa os rádios UniFi operando em condições de melhor estabilidade de RF (como \texttt{A-315} e \texttt{A-201}, com média de \texttt{2.49} clientes e sinal médio de \texttt{-65.2 dBm}). Alcança a menor taxa de retransmissão média registrada para a UniFi (\texttt{15.06\%}), validando a estabilidade do enlace sob baixa concorrência.
 
 \end{itemize}
 \subsubsection{Gráficos de Dispersão dos Clusters de APs}
-
-As figuras abaixo mapeiam os APs no espaço de carga (Clientes vs Throughput Agregado), com o tamanho dos pontos indicando a taxa de retransmissão e a cor indicando o grupo operacional.
 
 \begin{itemize}
   \item \textbf{Ruckus}:

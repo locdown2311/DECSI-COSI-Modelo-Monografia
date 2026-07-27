@@ -43,6 +43,54 @@ O diagnóstico operativo baseia-se na extração ativa de parâmetros de telemet
 	\item \textbf{Throughput (Vazão)}: Taxa efetiva de dados úteis transferida na camada de aplicação (Mbps), dividida entre Downstream (TX) e Upstream (RX). A garantia e o provimento de qualidade de serviço (\textit{Quality of Service} -- QoS) em redes IP dependem de estratégias de controle de vazão e priorização de tráfego, como serviços diferenciados (DiffServ) \cite{santos2017qos}.
 \end{itemize}
 
+\section{Mecanismos de Gerência e Conceitos Avançados de RF}
+\label{sec:fundamentacao_conceitos_avancados}
+
+A análise de desempenho em redes sem fio corporativas exige a compreensão de fenômenos dinâmicos que ocorrem nas camadas Física (PHY) e de Controle de Acesso ao Meio (MAC). Nesta seção, apresentam-se os conceitos chaves de radiofrequência e mecanismos de gerência de espectro que fundamentam as discussões empíricas deste trabalho.
+
+\subsection{Distinção Conceitual: PHY Rate, Link Speed e Throughput}
+\label{subsec:fundamentacao_taxas}
+
+Um dos pontos mais críticos no diagnóstico de redes locais sem fio é a diferenciação entre as taxas de dados medidas nas diversas camadas do modelo de referência. A velocidade física do enlace (\textit{Link Speed} ou \textit{PHY Rate}) representa a taxa nominal bruta de transmissão de bits negociada no ar entre o rádio do Access Point e a placa de rede do dispositivo cliente. Ela é determinada pelo Esquema de Modulação e Codificação (\textit{Modulation and Coding Scheme} -- MCS), que define o tipo de modulação digital (ex: BPSK, QPSK, QAM), a taxa de codificação para correção direta de erros (FEC), a largura do canal de rádio (ex: 20, 40 ou 80~MHz) e a quantidade de fluxos espaciais MIMO ativos.
+
+Por outro lado, a vazão útil (\textit{Throughput}) representa a taxa líquida de dados úteis transferida com sucesso e efetivamente entregue à camada de aplicação. O throughput é inerentemente inferior à velocidade física do enlace devido a múltiplos fatores de sobrecarga de protocolo (overhead):
+\begin{itemize}
+    \item Cabeçalhos de controle e sincronismo das camadas física (PLCP) e de enlace (MAC 802.11);
+    \item Tempos de guarda e espaçamentos obrigatórios entre quadros (como SIFS e DIFS) exigidos pelo protocolo CSMA/CA;
+    \item A necessidade de retransmissões físicas para recuperar quadros aéreos corrompidos ou perdidos no canal;
+    \item A ociosidade do próprio usuário, uma vez que a vazão útil medida reflete diretamente a demanda instantânea das aplicações de software ativas, operando muito abaixo do limite físico do canal na maior parte do tempo.
+\end{itemize}
+
+\subsection{Compartilhamento do Meio Físico: Airtime e Airtime Fairness}
+\label{subsec:fundamentacao_airtime}
+
+Como as transmissões de rádio Wi-Fi ocorrem em um canal compartilhado em regime \textit{half-duplex}, apenas um dispositivo (AP ou cliente) pode transmitir em uma determinada área de cobertura por vez. O recurso físico mais escasso e valioso em uma rede sem fio é o tempo de uso do canal de rádio, comumente denominado tempo de ar (\textit{Airtime}). 
+
+O protocolo CSMA/CA tradicional concede direitos de transmissão com base no número de pacotes a serem enviados. Sob esse modelo, clientes que operam com velocidades de enlace baixas (dispositivos de legado operando sob padrões antigos como 802.11b/g ou localizados nas bordas de cobertura atenuadas) demandam muito mais tempo de ar para transmitir a mesma quantidade de dados do que clientes rápidos situados próximos ao AP. Esse fenômeno degrada severamente a vazão global do rádio, pois os clientes rápidos passam a maior parte do tempo aguardando a liberação do meio pelos clientes lentos.
+
+Para contornar essa ineficiência, as controladoras corporativas modernas implementam o algoritmo de Equidade de Tempo de Ar (\textit{Airtime Fairness} -- ATF). O ATF aloca frações iguais de tempo de transmissão (\textit{Airtime}) para cada cliente conectado, independentemente de sua velocidade física de modulação. Dessa forma, clientes rápidos podem usufruir de taxas de throughput elevadas sem serem penalizados pelo tempo de canal consumido por dispositivos lentos de legado.
+
+\subsection{Utilização de Canal (Channel Utilization)}
+\label{subsec:fundamentacao_utilizacao}
+
+A Utilização de Canal (\textit{Channel Utilization}) mede a fração de tempo total em que a portadora física de RF é percebida como ocupada pelo rádio receptor do Access Point. Essa ocupação é dividida em três parcelas principais:
+\begin{itemize}
+    \item \textbf{Tráfego do próprio AP}: Tempo gasto transmitindo dados para os seus clientes ou recebendo dados deles;
+    \item \textbf{Tráfego co-canal}: Energia detectada proveniente de transmissões legítimas de outros APs ou clientes vizinhos operando no mesmo canal lógico de rádio;
+    \item \textbf{Ruído de Interferência}: Energia eletromagnética detectada no canal que não pode ser decodificada como um quadro 802.11 válido (provocada por redes de vizinhos distantes ou fontes não-Wi-Fi).
+\end{itemize}
+Taxas de utilização de canal acima de 50\% indicam saturação do espectro local, resultando em aumento drástico dos tempos de espera de contenção (\textit{backoff}) e colisões aéreas.
+
+\subsection{Roaming e Fenômenos de Associação: Sticky Client e Band Steering}
+\label{subsec:fundamentacao_associacao}
+
+Em redes sem fio centralizadas, a transição contínua de dispositivos móveis entre as células de cobertura de diferentes Access Points é coordenada por regras de associação e roaming:
+\begin{itemize}
+    \item \textbf{Sticky Client (Cliente Aderente)}: Ocorre quando um dispositivo móvel afasta-se de seu AP original e, apesar de haver um AP mais próximo com sinal excelente, o dispositivo insiste em manter a conexão com o AP distante e atenuado. Como a modulação decai com a distância, esse cliente "grudento" passa a transmitir sob taxas físicas extremamente baixas, consumindo uma parcela desproporcional de \textit{airtime} e deteriorando a capacidade útil global de ambos os APs.
+    
+    \item \textbf{Direcionamento de Banda (Band Steering)}: Trata-se de uma técnica de gerência espectral aplicada pela controladora para otimizar o uso das bandas de frequência. Como a faixa de 2,4~GHz é historicamente congestionada e saturada, o \textit{Band Steering} detecta se o cliente possui rádio de dupla banda (capaz de operar em 5~GHz) e responde ativamente apenas aos seus pedidos de associação em 5~GHz, forçando o dispositivo a migrar para a banda mais limpa e de maior capacidade.
+\end{itemize}
+
 \section{Trabalhos Relacionados}
 \label{sec:fundamentacao_relacionados}
 

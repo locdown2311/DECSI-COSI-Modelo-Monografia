@@ -87,7 +87,7 @@ Para estruturar a transição dos registros brutos capturados até a geração d
 
 As métricas de telemetria física foram consolidadas e parametrizadas. Dentre elas, destaca-se a modelagem de throughput e do equilíbrio na distribuição dos recursos físicos:
 \begin{itemize}
-	\item \textbf{Cálculo de Throughput}: A vazão instantânea do cliente em megabits por segundo (Mbps) é obtida dividindo a diferença incremental do volume total de bytes trafegados (\textit{tx\_bytes} e \textit{rx\_bytes}) pelo intervalo real de tempo decorrido entre duas coletas de telemetria consecutivas;
+	\item \textbf{Cálculo de Throughput}: A vazão do cliente em megabits por segundo (Mbps) é obtida dividindo a diferença incremental do volume total de bytes trafegados (\textit{tx\_bytes} e \textit{rx\_bytes}) pelo intervalo real de tempo decorrido entre duas coletas de telemetria consecutivas. Cumpre esclarecer que esta métrica não representa uma vazão instantânea de pico, mas sim o \textbf{throughput médio integrado em uma janela de amostragem de 5 minutos} (correspondente ao intervalo de consulta telemétrica (\textit{polling}) executado pelos coletores ativos);
 	\item \textbf{Índice de Equidade de Jain (\textit{Jain's Fairness Index})}: Para avaliar o equilíbrio na distribuição da capacidade do rádio entre múltiplos dispositivos que compartilham concorrentemente o canal de RF de um AP, implementou-se o cálculo do Índice de Jain ($J$). Para um instante $t$ com $n$ clientes ativos compartilhando o meio físico, o índice é definido pela Equação~\ref{eq:jain_metodologia}:
 
 	\begin{equation}
@@ -224,6 +224,17 @@ onde:
     \item $S_j$ representa a média de potência de sinal físico recebido (\textit{signal}) no rádio $j$, medida em dBm;
     \item $R_j$ representa a média da taxa de retransmissão de quadros de dados físicos no rádio $j$, expressa em percentual.
 \end{itemize}
+
+\subsection{Justificativa de Escolha do Algoritmo de Clusterização}
+\label{subsec:metodologia_justificativa_cluster}
+
+A escolha do algoritmo \textit{K-Means} em detrimento de outras técnicas clássicas de aprendizado de máquina não-supervisionado, como o agrupamento espacial baseado em densidade (DBSCAN) ou o agrupamento hierárquico aglomerativo, foi baseada em critérios de escalabilidade computacional e adequação à distribuição física das métricas sob análise:
+
+\begin{enumerate}
+    \item \textbf{Complexidade Computacional e Escalabilidade (K-Means vs. Hierárquico)}: O dataset de telemetria deste trabalho possui uma cardinalidade massiva ($N > 350.000$ registros). O algoritmo \textit{K-Means} apresenta complexidade temporal linear $O(t \cdot k \cdot n \cdot d)$ (onde $n$ é o número de amostras, $d$ as dimensões, $k$ o número de clusters e $t$ o número de iterações), o que viabiliza sua execução eficiente na escala de centenas de milhares de observações. Em contraste, os algoritmos de agrupamento hierárquico aglomerativo possuem complexidade de tempo de ordem quadrática ou cúbica $O(n^2 \log n)$ ou $O(n^3)$ e exigem matrizes de distância de complexidade espacial $O(n^2)$. Essa barreira matemática torna o agrupamento hierárquico computacionalmente impraticável para o presente estudo, resultando em estouro de memória física do sistema.
+    
+    \item \textbf{Distribuição de Densidade de Dados Wi-Fi (K-Means vs. DBSCAN)}: O DBSCAN é reconhecido pela capacidade de identificar ruídos e formar agrupamentos de formas geométricas arbitrárias sem exigir a especificação prévia do número de clusters ($K$). Contudo, o DBSCAN falha ao lidar com dados de rede que apresentam distribuições de densidade espacial extremamente variáveis ou assimétricas. Na telemetria Wi-Fi de produção do campus, há um acúmulo massivo de pontos próximos à origem espacial (com throughput zero e poucos clientes ativos devido à ociosidade do meio) e pontos extremamente esparsos quando há tráfego ativo nas salas de aula. Essa variação drástica de densidade impede a definição de um raio de vizinhança global ($\epsilon$) adequado: valores pequenos de $\epsilon$ classificam todo o tráfego ativo de interesse prático como pontos de ruído isolados, enquanto valores maiores de $\epsilon$ fundem toda a rede em um único macro-cluster inútil. O \textit{K-Means}, ao minimizar as variâncias intra-cluster por distâncias euclidianas globais após a padronização das escalas com \textit{StandardScaler}, consegue segmentar de forma estável os rádios em categorias operacionais de carga e perda, mesmo sob distribuições de densidade descontínuas.
+\end{enumerate}
 
 \section{Hipóteses de Pesquisa}
 \label{sec:metodologia_hipoteses}

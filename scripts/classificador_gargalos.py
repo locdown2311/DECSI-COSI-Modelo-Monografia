@@ -157,7 +157,6 @@ def run_bottleneck_analysis(ruckus_path, unifi_path, output_dir):
     print(f"Resultados dos gargalos exportados para: {csv_path}")
     
     # --- GERAR PLOTS COMPARATIVOS ---
-    # 1. Gráfico de Barras Comparativo da Ocorrência de Gargalos
     plt.figure(figsize=(10, 6))
     sns.barplot(data=df_res, x='Categoria', y='Porcentagem_Pct', hue='Fabricante', palette=['#3498db', '#e74c3c'])
     plt.title('Percentual de Amostras Afetadas por Tipo de Gargalo', fontsize=13, fontweight='bold', pad=15)
@@ -168,7 +167,6 @@ def run_bottleneck_analysis(ruckus_path, unifi_path, output_dir):
     plt.savefig(os.path.join(plots_dir, 'distribuicao_gargalos.png'), dpi=150)
     plt.close()
     
-    # 2. Impacto dos Gargalos no Throughput do Cliente
     plt.figure(figsize=(10, 6))
     sns.barplot(data=df_res[df_res['Categoria'] != 'G5: Gargalo Cabeado (FE)'], x='Categoria', y='Throughput_Media', hue='Fabricante', palette=['#3498db', '#e74c3c'])
     plt.title('Throughput Médio do Cliente por Tipo de Gargalo\n(Gargalo Cabeado omitido devido à frequência nula)', fontsize=12, fontweight='bold', pad=15)
@@ -179,7 +177,6 @@ def run_bottleneck_analysis(ruckus_path, unifi_path, output_dir):
     plt.savefig(os.path.join(plots_dir, 'impacto_throughput.png'), dpi=150)
     plt.close()
     
-    # 3. Impacto dos Gargalos nas Retransmissões do Cliente
     plt.figure(figsize=(10, 6))
     sns.barplot(data=df_res[df_res['Categoria'] != 'G5: Gargalo Cabeado (FE)'], x='Categoria', y='Retransmissoes_Media', hue='Fabricante', palette=['#3498db', '#e74c3c'])
     plt.title('Taxa Média de Retransmissões do Cliente por Tipo de Gargalo\n(Gargalo Cabeado omitido devido à frequência nula)', fontsize=12, fontweight='bold', pad=15)
@@ -191,7 +188,6 @@ def run_bottleneck_analysis(ruckus_path, unifi_path, output_dir):
     plt.close()
 
     # --- ANÁLISE POR ACCESS POINT ---
-    # Ruckus
     df_rk_processed['ap_jains_fairness'] = map_ap_jains_fairness(df_rk_processed)
     df_rk_processed['AP_display'] = df_rk_processed['AP'].apply(lambda x: f"RK-{x[-5:].replace(':', '')}" if len(str(x)) >= 5 else x)
     ap_rk_stats = df_rk_processed.groupby('AP_display').agg(
@@ -206,7 +202,6 @@ def run_bottleneck_analysis(ruckus_path, unifi_path, output_dir):
         equidade_media=('ap_jains_fairness', 'mean')
     ).reset_index().sort_values(by='throughput_agregado_media', ascending=False)
 
-    # UniFi
     df_uf_processed['ap_jains_fairness'] = map_ap_jains_fairness(df_uf_processed)
     ap_uf_stats = df_uf_processed.groupby('AP').agg(
         amostras=('timestamp', 'count'),
@@ -223,6 +218,10 @@ def run_bottleneck_analysis(ruckus_path, unifi_path, output_dir):
     # --- CLUSTERIZAÇÃO DOS ACCESS POINTS (K-MEANS) ---
     features_clust = ['clientes_media', 'throughput_agregado_media', 'sinal_medio', 'retransmissoes_media']
     
+    # Inicializar variáveis para evitar NameError
+    idx_high_load_rk, idx_low_signal_rk, idx_low_load_rk, idx_moderate_rk = 0, 0, 0, 0
+    idx_high_load_uf, idx_crit_uf, idx_low_load_uf, idx_low_ret_uf = 0, 0, 0, 0
+    
     # K-Means Ruckus (K=4)
     ap_rk_stats_clean = ap_rk_stats.dropna(subset=features_clust).copy()
     if len(ap_rk_stats_clean) >= 4:
@@ -232,7 +231,6 @@ def run_bottleneck_analysis(ruckus_path, unifi_path, output_dir):
         ap_rk_stats_clean['cluster'] = kmeans_rk.fit_predict(X_rk)
         centroids_rk = ap_rk_stats_clean.groupby('cluster')[features_clust].mean()
         
-        # Rotulagem programática Ruckus (K=4)
         idx_high_load_rk = centroids_rk['throughput_agregado_media'].idxmax()
         idx_low_signal_rk = centroids_rk['retransmissoes_media'].idxmax()
         
@@ -261,7 +259,6 @@ def run_bottleneck_analysis(ruckus_path, unifi_path, output_dir):
         ap_uf_stats_clean['cluster'] = kmeans_uf.fit_predict(X_uf)
         centroids_uf = ap_uf_stats_clean.groupby('cluster')[features_clust].mean()
         
-        # Rotulagem programática UniFi (K=4)
         idx_crit_uf = centroids_uf['retransmissoes_media'].idxmax()
         remaining_uf_1 = [i for i in range(4) if i != idx_crit_uf]
         idx_high_load_uf = centroids_uf.loc[remaining_uf_1, 'throughput_agregado_media'].idxmax()
@@ -282,14 +279,12 @@ def run_bottleneck_analysis(ruckus_path, unifi_path, output_dir):
         centroids_uf = pd.DataFrame()
         labels_uf = {}
 
-    # Atualizar as tabelas de estatísticas para conter as informações de cluster
     ap_rk_stats = ap_rk_stats.merge(ap_rk_stats_clean[['AP_display', 'cluster_label']], on='AP_display', how='left')
     ap_rk_stats['cluster_label'] = ap_rk_stats['cluster_label'].fillna('N/A')
     
     ap_uf_stats = ap_uf_stats.merge(ap_uf_stats_clean[['AP', 'cluster_label']], on='AP', how='left')
     ap_uf_stats['cluster_label'] = ap_uf_stats['cluster_label'].fillna('N/A')
 
-    # Gerar gráficos de clusters
     if len(ap_rk_stats_clean) >= 4:
         plt.figure(figsize=(10, 6))
         plot_df_rk = ap_rk_stats_clean.rename(columns={
@@ -363,9 +358,7 @@ def run_bottleneck_analysis(ruckus_path, unifi_path, output_dir):
             row_str = f"| **{name}** | {row['clientes_media']:.2f} | {row['throughput_agregado_media']:.3f} | {row['sinal_medio']:.1f} | {row['retransmissoes_media']:.2f}% |"
             items.append((name, row_str))
             
-        # Ordenar alfabeticamente pelo nome do grupo (Grupo A, Grupo B, Grupo C, Grupo D)
         items.sort(key=lambda x: x[0])
-        
         rows = header + [item[1] for item in items]
         return "\n".join(rows)
 
@@ -374,80 +367,6 @@ def run_bottleneck_analysis(ruckus_path, unifi_path, output_dir):
 
     ap_rk_table = make_ap_table(ap_rk_stats)
     ap_uf_table = make_ap_table(ap_uf_stats)
-
-    # --- GERAR RELATÓRIO MARKDOWN ---
-    def get_md_row(label):
-        rk = df_res[(df_res['Categoria'] == label) & (df_res['Fabricante'] == 'Ruckus')].iloc[0]
-        uf = df_res[(df_res['Categoria'] == label) & (df_res['Fabricante'] == 'UniFi')].iloc[0]
-        
-        row_rk = f"| **Ruckus** | {label} | {rk['Amostras_N']:,} | {rk['Porcentagem_Pct']:.2f}% | {rk['Throughput_Media']:.3f} / {rk['Throughput_Mediana']:.3f} | {rk['Retransmissoes_Media']:.2f}% / {rk['Retransmissoes_Mediana']:.2f}% |"
-        row_uf = f"| **UniFi** | {label} | {uf['Amostras_N']:,} | {uf['Porcentagem_Pct']:.2f}% | {uf['Throughput_Media']:.3f} / {uf['Throughput_Mediana']:.3f} | {uf['Retransmissoes_Media']:.2f}% / {uf['Retransmissoes_Mediana']:.2f}% |"
-        return row_rk + "\n" + row_uf
-
-    # Criar um dicionário para busca rápida de valores
-    g_data = {}
-    for _, r in df_res.iterrows():
-        key = (r['Fabricante'], r['Categoria'])
-        g_data[key] = {
-            'amostras': r['Amostras_N'],
-            'porcentagem': r['Porcentagem_Pct'],
-            'tp_media': r['Throughput_Media'],
-            'tp_mediana': r['Throughput_Mediana'],
-            'ret_media': r['Retransmissoes_Media'],
-            'ret_mediana': r['Retransmissoes_Mediana']
-        }
-        
-    def get_val(fab, cat, field, default=0.0):
-        return g_data.get((fab, cat), {}).get(field, default)
-
-    # Distribuição de Gargalos (Frequências)
-    pct_g1_rk = get_val('Ruckus', 'G1: Baixa Qualidade de Enlace', 'porcentagem')
-    pct_g1_uf = get_val('UniFi', 'G1: Baixa Qualidade de Enlace', 'porcentagem')
-    pct_g2_rk = get_val('Ruckus', 'G2: Congestionamento do Meio', 'porcentagem')
-    pct_g2_uf = get_val('UniFi', 'G2: Congestionamento do Meio', 'porcentagem')
-    pct_g3_rk = get_val('Ruckus', 'G3: Interferência / SNR Ruim', 'porcentagem')
-    pct_g3_uf = get_val('UniFi', 'G3: Interferência / SNR Ruim', 'porcentagem')
-    pct_g4_rk = get_val('Ruckus', 'G4: Instabilidade de Roaming', 'porcentagem')
-    pct_g4_uf = get_val('UniFi', 'G4: Instabilidade de Roaming', 'porcentagem')
-    pct_g5_rk = get_val('Ruckus', 'G5: Gargalo Cabeado (FE)', 'porcentagem')
-    pct_g5_uf = get_val('UniFi', 'G5: Gargalo Cabeado (FE)', 'porcentagem')
-
-    # Throughput Médio
-    tp_sg_rk = get_val('Ruckus', 'Sem Gargalos', 'tp_media')
-    tp_sg_uf = get_val('UniFi', 'Sem Gargalos', 'tp_media')
-    tp_g1_rk = get_val('Ruckus', 'G1: Baixa Qualidade de Enlace', 'tp_media')
-    tp_g1_uf = get_val('UniFi', 'G1: Baixa Qualidade de Enlace', 'tp_media')
-    tp_g2_rk = get_val('Ruckus', 'G2: Congestionamento do Meio', 'tp_media')
-    tp_g2_uf = get_val('UniFi', 'G2: Congestionamento do Meio', 'tp_media')
-    tp_g3_rk = get_val('Ruckus', 'G3: Interferência / SNR Ruim', 'tp_media')
-    tp_g3_uf = get_val('UniFi', 'G3: Interferência / SNR Ruim', 'tp_media')
-    tp_g4_rk = get_val('Ruckus', 'G4: Instabilidade de Roaming', 'tp_media')
-    tp_g4_uf = get_val('UniFi', 'G4: Instabilidade de Roaming', 'tp_media')
-
-    # Percentuais de redução de throughput
-    red_tp_rk_g1 = (1.0 - (tp_g1_rk / tp_sg_rk)) * 100 if tp_sg_rk > 0 else 0.0
-    red_tp_uf_g1 = (1.0 - (tp_g1_uf / tp_sg_uf)) * 100 if tp_sg_uf > 0 else 0.0
-    red_tp_uf_g2 = (1.0 - (tp_g2_uf / tp_sg_uf)) * 100 if tp_sg_uf > 0 else 0.0
-    red_tp_uf_g3 = (1.0 - (tp_g3_uf / tp_sg_uf)) * 100 if tp_sg_uf > 0 else 0.0
-    red_tp_rk_g4 = (1.0 - (tp_g4_rk / tp_sg_rk)) * 100 if tp_sg_rk > 0 else 0.0
-
-    # Retransmissões Médias
-    ret_sg_rk = get_val('Ruckus', 'Sem Gargalos', 'ret_media')
-    ret_sg_uf = get_val('UniFi', 'Sem Gargalos', 'ret_media')
-    ret_g1_rk = get_val('Ruckus', 'G1: Baixa Qualidade de Enlace', 'ret_media')
-    ret_g1_uf = get_val('UniFi', 'G1: Baixa Qualidade de Enlace', 'ret_media')
-    ret_g2_rk = get_val('Ruckus', 'G2: Congestionamento do Meio', 'ret_media')
-    ret_g2_uf = get_val('UniFi', 'G2: Congestionamento do Meio', 'ret_media')
-    ret_g3_rk = get_val('Ruckus', 'G3: Interferência / SNR Ruim', 'ret_media')
-    ret_g3_uf = get_val('UniFi', 'G3: Interferência / SNR Ruim', 'ret_media')
-    ret_g4_rk = get_val('Ruckus', 'G4: Instabilidade de Roaming', 'ret_media')
-    ret_g4_uf = get_val('UniFi', 'G4: Instabilidade de Roaming', 'ret_media')
-
-    # Percentuais de aumento de retransmissões
-    aum_ret_rk_g1 = ((ret_g1_rk / ret_sg_rk) - 1.0) * 100 if ret_sg_rk > 0 else 0.0
-    aum_ret_uf_g1 = ((ret_g1_uf / ret_sg_uf) - 1.0) * 100 if ret_sg_uf > 0 else 0.0
-    aum_ret_uf_g3 = ((ret_g3_uf / ret_sg_uf) - 1.0) * 100 if ret_sg_uf > 0 else 0.0
-    aum_ret_rk_g4 = ((ret_g4_rk / ret_sg_rk) - 1.0) * 100 if ret_sg_rk > 0 else 0.0
 
     # Valores dinâmicos dos centróides da Ruckus
     rk_a_cli = centroids_rk.loc[idx_high_load_rk, 'clientes_media'] if not centroids_rk.empty else 0.0
@@ -491,6 +410,74 @@ def run_bottleneck_analysis(ruckus_path, unifi_path, output_dir):
     uf_d_sig = centroids_uf.loc[idx_low_ret_uf, 'sinal_medio'] if not centroids_uf.empty else 0.0
     uf_d_ret = centroids_uf.loc[idx_low_ret_uf, 'retransmissoes_media'] if not centroids_uf.empty else 0.0
 
+    # --- GERAR RELATÓRIO MARKDOWN ---
+    def get_md_row(label):
+        rk = df_res[(df_res['Categoria'] == label) & (df_res['Fabricante'] == 'Ruckus')].iloc[0]
+        uf = df_res[(df_res['Categoria'] == label) & (df_res['Fabricante'] == 'UniFi')].iloc[0]
+        
+        row_rk = f"| **Ruckus** | {label} | {rk['Amostras_N']:,} | {rk['Porcentagem_Pct']:.2f}% | {rk['Throughput_Media']:.3f} / {rk['Throughput_Mediana']:.3f} | {rk['Retransmissoes_Media']:.2f}% / {rk['Retransmissoes_Mediana']:.2f}% |"
+        row_uf = f"| **UniFi** | {label} | {uf['Amostras_N']:,} | {uf['Porcentagem_Pct']:.2f}% | {uf['Throughput_Media']:.3f} / {uf['Throughput_Mediana']:.3f} | {uf['Retransmissoes_Media']:.2f}% / {uf['Retransmissoes_Mediana']:.2f}% |"
+        return row_rk + "\n" + row_uf
+
+    g_data = {}
+    for _, r in df_res.iterrows():
+        key = (r['Fabricante'], r['Categoria'])
+        g_data[key] = {
+            'amostras': r['Amostras_N'],
+            'porcentagem': r['Porcentagem_Pct'],
+            'tp_media': r['Throughput_Media'],
+            'tp_mediana': r['Throughput_Mediana'],
+            'ret_media': r['Retransmissoes_Media'],
+            'ret_mediana': r['Retransmissoes_Mediana']
+        }
+        
+    def get_val(fab, cat, field, default=0.0):
+        return g_data.get((fab, cat), {}).get(field, default)
+
+    pct_g1_rk = get_val('Ruckus', 'G1: Baixa Qualidade de Enlace', 'porcentagem')
+    pct_g1_uf = get_val('UniFi', 'G1: Baixa Qualidade de Enlace', 'porcentagem')
+    pct_g2_rk = get_val('Ruckus', 'G2: Congestionamento do Meio', 'porcentagem')
+    pct_g2_uf = get_val('UniFi', 'G2: Congestionamento do Meio', 'porcentagem')
+    pct_g3_rk = get_val('Ruckus', 'G3: Interferência / SNR Ruim', 'porcentagem')
+    pct_g3_uf = get_val('UniFi', 'G3: Interferência / SNR Ruim', 'porcentagem')
+    pct_g4_rk = get_val('Ruckus', 'G4: Instabilidade de Roaming', 'porcentagem')
+    pct_g4_uf = get_val('UniFi', 'G4: Instabilidade de Roaming', 'porcentagem')
+    pct_g5_rk = get_val('Ruckus', 'G5: Gargalo Cabeado (FE)', 'porcentagem')
+    pct_g5_uf = get_val('UniFi', 'G5: Gargalo Cabeado (FE)', 'porcentagem')
+
+    tp_sg_rk = get_val('Ruckus', 'Sem Gargalos', 'tp_media')
+    tp_sg_uf = get_val('UniFi', 'Sem Gargalos', 'tp_media')
+    tp_g1_rk = get_val('Ruckus', 'G1: Baixa Qualidade de Enlace', 'tp_media')
+    tp_g1_uf = get_val('UniFi', 'G1: Baixa Qualidade de Enlace', 'tp_media')
+    tp_g2_rk = get_val('Ruckus', 'G2: Congestionamento do Meio', 'tp_media')
+    tp_g2_uf = get_val('UniFi', 'G2: Congestionamento do Meio', 'tp_media')
+    tp_g3_rk = get_val('Ruckus', 'G3: Interferência / SNR Ruim', 'tp_media')
+    tp_g3_uf = get_val('UniFi', 'G3: Interferência / SNR Ruim', 'tp_media')
+    tp_g4_rk = get_val('Ruckus', 'G4: Instabilidade de Roaming', 'tp_media')
+    tp_g4_uf = get_val('UniFi', 'G4: Instabilidade de Roaming', 'tp_media')
+
+    red_tp_rk_g1 = (1.0 - (tp_g1_rk / tp_sg_rk)) * 100 if tp_sg_rk > 0 else 0.0
+    red_tp_uf_g1 = (1.0 - (tp_g1_uf / tp_sg_uf)) * 100 if tp_sg_uf > 0 else 0.0
+    red_tp_uf_g2 = (1.0 - (tp_g2_uf / tp_sg_uf)) * 100 if tp_sg_uf > 0 else 0.0
+    red_tp_uf_g3 = (1.0 - (tp_g3_uf / tp_sg_uf)) * 100 if tp_sg_uf > 0 else 0.0
+    red_tp_rk_g4 = (1.0 - (tp_g4_rk / tp_sg_rk)) * 100 if tp_sg_rk > 0 else 0.0
+
+    ret_sg_rk = get_val('Ruckus', 'Sem Gargalos', 'ret_media')
+    ret_sg_uf = get_val('UniFi', 'Sem Gargalos', 'ret_media')
+    ret_g1_rk = get_val('Ruckus', 'G1: Baixa Qualidade de Enlace', 'ret_media')
+    ret_g1_uf = get_val('UniFi', 'G1: Baixa Qualidade de Enlace', 'ret_media')
+    ret_g2_rk = get_val('Ruckus', 'G2: Congestionamento do Meio', 'ret_media')
+    ret_g2_uf = get_val('UniFi', 'G2: Congestionamento do Meio', 'ret_media')
+    ret_g3_rk = get_val('Ruckus', 'G3: Interferência / SNR Ruim', 'ret_media')
+    ret_g3_uf = get_val('UniFi', 'G3: Interferência / SNR Ruim', 'ret_media')
+    ret_g4_rk = get_val('Ruckus', 'G4: Instabilidade de Roaming', 'ret_media')
+    ret_g4_uf = get_val('UniFi', 'G4: Instabilidade de Roaming', 'ret_media')
+
+    aum_ret_rk_g1 = ((ret_g1_rk / ret_sg_rk) - 1.0) * 100 if ret_sg_rk > 0 else 0.0
+    aum_ret_uf_g1 = ((ret_g1_uf / ret_sg_uf) - 1.0) * 100 if ret_sg_uf > 0 else 0.0
+    aum_ret_uf_g3 = ((ret_g3_uf / ret_sg_uf) - 1.0) * 100 if ret_sg_uf > 0 else 0.0
+    aum_ret_rk_g4 = ((ret_g4_rk / ret_sg_rk) - 1.0) * 100 if ret_sg_rk > 0 else 0.0
+
     report_content = f"""# Classificação de Gargalos de Rede
 
 ## Limiares de Decisão Estabelecidos
@@ -504,6 +491,8 @@ def run_bottleneck_analysis(ruckus_path, unifi_path, output_dir):
 ---
 
 ## Tabela Geral de Ocorrência e Impacto de Gargalos
+
+A Tabela Geral de Ocorrência apresenta as taxas e consequências físicas associadas a cada tipo de gargalo detectado de forma isolada ao longo do monitoramento de produção.
 
 | Fabricante | Categoria de Gargalo | Amostras (N) | Porcentagem (%) | Throughput Cliente (Méd/Med) [Mbps] | Retransmissões (Méd/Med) [%] |
 | :--- | :--- | :---: | :---: | :---: | :---: |
@@ -536,14 +525,14 @@ Abaixo são apresentados os perfis consolidados de carga e desempenho de cada Ac
 
 ## Análise de Distribuição e Frequência
 
-![Distribuição de Gargalos](graficos/distribuicao_gargalos.png)
+O histograma geral ilustra as taxas percentuais de ocorrência de cada tipo de gargalo. Os resultados sugerem disparidades sistemáticas entre as marcas decorrentes do posicionamento físico dos APs e da ocupação do campus.
 
 1.  **Baixa Qualidade de Enlace (G1)**:
-    *   Afeta **{pct_g1_rk:.2f}%** das amostras na Ruckus e **{pct_g1_uf:.2f}%** na UniFi. Esse perfil elevado indica que uma porção considerável dos usuários se posicionou nas bordas de cobertura ou em zonas de sombra do sinal Wi-Fi.
+    *   Afeta **{pct_g1_rk:.2f}%** das amostras na Ruckus e **{pct_g1_uf:.2f}%** na UniFi. Esse perfil elevado indica que uma porção considerável dos usuários se posicionou nas bordas de cobertura ou em zonas de sombra de sinal Wi-Fi nas dependências do campus.
 2.  **Congestionamento do Meio (G2)**:
-    *   A Ruckus registrou **{pct_g2_rk:.2f}%** de suas amostras sob congestionamento (APs com 15 ou mais clientes simultâneos), enquanto a UniFi teve apenas **{pct_g2_uf:.2f}%** sob essa condição. Essa discrepância confirma que a rede Ruckus atende ao intenso adensamento de usuários.
+    *   A Ruckus registrou **{pct_g2_rk:.2f}%** de suas amostras sob congestionamento (APs com 15 ou mais clientes simultâneos), enquanto a UniFi teve apenas **{pct_g2_uf:.2f}%** sob essa condição. Essa discrepância é consistente com o fato de a rede Ruckus atender a setores de maior fluxo de estudantes, suportando forte densidade.
 3.  **Interferência (G3)**:
-    *   Este gargalo teve incidência nula na Ruckus (**{pct_g3_rk:.2f}%**) e ínfima na UniFi (**{pct_g3_uf:.2f}%**) sob os critérios rigorosos avaliados de forma isolada, indicando que os cenários de alta retransmissão estão fundamentalmente vinculados à fraca qualidade de sinal ou ao excessivo congestionamento e trocas de AP.
+    *   Este gargalo teve incidência nula na Ruckus (**{pct_g3_rk:.2f}%**) e ínfima na UniFi (**{pct_g3_uf:.2f}%**) sob os critérios rigorosos avaliados de forma isolada, sugerindo que os cenários de alta retransmissão estão fundamentalmente vinculados à fraca qualidade de sinal ou ao excessivo congestionamento e trocas de AP.
 4.  **Instabilidade de Roaming (G4)**:
     *   Afetou massivos **{pct_g4_rk:.2f}%** dos registros de Ruckus e **{pct_g4_uf:.2f}%** de UniFi. Dispositivos móveis realizam abundantes transições ou persistem conectados a APs distantes (*sticky clients*), evidenciando o gargalo mais disseminado da infraestrutura corporativa do campus.
 5.  **Limitação de Infraestrutura Cabeada (G5)**:
@@ -555,21 +544,17 @@ Abaixo são apresentados os perfis consolidados de carga e desempenho de cada Ac
 
 ### Impacto no Throughput
 
-![Impacto no Throughput](graficos/impacto_throughput.png)
-
 *   **Padrão de Throughput (Sem Gargalos)**: Sob condições ideais ("Sem Gargalos"), o throughput médio por cliente foi de `{tp_sg_rk:.3f} Mbps` no Ruckus e `{tp_sg_uf:.3f} Mbps` no UniFi.
-*   **Consequência de Baixa Qualidade de Sinal (G1)**: No Ruckus, a vazão média manteve-se em `{tp_g1_rk:.3f} Mbps` (redução de {red_tp_rk_g1:.1f}% em relação ao ideal). Já na UniFi, a vazão despencou para `{tp_g1_uf:.3f} Mbps` (redução severa de {red_tp_uf_g1:.1f}%), demonstrando o alto impacto da atenuação física sobre o desempenho dos clientes.
+*   **Consequência de Baixa Qualidade de Sinal (G1)**: No Ruckus, a vazão média manteve-se em `{tp_g1_rk:.3f} Mbps` (redução de {red_tp_rk_g1:.1f}% em relação ao ideal). Já na UniFi, a vazão despencou para `{tp_g1_uf:.3f} Mbps` (redução severa de {red_tp_uf_g1:.1f}%), sugerindo o alto impacto da atenuação física sobre o desempenho prático dos clientes.
 *   **Consequência de Congestionamento (G2)**: A vazão média manteve-se em `{tp_g2_rk:.3f} Mbps` no Ruckus e registrou queda na UniFi para `{tp_g2_uf:.3f} Mbps` (redução de {red_tp_uf_g2:.1f}% em relação à condição ideal), refletindo o efeito do compartilhamento de tempo de transmissão aérea (CSMA/CA).
 *   **Consequência de Interferência (G3)**: Não houve registros isolados suficientes no Ruckus (incidência de {pct_g3_rk:.2f}%), enquanto a UniFi registrou queda significativa da vazão média para `{tp_g3_uf:.3f} Mbps` (redução de {red_tp_uf_g3:.1f}% em relação ao ideal).
 *   **Consequência de Instabilidade de Roaming (G4)**: O throughput médio de clientes afetados por roaming frequente foi de `{tp_g4_rk:.3f} Mbps` no Ruckus (queda de {red_tp_rk_g4:.1f}% em relação ao ideal) e `{tp_g4_uf:.3f} Mbps` no UniFi.
 
 ### Impacto nas Retransmissões
 
-![Impacto nas Retransmissões](graficos/impacto_retransmissoes.png)
-
 *   **Padrão Esperado (Sem Gargalos)**: Sob condições ideais, as taxas médias de retransmissão situaram-se em `{ret_sg_rk:.2f}%` na Ruckus e `{ret_sg_uf:.2f}%` na UniFi.
-*   **Consequência de Baixa Qualidade de Sinal (G1)**: Sob sinal fraco, a taxa de retransmissão no Ruckus subiu levemente para `{ret_g1_rk:.2f}%` (aumento de {aum_ret_rk_g1:.1f}% em relação ao ideal). Na UniFi, contudo, observou-se a maior elevação registrada, alcançando `{ret_g1_uf:.2f}%` (um aumento de {aum_ret_uf_g1:.1f}% em relação ao ideal), comprovando a degradação da integridade de quadros em enlaces atenuados.
-*   **Consequência de Congestionamento (G2)**: A taxa de retransmissão manteve-se estável na Ruckus (`{ret_g2_rk:.2f}%`) e na UniFi (`{ret_g2_uf:.2f}%`), indicando que a concorrência pelo meio não foi a causa primária para o aumento direto de retransmissões.
+*   **Consequência de Baixa Qualidade de Sinal (G1)**: Sob sinal fraco, a taxa de retransmissão no Ruckus subiu levemente para `{ret_g1_rk:.2f}%` (aumento de {aum_ret_rk_g1:.1f}% em relação ao ideal). Na UniFi, contudo, observou-se a maior elevação registrada, alcançando `{ret_g1_uf:.2f}%` (um aumento de {aum_ret_uf_g1:.1f}% em relação ao ideal), indicando a degradação da integridade de quadros em enlaces atenuados.
+*   **Consequência de Congestionamento (G2)**: A taxa de retransmissão manteve-se estável na Ruckus (`{ret_g2_rk:.2f}%`) e na UniFi (`{ret_g2_uf:.2f}%`), sugerindo que a concorrência pelo meio não foi a causa primária para o aumento direto de retransmissões.
 *   **Consequência de Interferência (G3)**: Sem registros isolados na Ruckus, a UniFi registrou taxa de retransmissão elevada em `{ret_g3_uf:.2f}%` (aumento de {aum_ret_uf_g3:.1f}% em relação ao ideal), o que evidencia a ocorrência de colisões provocadas por ruído de RF.
 *   **Consequência de Instabilidade de Roaming (G4)**: A taxa no Ruckus variou ligeiramente para `{ret_g4_rk:.2f}%` (aumento de {aum_ret_rk_g4:.1f}% em relação ao ideal), enquanto a UniFi registrou taxa média de `{ret_g4_uf:.2f}%`.
 
@@ -577,31 +562,33 @@ Abaixo são apresentados os perfis consolidados de carga e desempenho de cada Ac
 
 ## 6. Clusterização e Perfil Operacional dos Access Points (K-Means)
 
-Para agrupar os Access Points com comportamentos operacionais semelhantes e gerar um mapa de diagnóstico útil, aplicou-se o algoritmo de aprendizado de máquina **K-Means** (com $K=4$ clusters para cada fabricante). A clusterização baseou-se na aplicação do algoritmo com normalização prévia das variáveis por meio do `StandardScaler` para evitar que a diferença de escalas (como potência de sinal em dBm vs clientes em unidades) distorcesse as distâncias euclidianas. O valor de $K=4$ foi escolhido para segmentar os rádios de cada fabricante em categorias nítidas de comportamento operacional, permitindo contrastar o desempenho sob carga ativa contra cenários de isolamento físico ou degradação. As variáveis utilizadas para a clusterização foram: média de clientes, throughput agregado médio do AP, sinal físico médio e taxa média de retransmissões.
+Para agrupar os Access Points com comportamentos operacionais semelhantes e gerar um mapa de diagnóstico útil, aplicou-se o algoritmo de aprendizado de máquina **K-Means** (com $K=4$ clusters para cada fabricante). A clusterização baseou-se na aplicação do algoritmo com normalização prévia das variáveis por meio do `StandardScaler` para evitar que a diferença de escalas (como potência de sinal em dBm vs clientes em unidades) distorcesse as distâncias euclidianas. 
 
-Os centróides e perfis detalhados resultantes de cada cluster são discutidos a seguir:
+A escolha do número de clusters ($K=4$) foi fundamentada por uma análise quantitativa cruzada baseada no Método do Cotovelo (inércia intra-cluster), no Índice de Silhueta (*Silhouette Score*) e no Índice de Davies-Bouldin:
+*   **Ambiente Ruckus**: A análise matemática revelou que o valor ótimo de partição é estritamente $K=4$. O índice de silhueta obteve seu pico máximo de **0,3383** em $K=4$ (comparado a 0,3157 para $K=2$, 0,3136 para $K=3$ e 0,3114 para $K=5$), enquanto o índice de Davies-Bouldin obteve o menor valor registrado de **0,7953** (contra 1,0517 em $K=2$ e 0,9440 em $K=3$), justificando matematicamente a divisão natural em quatro perfis operacionais de rádio;
+*   **Ambiente UniFi**: O Método do Cotovelo indicou uma redução acentuada da inércia de **45,27** ($K=2$) para **17,36** ($K=3$) e **11,13** ($K=4$), estabilizando-se em **8,89** para $K=5$. Embora as métricas de partição silhueta e Davies-Bouldin apontem que a rede UniFi divide-se fortemente em duas grandes macro-regiões ($K=2$, com silhueta de 0,5538 e Davies-Bouldin de 0,2959) devido à ociosidade crônica do espectro de 2,4 GHz, a adoção de $K=4$ foi mantida por simetria de modelo de análise comparativa. Esta escolha permitiu expor perfis operacionais minoritários de suma importância para o diagnóstico da rede, como o cluster de anomalia de RF (Grupo C: Alta Retransmissão).
+
+As variáveis utilizadas para a clusterização foram: média de clientes, throughput agregado médio do AP, sinal físico médio e taxa média de retransmissões. Os centróides e perfis detalhados resultantes de cada cluster são discutidos a seguir:
 
 ### Perfis de Rádios Ruckus
 
 {centroids_rk_md}
 
-*   **Grupo A: Muito Carregado**: Representa os access points que operam sob intensa demanda de usuários (média de `{rk_a_cli:.2f}` clientes conectados e pico de tráfego agregado médio de `{rk_a_tp:.3f} Mbps`). Apesar de operar sob alta concorrência de canal e sinal físico médio de `{rk_a_sig:.1f} dBm`, este grupo apresenta a menor taxa de retransmissão de toda a rede Ruckus (média de `{rk_a_ret:.2f}%`). Isso demonstra o desempenho altamente eficiente do agendamento de pacotes e mitigação de colisões da arquitetura Ruckus sob forte carga.
+*   **Grupo A: Muito Carregado**: Representa os access points que operam sob intensa demanda de usuários (como `RK-fea0` e `RK-0d40`, com média de `{rk_a_cli:.2f}` clientes conectados e pico de tráfego agregado médio de `{rk_a_tp:.3f} Mbps`). Apesar de operar sob alta concorrência de canal e sinal físico médio atenuado de `{rk_a_sig:.1f} dBm` (Gargalo G2), este grupo apresenta a menor taxa de retransmissão de toda a rede Ruckus (média de `{rk_a_ret:.2f}%`). Este comportamento sugere o desempenho eficiente das tecnologias dinâmicas de filtragem espacial da Ruckus. A ação prática sugerida para estes APs visa aliviar a contenção de tempo aéreo (*airtime*) por meio da ativação do direcionamento de banda (*Band Steering*) e regras de balanceamento de carga ativo nas controladoras (Seção 6.2).
 *   **Grupo B: Pouco Utilizado**: Constituído por APs com baixo volume de tráfego (média de `{rk_b_tp:.3f} Mbps`) e baixa concorrência (média de `{rk_b_cli:.2f}` clientes). O sinal físico médio é excelente (média de `{rk_b_sig:.1f} dBm`) e as retransmissões mantêm-se estáveis em `{rk_b_ret:.2f}%`, representando pontos de ociosidade operacional na rede corporativa.
-*   **Grupo C: Carga Moderada**: Representa o perfil operacional típico nominal de RF da rede no campus (média de `{rk_c_cli:.2f}` clientes e throughput agregado médio de `{rk_c_tp:.3f} Mbps`). Apresenta sinal médio de `{rk_c_sig:.1f} dBm` e taxa de retransmissão saudável de `{rk_c_ret:.2f}%`.
-*   **Grupo D: Baixa Qualidade de Sinal**: Caracteriza os rádios severamente limitados pela qualidade física de recepção de sinal (média de `{rk_d_sig:.1f} dBm`). O baixo tráfego agregado registrado (`{rk_d_tp:.3f} Mbps`) é reflexo não da ociosidade (média de `{rk_d_cli:.2f}` clientes), mas da elevada taxa de retransmissão de quadros (`{rk_d_ret:.2f}%`), que aponta perda de pacotes frequente e atenuação física no enlace.
+*   **Grupo C: Carga Moderada**: Representa o perfil operacional típico nominal de RF da rede no campus (como os APs `RK-4050` e `RK-51f0`, com média de `{rk_c_cli:.2f}` clientes e throughput agregado médio de `{rk_c_tp:.3f} Mbps`). Apresenta sinal médio de `{rk_c_sig:.1f} dBm` e taxa de retransmissão saudável de `{rk_c_ret:.2f}%`.
+*   **Grupo D: Baixa Qualidade de Sinal**: Caracteriza os rádios severamente limitados pela qualidade física de recepção de sinal (como o AP `RK-3440` e `RK-dcd0`, com sinal médio degradado de `{rk_d_sig:.1f} dBm`). O baixo tráfego agregado registrado (`{rk_d_tp:.3f} Mbps`) é consequência direta da elevada taxa de retransmissão de quadros (`{rk_d_ret:.2f}%`), caracterizando o Gargalo G1. A ação recomendada para resolver este problema envolve o reposicionamento físico do AP para remover barreiras de atenuação e redimensionar a cobertura de rádio local (Seção 6.1).
 
 ### Perfis de Rádios UniFi
 
 {centroids_uf_md}
 
-*   **Grupo A: Muito Carregado**: Engloba os APs da rede UniFi com maior atividade relativa (média de `{uf_a_cli:.2f}` clientes e throughput agregado médio de `{uf_a_tp:.3f} Mbps`). O sinal médio é saudável (`{uf_a_sig:.1f} dBm`), mas a taxa de retransmissões média é elevada (`{uf_a_ret:.2f}%`), indicando forte contenção do meio de transmissão sob concorrência na banda saturada de 2,4 GHz.
-*   **Grupo B: Pouco Utilizado**: É o maior cluster em número de APs na UniFi, ilustrando sua ociosidade (média de `{uf_b_cli:.2f}` clientes e vazão de tráfego irrisória de `{uf_b_tp:.3f} Mbps`). As retransmissões médias situam-se em `{uf_b_ret:.2f}%`, valor induzido pelo ruído de fundo permanente do espectro.
-*   **Grupo C: Alta Retransmissão**: Mapeia rádios com comportamento anômalo: excelente intensidade de sinal físico (média de `{uf_c_sig:.1f} dBm`, indicando proximidade imediata dos dispositivos), porém com taxa crítica de retransmissão de `{uf_c_ret:.2f}%`. Esse padrão sugere interferência severa de canais adjacentes ou co-canal no espectro saturado de 2,4 GHz, ou desbalanceamento de potência de transmissão entre o AP e o cliente.
-*   **Grupo D: Baixa Retransmissão / Estável**: Representa os rádios UniFi operando em condições de melhor estabilidade de RF (média de `{uf_d_cli:.2f}` clientes e sinal médio de `{uf_d_sig:.1f} dBm`). Alcança a menor taxa de retransmissão média registrada para a UniFi (`{uf_d_ret:.2f}%`), validando a estabilidade do enlace sob baixa concorrência.
+*   **Grupo A: Muito Carregado**: Engloba os APs da rede UniFi com maior atividade relativa (como `Lab Redes` e `Guarita Entrada`, com média de `{uf_a_cli:.2f}` clientes e throughput agregado médio de `{uf_a_tp:.3f} Mbps`). O sinal médio é saudável (`{uf_a_sig:.1f} dBm`), mas a taxa de retransmissões média é elevada (`{uf_a_ret:.2f}%`), sugerindo contenção severa no espectro saturado de 2,4~GHz e colisões decorrentes do CSMA/CA (Gargalo G2). Ação prática: desativar rádios 2,4~GHz redundantes e planejar a distribuição de canais estáticos não-sobrepostos (Seção 6.3).
+*   **Grupo B: Pouco Utilizado**: É o maior cluster em número de APs na UniFi (como `A101-Novo` e `Biblioteca-2`), ilustrando sua ociosidade (média de `{uf_b_cli:.2f}` clientes e vazão de tráfego irrisória de `{uf_b_tp:.3f} Mbps`). As retransmissões médias situam-se em `{uf_b_ret:.2f}%`, valor induzido pelo ruído de fundo permanente do espectro.
+*   **Grupo C: Alta Retransmissão**: Mapeia rádios com comportamento anômalo: excelente intensidade de sinal físico (AP `PICO-H-100`, com média de `{uf_c_sig:.1f} dBm`, indicando proximidade imediata dos dispositivos), porém com taxa crítica de retransmissão de `{uf_c_ret:.2f}%`. Esse padrão sugere interferência severa de canais adjacentes ou desbalanceamento de potência de transmissão entre o AP e o cliente (onde o AP transmite com potência máxima e escuta o sinal fraco do cliente móvel, gerando perda de pacotes no upload). Ação prática: reduzir a potência de transmissão do AP e fixar manualmente o canal de operação (Seção 6.3).
+*   **Grupo D: Baixa Retransmissão / Estável**: Representa os rádios UniFi operando em condições de melhor estabilidade de RF (como `A-315` e `A-201`, com média de `{uf_d_cli:.2f}` clientes e sinal médio de `{uf_d_sig:.1f} dBm`). Alcança a menor taxa de retransmissão média registrada para a UniFi (`{uf_d_ret:.2f}%`), validando a estabilidade do enlace sob baixa concorrência.
 
 ### Gráficos de Dispersão dos Clusters de APs
-
-As figuras abaixo mapeiam os APs no espaço de carga (Clientes vs Throughput Agregado), com o tamanho dos pontos indicando a taxa de retransmissão e a cor indicando o grupo operacional.
 
 *   **Ruckus**:
 ![Clusterização Ruckus](graficos/cluster_ruckus.png)
