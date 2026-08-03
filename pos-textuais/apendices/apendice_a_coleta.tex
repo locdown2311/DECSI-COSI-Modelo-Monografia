@@ -1,85 +1,38 @@
 % ----------------------------------------------------------
-\chapter{Código de Normalização e Higienização de Dados}
-\label{ap:normalizacao_coleta}
+\chapter{Repositório do Projeto e Códigos de Suporte}
+\label{ap:repositorio_projeto}
 % ----------------------------------------------------------
 
-Este apêndice apresenta o script desenvolvido em Python para carregar, extrair e normalizar os logs telemétricos das controladoras Wi-Fi Ruckus e UniFi. Devido às diferenças nativas nos formatos de reporte e nomes das chaves nos payloads JSON, o script realiza a consolidação das colunas comuns.
+Este apêndice reúne as informações de acesso ao repositório público do projeto no GitHub e descreve a estrutura de scripts de processamento desenvolvida para este trabalho. Visando a reprodutibilidade da pesquisa e a limpeza do documento impresso, todos os códigos-fonte detalhados das rotinas de coleta, higienização, normalização, correlações e classificação de gargalos foram centralizados no repositório.
 
-Abaixo é apresentado o trecho principal da rotina utilizada para extrair os logs brutos e mapear os dados para um formato CSV unificado de telemetria.
+\section{Acesso ao Repositório GitHub}
 
-\begin{lstlisting}[language=Python, caption={Script de Normalização e Higienização da Rede UniFi}, label={lst:filtragem_unifi}]
-import pandas as pd
-import json
+O projeto completo de telemetria, scripts e a pasta do documento monográfico em LaTeX estão disponíveis publicamente sob licença de código aberto no GitHub, acessível por meio do seguinte endereço:
+\begin{center}
+    \url{https://github.com/locdown2311/DECSI-COSI-Modelo-Monografia/tree/v2}
+\end{center}
 
-# Carregar o ficheiro CSV original contendo o log bruto
-df = pd.read_csv('Logs-A-data-2026-06-17.csv')
+No repositório, o leitor encontrará:
+\begin{itemize}
+    \item Os scripts completos de processamento e análise na pasta \texttt{/scripts};
+    \item Arquivos de payloads de telemetria e documentação de APIs na pasta \texttt{/docs};
+    \item Os arquivos originais em formato CSV e os resultados gerados em cada etapa do pipeline.
+\end{itemize}
 
-# Funcao para transformar a string JSON da coluna 'Line' em dicionario
-def parse_line(line):
-    try:
-        return json.loads(line)
-    except:
-        return {}
+\section{Estrutura de Scripts de Processamento}
 
-parsed = pd.json_normalize(df['Line'].apply(parse_line))
+Abaixo são detalhados os principais scripts do pipeline desenvolvidos em Python para a consolidação dos resultados apresentados nesta monografia:
 
-# Criar dicionario mapeando o MAC do AP para o seu Nome
-ap_map = {}
-if 'tipo' in parsed.columns and 'mac' in parsed.columns and 'name' in parsed.columns:
-    ap_df = parsed[parsed['tipo'] == 'ap']
-    for _, row in ap_df.iterrows():
-        if pd.notna(row['mac']) and pd.notna(row['name']):
-            ap_map[row['mac']] = row['name']
-
-telemetria_rows = []
-
-# Extracao de dados para formatar os registros
-for _, row in parsed.iterrows():
-    if row['tipo'] == 'cliente':
-        ts = pd.to_datetime(row['ts']).strftime('%Y-%m-%d %H:%M')
-        ap_mac = row.get('ap_mac', '')
-        ap_name = ap_map.get(ap_mac, ap_mac)
-        client_mac = row.get('mac', '')
-        
-        rssi = row.get('rssi', '')
-        signal = row.get('signal', '')
-        noise = row.get('noise', '')
-        canal = row.get('channel', '')
-        
-        # Conversao de taxas brutas para Mbps
-        tx_bps = float(row.get('tx_bytes_r', 0)) * 8
-        rx_bps = float(row.get('rx_bytes_r', 0)) * 8
-        tx_mbps = tx_bps / 1000000 
-        rx_mbps = rx_bps / 1000000 
-        
-        # Modulacao fisica do Link Speed
-        tx_rate_kbps = float(row.get('tx_rate', 0))
-        rx_rate_kbps = float(row.get('rx_rate', 0))
-        tx_link_mbps = tx_rate_kbps / 1000
-        rx_link_mbps = rx_rate_kbps / 1000
-        
-        ccq = float(row.get('ccq', 1000))
-        retries = (100 - (ccq / 10.0)) if pd.notna(ccq) else 0.0
-        
-        proto = row.get('radio_proto', '')
-        padrao = {'ng': '802.11n', 'ac': '802.11ac', 'ax': '802.11ax', 'g': '802.11g'}.get(proto, proto)
-        
-        telemetria_rows.append({
-            'timestamp': ts,
-            'AP': ap_name,
-            'cliente': client_mac,
-            'RSSI': rssi,
-            'signal': signal,
-            'noise': noise,
-            'canal': canal,
-            'throughput_tx_mbps': tx_mbps,
-            'throughput_rx_mbps': rx_mbps,
-            'link_speed_tx_mbps': tx_link_mbps,
-            'link_speed_rx_mbps': rx_link_mbps,
-            'retransmissoes_pct': retries,
-            'padrao': padrao
-        })
-
-df_output = pd.DataFrame(telemetria_rows)
-df_output.to_csv('unifi_standardized.csv', index=False)
-\end{lstlisting}
+\begin{enumerate}
+    \item \textbf{\texttt{unify\_logs.py}}: Consolida os arquivos de log diários gerados pelas controladoras em um único arquivo bruto unificado para cada fabricante, aplicando filtros iniciais de integridade de data.
+    \item \textbf{\texttt{dataset\_validator.py}}: Realiza o diagnóstico inicial de qualidade de dados brutos consolidados, identificando falhas de amostragem temporal, taxas de medições incompletas e preenchendo ou descartando registros corrompidos.
+    \item \textbf{\texttt{data\_standardizer.py}}: Realiza a limpeza fina de registros inválidos (como MACs vazios ou instâncias sem leitura), converte as grandezas para escalas físicas comuns (e.g., potência de sinal recebido em dBm e vazão em Mbps) e mapeia os nomes legíveis dos Access Points cadastrados.
+    \item \textbf{\texttt{descriptive\_analyzer.py}}: Executa o cálculo das estatísticas descritivas básicas (médias, medianas, quartis e desvios padrão) de todos os parâmetros físicos e plota histogramas e diagramas de caixa (\textit{boxplots}) comparativos.
+    \item \textbf{\texttt{visualizador\_dados.py}}: Gera gráficos temporais de distribuição de clientes únicos ao longo dos dias e os mapas de calor de densidade horária de dispositivos associados por fabricante.
+    \item \textbf{\texttt{analisador\_correlacoes.py}}: Computa as matrizes de correlação cruzada usando os coeficientes de Pearson e Spearman, gerando os mapas de calor gerais e gráficos de dispersão específicos entre variáveis críticas.
+    \item \textbf{\texttt{analisador\_testes.py}}: Aplica os testes de normalidade de Shapiro-Wilk e de significância estatística U de Mann-Whitney para validação das hipóteses, acompanhado do cálculo do tamanho de efeito operacional (\textit{effect size} $r$ e $d$).
+    \item \textbf{\texttt{classificador\_gargalos.py}}: Executa a classificação heurística de gargalos operacionais de rede (G1 a G5), realiza o agrupamento de Access Points via algoritmo K-Means e gera os gráficos correspondentes de distribuição de carga.
+    \item \textbf{\texttt{validador\_kmeans.py}}: Script de validação matemática que calcula a inércia intra-cluster (Método do Cotovelo), o Índice de Silhueta e o Índice de Davies-Bouldin para determinar o número ideal de perfis operacionais de rede ($K$) nos ecossistemas Ruckus e UniFi.
+    \item \textbf{\texttt{run\_pipeline.py}}: Script orquestrador central que executa todo o pipeline de processamento na sequência lógica correta, gerando as tabelas em CSV e convertendo os relatórios finais.
+    \item \textbf{\texttt{convert\_md\_to\_tex.py}}: Script utilitário responsável por ler os relatórios em Markdown, aplicar as regras de escape LaTeX e formatação brasileira de números (decimais por vírgula, milhares por ponto) e exportar os arquivos textuais finais.
+\end{enumerate}

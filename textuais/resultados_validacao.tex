@@ -9,7 +9,6 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
   \caption{Quantidade de Registros}%
   \label{tab:data_validacao_de_dados_1}%
 }{%
-  \resizebox{\textwidth}{!}{%
     \begin{tabular}{lcccc}
       \toprule
       Fabricante & Registros Originais & Registros Duplicados Removidos & Registros Limpos & \% de Redundância \\
@@ -18,7 +17,6 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
       \textbf{UniFi} & 36.180 & 0 & 36.180 & 0,00\% \\
       \bottomrule
     \end{tabular}%
-  }%
 }{%
   \fonte{Produzido pelos autores.}%
 }
@@ -33,7 +31,6 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
   \caption{Período Coberto pela Coleta}%
   \label{tab:data_validacao_de_dados_2}%
 }{%
-  \resizebox{\textwidth}{!}{%
     \begin{tabular}{lccc}
       \toprule
       Fabricante & Data/Hora Inicial (Min) & Data/Hora Final (Max) & Duração Efetiva \\
@@ -42,7 +39,6 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
       \textbf{UniFi} & 23/06/2026 00:02 & 10/07/2026 23:57 & 14 dias úteis \\
       \bottomrule
     \end{tabular}%
-  }%
 }{%
   \fonte{Produzido pelos autores.}%
 }
@@ -59,7 +55,6 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
   \caption{Dados Ausentes (Missing Values)}%
   \label{tab:data_validacao_de_dados_3}%
 }{%
-  \resizebox{\textwidth}{!}{%
     \begin{tabular}{lccc}
       \toprule
       Coluna Padronizada & \% Nulos Ruckus & \% Nulos UniFi & Tipo de Dado \\
@@ -81,7 +76,6 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
       \texttt{padrão} & 0,00\% & 0,00\% & Categórico \\
       \bottomrule
     \end{tabular}%
-  }%
 }{%
   \fonte{Produzido pelos autores.}%
 }
@@ -116,7 +110,6 @@ A tabela abaixo mostra a relação entre os campos extraídos de cada fabricante
   \caption{Equivalência de Métricas (Mapeamento Ruckus vs UniFi)}%
   \label{tab:data_validacao_de_dados_4}%
 }{%
-  \resizebox{\textwidth}{!}{%
     \begin{tabular}{lccc}
       \toprule
       Grandeza Física & Métrica Ruckus (Raw) & Métrica UniFi (Raw) & Coluna Padronizada Final \\
@@ -130,7 +123,6 @@ A tabela abaixo mostra a relação entre os campos extraídos de cada fabricante
       Modulação de Velocidade & \texttt{throughput\_rate} & \texttt{tx\_rate}, \texttt{rx\_rate} & \texttt{link\_speed\_tx\_mbps}, \texttt{link\_speed\_rx\_mbps} \\
       \bottomrule
     \end{tabular}%
-  }%
 }{%
   \fonte{Produzido pelos autores.}%
 }
