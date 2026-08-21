@@ -9,14 +9,16 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
   \caption{Quantidade de Registros}%
   \label{tab:data_validacao_de_dados_1}%
 }{%
+  \centering\footnotesize
+  \resizebox{0.92\textwidth}{!}{%
     \begin{tabular}{lcccc}
-      \toprule
       Fabricante & Registros Originais & Registros Duplicados Removidos & Registros Limpos & \% de Redundância \\
       \midrule
       \textbf{Ruckus} & 318.074 & 0 & 318.074 & 0,00\% \\
       \textbf{UniFi} & 36.180 & 0 & 36.180 & 0,00\% \\
       \bottomrule
     \end{tabular}%
+  }%
 }{%
   \fonte{Produzido pelos autores.}%
 }
@@ -26,19 +28,23 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
 
 \subsection{Período Coberto pela Coleta}
 
+A fim de atestar a simultaneidade e a equivalência temporal das coletas de dados executadas nas duas infraestruturas, delimitou-se o período de monitoramento ativo de cada controladora. A Tabela 2 apresenta as datas iniciais, finais e a duração total efetiva do período amostral sob análise.
+
 \begin{table}[H]
 \IBGEtab{%
   \caption{Período Coberto pela Coleta}%
   \label{tab:data_validacao_de_dados_2}%
 }{%
+  \centering\footnotesize
+  \resizebox{0.78\textwidth}{!}{%
     \begin{tabular}{lccc}
-      \toprule
       Fabricante & Data/Hora Inicial (Min) & Data/Hora Final (Max) & Duração Efetiva \\
       \midrule
       \textbf{Ruckus} & 23/06/2026 00:00 & 10/07/2026 23:55 & 14 dias úteis \\
       \textbf{UniFi} & 23/06/2026 00:02 & 10/07/2026 23:57 & 14 dias úteis \\
       \bottomrule
     \end{tabular}%
+  }%
 }{%
   \fonte{Produzido pelos autores.}%
 }
@@ -55,8 +61,9 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
   \caption{Dados Ausentes (Missing Values)}%
   \label{tab:data_validacao_de_dados_3}%
 }{%
+  \centering\footnotesize
+  \resizebox{\textwidth}{!}{%
     \begin{tabular}{lccc}
-      \toprule
       Coluna Padronizada & \% Nulos Ruckus & \% Nulos UniFi & Tipo de Dado \\
       \midrule
       \texttt{timestamp} & 0,00\% & 0,00\% & Datetime \\
@@ -76,6 +83,7 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
       \texttt{padrão} & 0,00\% & 0,00\% & Categórico \\
       \bottomrule
     \end{tabular}%
+  }%
 }{%
   \fonte{Produzido pelos autores.}%
 }
@@ -85,7 +93,7 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
 
 \begin{itemize}
   \item \textbf{Link Speed no Ruckus}: A taxa de modulação física de TX (\texttt{link\_speed\_tx\_mbps}) foi extraída com sucesso a partir do campo \texttt{throughput\_rate} (em Kbps) nos logs de telemetria da controladora SmartZone. A taxa RX correspondente (\texttt{link\_speed\_rx\_mbps}) não é informada nos logs brutos e é mantida como \texttt{NaN}.
-  \item \textbf{Ruído (Noise) e Sinal (Signal) em Ruckus}: Alguns registros continham valores de sinal zerados ou vazios. Onde o sinal era -100 (vazio padrão) e SNR era 0, o ruído foi definido como NaN para evitar distorções de cálculo.
+  \item \textbf{Ruído (Noise) e Intensidade de Sinal (IS) em Ruckus}: Alguns registros continham valores de intensidade de sinal zerados ou vazios. Onde o sinal era -100 (vazio padrão) e SNR era 0, o ruído foi definido como NaN para evitar distorções de cálculo.
   \item \textbf{Valores Nulos na UniFi}: O dataset UniFi apresenta consistência total (0\% de nulos nas métricas principais de telemetria).
 
 \end{itemize}
@@ -93,7 +101,7 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
 
 As colunas foram padronizadas da seguinte forma:
 \begin{enumerate}
-  \item \textbf{Sinal e Ruído}: Potência medida em \textbf{dBm}.
+  \item \textbf{Intensidade de Sinal (IS) e Ruído}: Potência medida em \textbf{dBm}.
   \item \textbf{RSSI/SNR}: Medido em \textbf{dB} (ou índice relativo na UniFi).
   \item \textbf{Throughput}: Convertido em \textbf{Mbps} (Megabits por segundo) para Downstream (\texttt{tx}) e Upstream (\texttt{rx}).
   \item \textbf{Volume de Dados}: Convertido em \textbf{MB} (Megabytes) acumulados por cliente no período de observação.
@@ -110,19 +118,21 @@ A tabela abaixo mostra a relação entre os campos extraídos de cada fabricante
   \caption{Equivalência de Métricas (Mapeamento Ruckus vs UniFi)}%
   \label{tab:data_validacao_de_dados_4}%
 }{%
+  \centering\footnotesize
+  \resizebox{\textwidth}{!}{%
     \begin{tabular}{lccc}
-      \toprule
       Grandeza Física & Métrica Ruckus (Raw) & Métrica UniFi (Raw) & Coluna Padronizada Final \\
       \midrule
       Potência do Sinal & \texttt{signal\_rssi} & \texttt{signal} & \texttt{signal} (dBm) \\
       Relação Sinal/Ruído & \texttt{snr} & \texttt{rssi} & \texttt{RSSI} (dB) \\
-      Throughput Downstream & \texttt{tx\_bytes / uptime} & \texttt{tx\_bytes\_r \textsuperscript{*} 8} & \texttt{throughput\_tx\_mbps} \\
-      Throughput Upstream & \texttt{rx\_bytes / uptime} & \texttt{rx\_bytes\_r \textsuperscript{*} 8} & \texttt{throughput\_rx\_mbps} \\
+      Throughput Downstream & \texttt{tx\_bytes / uptime} & \texttt{tx\_bytes\_r * 8} & \texttt{throughput\_tx\_mbps} \\
+      Throughput Upstream & \texttt{rx\_bytes / uptime} & \texttt{rx\_bytes\_r * 8} & \texttt{throughput\_rx\_mbps} \\
       Retransmissões & \texttt{tx\_retries / (tx\_pkts + tx\_retries)} & \texttt{100 - (ccq / 10)} & \texttt{retransmissoes\_pct} \\
-      Volume Trafegado & \texttt{tx\_bytes}, \texttt{rx\_bytes} & \texttt{tx\_bytes\_r \textit{ uptime}, \texttt{rx\_bytes\_r } uptime} & \texttt{volume\_tx\_mb}, \texttt{volume\_rx\_mb} \\
+      Volume Trafegado & \texttt{tx\_bytes}, \texttt{rx\_bytes} & \texttt{tx\_bytes\_r * uptime}, \texttt{rx\_bytes\_r * uptime} & \texttt{volume\_tx\_mb}, \texttt{volume\_rx\_mb} \\
       Modulação de Velocidade & \texttt{throughput\_rate} & \texttt{tx\_rate}, \texttt{rx\_rate} & \texttt{link\_speed\_tx\_mbps}, \texttt{link\_speed\_rx\_mbps} \\
       \bottomrule
     \end{tabular}%
+  }%
 }{%
   \fonte{Produzido pelos autores.}%
 }

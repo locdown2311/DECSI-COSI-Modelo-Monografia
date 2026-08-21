@@ -30,14 +30,16 @@
 \end{enumerate}
 \subsection{Tabela Consolidada de Testes de Hipótese}
 
+Para avaliar formalmente se as diferenças observadas entre os grupos de interesse são estatisticamente significativas, executou-se a modelagem de hipóteses sobre os dados amostrais. A tabela a seguir consolida os testes aplicados, comparando o sinal (RSSI), a taxa de retransmissão e o throughput entre as bandas e fabricantes sob análise.
+
 \begin{table}[H]
 \IBGEtab{%
   \caption{Tabela Consolidada de Testes de Hipótese}%
   \label{tab:data_testes_hipotese_1}%
 }{%
+  \centering\footnotesize
   \resizebox{\textwidth}{!}{%
     \begin{tabular}{lcccccc}
-      \toprule
       Métrica & Comparação (A vs B) & Amostras (N\_A vs N\_B) & Média/Mediana (A vs B) & P-valor & Tam. Efeito (r / d) & Signif.? \\
       \midrule
       \textbf{RSSI} & RK 2,4G vs RK 5G & 74.701 vs 210.480 & -67,4/-68,0 vs -76,2/-77,0 & $p < 0,001$ (\textsuperscript{***}) & 0,3685 & \textbf{Sim} \\
@@ -146,9 +148,9 @@ A tabela abaixo apresenta os mesmos testes estatísticos em formato expandido, c
   \caption{Apêndice: Tabela Detalhada de Testes de Hipótese (Reserva)}%
   \label{tab:data_testes_hipotese_2}%
 }{%
+  \centering\footnotesize
   \resizebox{\textwidth}{!}{%
     \begin{tabular}{lcccccccccc}
-      \toprule
       Métrica & Grupo A & Grupo B & Média/Mediana A & Média/Mediana B & Normal A/B & Teste Aplicado & Estatística & P-valor & Tam. Efeito (r / d) & Diferença Significativa? \\
       \midrule
       \textbf{RSSI} & Ruckus 2,4G & Ruckus 5G & -67,406 / -68,000 & -76,188 / -77,000 & Não/Não & Mann-Whitney U & 11665444861,50 & $p < 0,001$ (\textsuperscript{***}) & 0,3685 & \textbf{Sim} \\

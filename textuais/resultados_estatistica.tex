@@ -2,18 +2,20 @@
 
 \subsection{Tabela Geral de Estatísticas Descritivas}
 
+A fim de estabelecer uma visão panorâmica e comparativa das propriedades estatísticas das variáveis coletadas, realizou-se a consolidação descritiva dos dados de telemetria de ambas as redes. A tabela a seguir apresenta as principais medidas de tendência central e de dispersão para os parâmetros analisados.
+
 \begin{table}[H]
 \IBGEtab{%
   \caption{Tabela Geral de Estatísticas Descritivas}%
   \label{tab:data_estatistica_descritiva_1}%
 }{%
+  \centering\footnotesize
   \resizebox{\textwidth}{!}{%
     \begin{tabular}{lccccccccc}
-      \toprule
       Fabricante & Parâmetro Analisado & Registros & Média & Desvio Padrão & Mínimo & Q1 (25\%) & Mediana (Q2) & Q3 (75\%) & Máximo \\
       \midrule
-      \textbf{Ruckus} & Sinal (signal) [dBm] & 285181 & -73,8879 & 10,0487 & -98,0000 & -81,0000 & -75,0000 & -68,0000 & -3,0000 \\
-      \textbf{UniFi} & Sinal (signal) [dBm] & 36180 & -66,5557 & 13,1242 & -93,0000 & -76,0000 & -68,0000 & -57,0000 & -21,0000 \\
+      \textbf{Ruckus} & Intensidade de Sinal (IS) [dBm] & 285181 & -73,8879 & 10,0487 & -98,0000 & -81,0000 & -75,0000 & -68,0000 & -3,0000 \\
+      \textbf{UniFi} & Intensidade de Sinal (IS) [dBm] & 36180 & -66,5557 & 13,1242 & -93,0000 & -76,0000 & -68,0000 & -57,0000 & -21,0000 \\
       \textbf{Ruckus} & RSSI / SNR [dB] & 285181 & -73,8879 & 10,0487 & -98,0000 & -81,0000 & -75,0000 & -68,0000 & -3,0000 \\
       \textbf{UniFi} & RSSI / SNR [dB] & 36180 & 29,2337 & 12,9475 & 3,0000 & 20,0000 & 28,0000 & 38,0000 & 69,0000 \\
       \textbf{Ruckus} & Throughput Total [Mbps] & 318074 & 0,4866 & 1,2428 & 0,0000 & 0,0253 & 0,1187 & 0,4927 & 105,8838 \\
@@ -47,9 +49,9 @@
 \subsection{Principais Descobertas e Comparações}
 
 \begin{enumerate}
-  \item \textbf{Intensidade do Sinal (Signal)}:
+  \item \textbf{Intensidade de Sinal (IS)}:
   \begin{itemize}
-    \item O sinal físico real (em dBm) pode ser comparado diretamente.
+    \item A intensidade do sinal físico real (em dBm) pode ser comparada diretamente.
     \item Valores medianos e quartis mostram a cobertura de sinal observada para os clientes conectados de cada fabricante.
 \end{itemize}
   \item \textbf{Throughput vs Volume}:

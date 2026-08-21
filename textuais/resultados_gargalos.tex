@@ -3,9 +3,9 @@
 \subsection{Limiares de Decisão Estabelecidos}
 
 \begin{enumerate}
-  \item \textbf{G1: Baixa Qualidade de Enlace}: Potência física de sinal recebido pelo AP (\texttt{signal}) < \texttt{-75 dBm}.
+  \item \textbf{G1: Baixa Qualidade de Enlace}: Intensidade de sinal física recebida pelo AP (\texttt{signal}) < \texttt{-75 dBm}.
   \item \textbf{G2: Congestionamento do Meio}: Número de clientes simultâneos conectados no mesmo AP e minuto >= 15.
-  \item \textbf{G3: Interferência / SNR Ruim}: Ruído de fundo (\texttt{noise}) > \texttt{-90 dBm} ou SNR < \texttt{20 dB} em clientes com bom sinal (>= -75 dBm).
+  \item \textbf{G3: Interferência / SNR Ruim}: Ruído de fundo (\texttt{noise}) > \texttt{-90 dBm} ou SNR < \texttt{20 dB} em clientes com boa IS (>= -75 dBm).
   \item \textbf{G4: Instabilidade de Roaming}: Clientes (MAC) que registraram > 5 trocas de AP no período de observação.
   \item \textbf{G5: Gargalo Cabeado (FE)}: Throughput de tráfego agregado sustentado do AP >= 90 Mbps (limite de interface Fast Ethernet de 100 Mbps).
 
@@ -20,8 +20,9 @@ A Tabela Geral de Ocorrência apresenta as taxas e consequências físicas assoc
   \caption{Tabela Geral de Ocorrência e Impacto de Gargalos}%
   \label{tab:data_classificacao_gargalos_1}%
 }{%
+  \centering\footnotesize
+  \resizebox{0.92\textwidth}{!}{%
     \begin{tabular}{lccccc}
-      \toprule
       Fabricante & Categoria de Gargalo & Amostras (N) & Porcentagem (\%) & Throughput Cliente (Méd/Med) [Mbps] & Retransmissões (Méd/Med) [\%] \\
       \midrule
       \textbf{Ruckus} & G1: Baixa Qualidade de Enlace & 138.128 & 43,43\% & 0,521 / 0,131 & 5,44\% / 0,00\% \\
@@ -38,6 +39,7 @@ A Tabela Geral de Ocorrência apresenta as taxas e consequências físicas assoc
       \textbf{UniFi} & Sem Gargalos & 7.622 & 21,07\% & 0,327 / 0,002 & 19,94\% / 10,60\% \\
       \bottomrule
     \end{tabular}%
+  }%
 }{%
   \fonte{Produzido pelos autores.}%
 }
@@ -50,15 +52,17 @@ Abaixo são apresentados os perfis consolidados de carga e desempenho de cada Ac
 
 \subsubsection{Rede Ruckus (APs MAC Simplificados)}
 
+O perfil de carga de tráfego e as condições físicas de rádio para cada ponto de acesso Ruckus foram computados ao longo do período monitorado. A tabela a seguir ordena os APs de forma decrescente pelo throughput médio e associa cada dispositivo a um perfil operacional (cluster) de desempenho.
+
 \begin{table}[H]
 \IBGEtab{%
   \caption{Rede Ruckus (APs MAC Simplificados)}%
   \label{tab:data_classificacao_gargalos_2}%
 }{%
+  \centering\footnotesize
   \resizebox{\textwidth}{!}{%
     \begin{tabular}{lcccccccc}
-      \toprule
-      Access Point & Amostras (N) & Clientes Médios (Pico) & Throughput Agregado Médio (Max) [Mbps] & Sinal Médio [dBm] & Retransmissões Médias [\%] & Throughput Médio p/ Cliente [Mbps] & Equidade Média (Jain) & Perfil Operacional (Cluster) \\
+      Access Point & Amostras (N) & Clientes Médios (Pico) & Throughput Agregado Médio (Max) [Mbps] & IS Média [dBm] & Retransmissões Médias [\%] & Throughput Médio p/ Cliente [Mbps] & Equidade Média (Jain) & Perfil Operacional (Cluster) \\
       \midrule
       \textbf{RK-fea0} & 29.623 & 24,3 (max 64) & 16,804 (max 111,108) & -75,7 & 3,84\% & 0,652 & 0,2901 & Grupo A: Muito Carregado \\
       \textbf{RK-0d40} & 27.534 & 21,9 (max 49) & 11,907 (max 54,074) & -75,9 & 4,11\% & 0,541 & 0,3015 & Grupo A: Muito Carregado \\
@@ -93,15 +97,17 @@ Abaixo são apresentados os perfis consolidados de carga e desempenho de cada Ac
 
 \subsubsection{Rede UniFi (APs Cadastrados)}
 
+Da mesma forma, o comportamento de carga e a qualidade de enlace para os rádios UniFi foram caracterizados individualmente. A tabela abaixo lista os pontos de acesso cadastrados da UniFi e suas respectivas métricas consolidadas ordenadas por throughput médio.
+
 \begin{table}[H]
 \IBGEtab{%
   \caption{Rede UniFi (APs Cadastrados)}%
   \label{tab:data_classificacao_gargalos_3}%
 }{%
+  \centering\footnotesize
   \resizebox{\textwidth}{!}{%
     \begin{tabular}{lcccccccc}
-      \toprule
-      Access Point & Amostras (N) & Clientes Médios (Pico) & Throughput Agregado Médio (Max) [Mbps] & Sinal Médio [dBm] & Retransmissões Médias [\%] & Throughput Médio p/ Cliente [Mbps] & Equidade Média (Jain) & Perfil Operacional (Cluster) \\
+      Access Point & Amostras (N) & Clientes Médios (Pico) & Throughput Agregado Médio (Max) [Mbps] & IS Média [dBm] & Retransmissões Médias [\%] & Throughput Médio p/ Cliente [Mbps] & Equidade Média (Jain) & Perfil Operacional (Cluster) \\
       \midrule
       \textbf{Lab Redes} & 7.546 & 7,8 (max 21) & 1,819 (max 34,705) & -67,7 & 23,70\% & 0,190 & 0,2779 & Grupo A: Muito Carregado \\
       \textbf{Guarita Entrada} & 6.331 & 4,7 (max 15) & 1,709 (max 14,020) & -68,0 & 32,66\% & 0,462 & 0,3185 & Grupo A: Muito Carregado \\
@@ -190,18 +196,21 @@ A escolha do número de clusters ($K=4$) foi fundamentada por uma análise quant
   \item \textbf{Ambiente UniFi}: O Método do Cotovelo indicou uma redução acentuada da inércia de \textbf{45,27} ($K=2$) para \textbf{17,36} ($K=3$) e \textbf{11,13} ($K=4$), estabilizando-se em \textbf{8,89} para $K=5$. Embora as métricas de partição silhueta e Davies-Bouldin apontem que a rede UniFi divide-se fortemente em duas grandes macro-regiões ($K=2$, com silhueta de 0,5538 e Davies-Bouldin de 0,2959) devido à ociosidade crônica do espectro de 2,4 GHz, a adoção de $K=4$ foi mantida por simetria de modelo de análise comparativa. Esta escolha permitiu expor perfis operacionais minoritários de suma importância para o diagnóstico da rede, como o cluster de anomalia de RF (Grupo C: Alta Retransmissão).
 
 \end{itemize}
-As variáveis utilizadas para a clusterização foram: média de clientes, throughput agregado médio do AP, sinal físico médio e taxa média de retransmissões. Os centróides e perfis detalhados resultantes de cada cluster são discutidos a seguir:
+As variáveis utilizadas para a clusterização foram: média de clientes, throughput agregado médio do AP, intensidade de sinal física média e taxa média de retransmissões. Os centróides e perfis detalhados resultantes de cada cluster são discutidos a seguir:
 
 \subsubsection{Perfis de Rádios Ruckus}
+
+Com base no algoritmo K-Means, agrupou-se os APs Ruckus em quatro clusters operacionais para sintetizar o estado geral da rede. A tabela a seguir apresenta os centróides médios calculados para cada um dos quatro grupos resultantes.
 
 \begin{table}[H]
 \IBGEtab{%
   \caption{Perfis de Rádios Ruckus}%
   \label{tab:data_classificacao_gargalos_4}%
 }{%
+  \centering\footnotesize
+  \resizebox{0.92\textwidth}{!}{%
     \begin{tabular}{lcccc}
-      \toprule
-      Perfil Operacional (Cluster) & Média Clientes & Throughput Agregado Médio [Mbps] & Sinal Médio [dBm] & Retransmissões Médias [\%] \\
+      Perfil Operacional (Cluster) & Média Clientes & Throughput Agregado Médio [Mbps] & IS Média [dBm] & Retransmissões Médias [\%] \\
       \midrule
       \textbf{Grupo A: Muito Carregado} & 23,10 & 14,356 & -75,8 & 3,98\% \\
       \textbf{Grupo B: Pouco Utilizado} & 9,96 & 4,396 & -70,0 & 5,62\% \\
@@ -209,28 +218,32 @@ As variáveis utilizadas para a clusterização foram: média de clientes, throu
       \textbf{Grupo D: Baixa Qualidade de Sinal} & 6,39 & 2,166 & -75,9 & 11,24\% \\
       \bottomrule
     \end{tabular}%
+  }%
 }{%
   \fonte{Produzido pelos autores.}%
 }
 \end{table}
 
 \begin{itemize}
-  \item \textbf{Grupo A: Muito Carregado}: Representa os access points que operam sob intensa demanda de usuários (como \texttt{RK-fea0} e \texttt{RK-0d40}, com média de \texttt{23.10} clientes conectados e pico de tráfego agregado médio de \texttt{14.356 Mbps}). Apesar de operar sob alta concorrência de canal e sinal físico médio atenuado de \texttt{-75.8 dBm} (Gargalo G2), este grupo apresenta a menor taxa de retransmissão de toda a rede Ruckus (média de \texttt{3.98\%}). Este comportamento sugere o desempenho eficiente das tecnologias dinâmicas de filtragem espacial da Ruckus. A ação prática sugerida para estes APs visa aliviar a contenção de tempo aéreo (\textit{airtime}) por meio da ativação do direcionamento de banda (\textit{Band Steering}) e regras de balanceamento de carga ativo nas controladoras (Seção 6,2).
-  \item \textbf{Grupo B: Pouco Utilizado}: Constituído por APs com baixo volume de tráfego (média de \texttt{4.396 Mbps}) e baixa concorrência (média de \texttt{9.96} clientes). O sinal físico médio é excelente (média de \texttt{-70.0 dBm}) e as retransmissões mantêm-se estáveis em \texttt{5.62\%}, representando pontos de ociosidade operacional na rede corporativa.
-  \item \textbf{Grupo C: Carga Moderada}: Representa o perfil operacional típico nominal de RF da rede no campus (como os APs \texttt{RK-4050} e \texttt{RK-51f0}, com média de \texttt{14.37} clientes e throughput agregado médio de \texttt{6.552 Mbps}). Apresenta sinal médio de \texttt{-74.2 dBm} e taxa de retransmissão saudável de \texttt{5.50\%}.
-  \item \textbf{Grupo D: Baixa Qualidade de Sinal}: Caracteriza os rádios severamente limitados pela qualidade física de recepção de sinal (como o AP \texttt{RK-3440} e \texttt{RK-dcd0}, com sinal médio degradado de \texttt{-75.9 dBm}). O baixo tráfego agregado registrado (\texttt{2.166 Mbps}) é consequência direta da elevada taxa de retransmissão de quadros (\texttt{11.24\%}), caracterizando o Gargalo G1. A ação recomendada para resolver este problema envolve o reposicionamento físico do AP para remover barreiras de atenuação e redimensionar a cobertura de rádio local (Seção 6,1).
+  \item \textbf{Grupo A: Muito Carregado}: Representa os access points que operam sob intensa demanda de usuários (como \texttt{RK-fea0} e \texttt{RK-0d40}, com média de \texttt{23.10} clientes conectados e pico de tráfego agregado médio de \texttt{14.356 Mbps}). Apesar de operar sob alta concorrência de canal e IS física média atenuada de \texttt{-75.8 dBm} (Gargalo G2), este grupo apresenta a menor taxa de retransmissão de toda a rede Ruckus (média de \texttt{3.98\%}). Este comportamento sugere o desempenho eficiente das tecnologias dinâmicas de filtragem espacial da Ruckus. A ação prática sugerida para estes APs visa aliviar a contenção de tempo aéreo (\textit{airtime}) por meio da ativação do direcionamento de banda (\textit{Band Steering}) e regras de balanceamento de carga ativo nas controladoras (Seção 6,2).
+  \item \textbf{Grupo B: Pouco Utilizado}: Constituído por APs com baixo volume de tráfego (média de \texttt{4.396 Mbps}) e baixa concorrência (média de \texttt{9.96} clientes). A IS física média é excelente (média de \texttt{-70.0 dBm}) e as retransmissões mantêm-se estáveis em \texttt{5.62\%}, representando pontos de ociosidade operacional na rede corporativa.
+  \item \textbf{Grupo C: Carga Moderada}: Representa o perfil operacional típico nominal de RF da rede no campus (como os APs \texttt{RK-4050} e \texttt{RK-51f0}, com média de \texttt{14.37} clientes e throughput agregado médio de \texttt{6.552 Mbps}). Apresenta IS média de \texttt{-74.2 dBm} e taxa de retransmissão saudável de \texttt{5.50\%}.
+  \item \textbf{Grupo D: Baixa Qualidade de Sinal}: Caracteriza os rádios severamente limitados pela qualidade física de recepção de sinal (como o AP \texttt{RK-3440} e \texttt{RK-dcd0}, com IS média degradada de \texttt{-75.9 dBm}). O baixo tráfego agregado registrado (\texttt{2.166 Mbps}) é consequência direta da elevada taxa de retransmissão de quadros (\texttt{11.24\%}), caracterizando o Gargalo G1. A ação recomendada para resolver este problema envolve o reposicionamento físico do AP para remover barreiras de atenuação e redimensionar a cobertura de rádio local (Seção 6,1).
 
 \end{itemize}
 \subsubsection{Perfis de Rádios UniFi}
+
+Os pontos de acesso da rede UniFi também foram particionados de forma análoga para comparação direta. A tabela abaixo resume as características centrais (centróides) de sinal, tráfego e retransmissões associadas aos perfis operacionais da UniFi.
 
 \begin{table}[H]
 \IBGEtab{%
   \caption{Perfis de Rádios UniFi}%
   \label{tab:data_classificacao_gargalos_5}%
 }{%
+  \centering\footnotesize
+  \resizebox{0.92\textwidth}{!}{%
     \begin{tabular}{lcccc}
-      \toprule
-      Perfil Operacional (Cluster) & Média Clientes & Throughput Agregado Médio [Mbps] & Sinal Médio [dBm] & Retransmissões Médias [\%] \\
+      Perfil Operacional (Cluster) & Média Clientes & Throughput Agregado Médio [Mbps] & IS Média [dBm] & Retransmissões Médias [\%] \\
       \midrule
       \textbf{Grupo A: Muito Carregado} & 6,25 & 1,650 & -66,4 & 25,58\% \\
       \textbf{Grupo B: Pouco Utilizado} & 1,69 & 0,171 & -69,1 & 21,04\% \\
@@ -238,16 +251,17 @@ As variáveis utilizadas para a clusterização foram: média de clientes, throu
       \textbf{Grupo D: Baixa Retransmissão / Estável} & 2,49 & 0,676 & -65,2 & 15,06\% \\
       \bottomrule
     \end{tabular}%
+  }%
 }{%
   \fonte{Produzido pelos autores.}%
 }
 \end{table}
 
 \begin{itemize}
-  \item \textbf{Grupo A: Muito Carregado}: Engloba os APs da rede UniFi com maior atividade relativa (como \texttt{Lab Redes} e \texttt{Guarita Entrada}, com média de \texttt{6.25} clientes e throughput agregado médio de \texttt{1.650 Mbps}). O sinal médio é saudável (\texttt{-66.4 dBm}), mas a taxa de retransmissões média é elevada (\texttt{25.58\%}), sugerindo contenção severa no espectro saturado de 2,4~GHz e colisões decorrentes do CSMA/CA (Gargalo G2). Ação prática: desativar rádios 2,4~GHz redundantes e planejar a distribuição de canais estáticos não-sobrepostos (Seção 6,3).
+  \item \textbf{Grupo A: Muito Carregado}: Engloba os APs da rede UniFi com maior atividade relativa (como \texttt{Lab Redes} e \texttt{Guarita Entrada}, com média de \texttt{6.25} clientes e throughput agregado médio de \texttt{1.650 Mbps}). A IS média é saudável (\texttt{-66.4 dBm}), mas a taxa de retransmissões média é elevada (\texttt{25.58\%}), sugerindo contenção severa no espectro saturado de 2,4~GHz e colisões decorrentes do CSMA/CA (Gargalo G2). Ação prática: desativar rádios 2,4~GHz redundantes e planejar a distribuição de canais estáticos não-sobrepostos (Seção 6,3).
   \item \textbf{Grupo B: Pouco Utilizado}: É o maior cluster em número de APs na UniFi (como \texttt{A101-Novo} e \texttt{Biblioteca-2}), ilustrando sua ociosidade (média de \texttt{1.69} clientes e vazão de tráfego irrisória de \texttt{0.171 Mbps}). As retransmissões médias situam-se em \texttt{21.04\%}, valor induzido pelo ruído de fundo permanente do espectro.
   \item \textbf{Grupo C: Alta Retransmissão}: Mapeia rádios com comportamento anômalo: excelente intensidade de sinal físico (AP \texttt{PICO-H-100}, com média de \texttt{-42.5 dBm}, indicando proximidade imediata dos dispositivos), porém com taxa crítica de retransmissão de \texttt{39.67\%}. Esse padrão sugere interferência severa de canais adjacentes ou desbalanceamento de potência de transmissão entre o AP e o cliente (onde o AP transmite com potência máxima e escuta o sinal fraco do cliente móvel, gerando perda de pacotes no upload). Ação prática: reduzir a potência de transmissão do AP e fixar manualmente o canal de operação (Seção 6,3).
-  \item \textbf{Grupo D: Baixa Retransmissão / Estável}: Representa os rádios UniFi operando em condições de melhor estabilidade de RF (como \texttt{A-315} e \texttt{A-201}, com média de \texttt{2.49} clientes e sinal médio de \texttt{-65.2 dBm}). Alcança a menor taxa de retransmissão média registrada para a UniFi (\texttt{15.06\%}), validando a estabilidade do enlace sob baixa concorrência.
+  \item \textbf{Grupo D: Baixa Retransmissão / Estável}: Representa os rádios UniFi operando em condições de melhor estabilidade de RF (como \texttt{A-315} e \texttt{A-201}, com média de \texttt{2.49} clientes e IS média de \texttt{-65.2 dBm}). Alcança a menor taxa de retransmissão média registrada para a UniFi (\texttt{15.06\%}), validando a estabilidade do enlace sob baixa concorrência.
 
 \end{itemize}
 \subsubsection{Gráficos de Dispersão dos Clusters de APs}
