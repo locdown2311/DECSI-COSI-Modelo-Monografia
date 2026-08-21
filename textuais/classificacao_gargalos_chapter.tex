@@ -13,15 +13,15 @@ Este capítulo descreve a implementação prática do classificador determiníst
 A identificação automática das causas de degradação de vazão em cada AP foi modelada inicialmente por meio de uma árvore de decisão com limiares físicos heurísticos baseados em boas práticas de gerência de redes corporativas. Esse classificador determinístico rotula o estado operacional de cada amostra de telemetria em um de cinco perfis de gargalos físicos e de infraestrutura, além do estado ideal:
 
 \begin{enumerate}
-	\item \textbf{Baixa Qualidade de Enlace (Gargalo G1)}: Ocorre quando a potência média de recepção do rádio é atenuada. Define-se o limiar de gatilho para amostras em que o sinal físico recebido pelo AP (\textit{signal}) é estritamente inferior a $-75$~dBm;
+	\item \textbf{Baixa Qualidade de Enlace (Gargalo G1)}: Ocorre quando a intensidade média de sinal recebido é atenuada. Define-se o limiar de gatilho para amostras em que a intensidade de sinal física recebida pelo AP (\textit{IS}) é estritamente inferior a $-75$~dBm;
 	\item \textbf{Congestionamento do Meio (Gargalo G2)}: Caracteriza o esgotamento de recursos decorrente da densidade de dispositivos. É disparado quando o número de clientes ativos simultâneos conectados no mesmo AP e minuto é maior ou igual a $15$ dispositivos;
-	\item \textbf{Interferência ou SNR Ruim (Gargalo G3)}: Identifica a perda de integridade física dos quadros de rádio decorrente de interferência externa. É ativado quando o ruído de fundo (\textit{noise}) é superior a $-90$~dBm, ou quando a relação sinal-ruído (\textit{Signal-to-Noise Ratio} -- SNR) é inferior a $20$~dB em clientes que possuem boa intensidade de sinal recebido (maior ou igual a $-75$~dBm);
+	\item \textbf{Interferência ou SNR Ruim (Gargalo G3)}: Identifica a perda de integridade física dos quadros de rádio decorrente de interferência externa. É ativado quando o ruído de fundo (\textit{noise}) é superior a $-90$~dBm, ou quando a relação sinal-ruído (\textit{Signal-to-Noise Ratio} -- SNR) é inferior a $20$~dB em clientes que possuem boa intensidade de sinal (IS) recebida (maior ou igual a $-75$~dBm);
 	\item \textbf{Instabilidade de Roaming (Gargalo G4)}: Mapeia o comportamento de instabilidade na associação de clientes. É disparado para dispositivos clientes que registraram mais de $5$ transições rápidas de AP (\textit{roaming}) no período de observação de um dia;
 	\item \textbf{Gargalo de Infraestrutura Cabeada (Gargalo G5)}: Identifica a saturação do enlace físico que conecta o AP ao \textit{switch} de acesso da rede local. É acionado quando a taxa de throughput agregada sustentada no rádio atinge ou supera o patamar de $90$~Mbps, aproximando-se do limite de vazão útil de uma porta física \textit{Fast Ethernet} de $100$~Mbps;
-	\item \textbf{Operação Ideal (Sem Gargalos)}: Amostras que apresentam sinal físico saudável (maior ou igual a $-75$~dBm), ausência de congestionamento de canal ou interferência eletromagnética crônica, sem ocorrência de instabilidade de associação ou saturação de cabeamento.
+	\item \textbf{Operação Ideal (Sem Gargalos)}: Amostras que apresentam intensidade de sinal física (IS) saudável (maior ou igual a $-75$~dBm), ausência de congestionamento de canal ou interferência eletromagnética crônica, sem ocorrência de instabilidade de associação ou saturação de cabeamento.
 \end{enumerate}
 
-Essa divisão sistemática permite que os administradores identifiquem se a degradação de sinal de um setor decorre de barreiras estruturais da edificação (G1), subdimensionamento do número de rádios instalados (G2), poluição do espectro local por canais concorrentes (G3), instabilidade de antena do cliente (G4) ou obsolescência dos equipamentos de rede cabeada e switches locais (G5).
+Essa divisão sistemática permite que os administradores identifiquem se a degradação de intensidade de sinal (IS) de um setor decorre de barreiras estruturais da edificação (G1), subdimensionamento do número de rádios instalados (G2), poluição do espectro local por canais concorrentes (G3), instabilidade de antena do cliente (G4) ou obsolescência dos equipamentos de rede cabeada e switches locais (G5).
 
 \section{Agrupamento Operacional de Access Points (K-Means)}
 \label{sec:kmeans_desenvolvimento_cap}
@@ -39,7 +39,7 @@ onde:
 \begin{itemize}
 	\item $C_j$ representa a média de dispositivos clientes conectados simultaneamente ao rádio $j$;
 	\item $T_j$ representa a média de vazão agregada (\textit{throughput}) do rádio $j$, mensurada em Mbps;
-	\item $S_j$ representa a média de potência de sinal físico recebido (\textit{signal}) no rádio $j$, medida em dBm;
+	\item $S_j$ representa a média da intensidade de sinal física recebida (\textit{IS}) no rádio $j$, medida em dBm;
 	\item $R_j$ representa a média da taxa de retransmissão de quadros de dados físicos no rádio $j$, expressa em percentual.
 \end{itemize}
 
