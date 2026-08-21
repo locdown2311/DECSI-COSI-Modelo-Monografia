@@ -37,7 +37,7 @@ A operação de WLANs é limitada pela disponibilidade de espectro nas faixas n�
 
 O diagnóstico operativo baseia-se na extração ativa de parâmetros de telemetria das controladoras. As grandezas físicas cruciais incluem:
 \begin{itemize}
-	\item \textbf{Intensidade de Sinal (RSSI/Signal)}: Potência absoluta recebida pelo rádio (dBm). Valores acima de $-65$~dBm indicam excelente sinal, enquanto marcas abaixo de $-75$~dBm representam conectividade marginal.
+	\item \textbf{Intensidade de Sinal (RSSI/IS)}: Potência absoluta recebida pelo rádio (dBm). Valores acima de $-65$~dBm indicam excelente sinal, enquanto marcas abaixo de $-75$~dBm representam conectividade marginal.
 	\item \textbf{Ruído de Fundo (Noise)}: Potência do ruído térmico e eletromagnético ambiental (dBm). Determina o piso limitante do SNR.
 	\item \textbf{Retransmissões de Quadros}: Percentual de pacotes físicos que precisaram ser reenviados. No UniFi, essa métrica é estimada dinamicamente pelo firmware sob a forma de \textit{Client Connection Quality} (\acs{CCQ}), onde a perda de pacotes reduz linearmente a eficiência nominal do link.
 	\item \textbf{Throughput (Vazão)}: Taxa efetiva de dados úteis transferida na camada de aplicação (Mbps), dividida entre Downstream (TX) e Upstream (RX). A garantia e o provimento de qualidade de serviço (\textit{Quality of Service} -- QoS) em redes IP dependem de estratégias de controle de vazão e priorização de tráfego, como serviços diferenciados (DiffServ) \cite{santos2017qos}.
