@@ -14,8 +14,8 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
     \begin{tabular}{lcccc}
       Fabricante & Registros Originais & Registros Duplicados Removidos & Registros Limpos & \% de Redundância \\
       \midrule
-      \textbf{Ruckus} & 318.074 & 0 & 318.074 & 0,00\% \\
-      \textbf{UniFi} & 36.180 & 0 & 36.180 & 0,00\% \\
+      \textbf{Ruckus} & 446.060 & 0 & 446.060 & 0,00\% \\
+      \textbf{UniFi} & 51.974 & 0 & 51.974 & 0,00\% \\
       \bottomrule
     \end{tabular}%
   }%
@@ -28,8 +28,6 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
 
 \subsection{Período Coberto pela Coleta}
 
-A fim de atestar a simultaneidade e a equivalência temporal das coletas de dados executadas nas duas infraestruturas, delimitou-se o período de monitoramento ativo de cada controladora. A Tabela 2 apresenta as datas iniciais, finais e a duração total efetiva do período amostral sob análise.
-
 \begin{table}[H]
 \IBGEtab{%
   \caption{Período Coberto pela Coleta}%
@@ -40,8 +38,8 @@ A fim de atestar a simultaneidade e a equivalência temporal das coletas de dado
     \begin{tabular}{lccc}
       Fabricante & Data/Hora Inicial (Min) & Data/Hora Final (Max) & Duração Efetiva \\
       \midrule
-      \textbf{Ruckus} & 23/06/2026 00:00 & 10/07/2026 23:55 & 14 dias úteis \\
-      \textbf{UniFi} & 23/06/2026 00:02 & 10/07/2026 23:57 & 14 dias úteis \\
+      \textbf{Ruckus} & 23/06/2026 00:00 & 04/09/2026 23:55 & 20 dias com logs \\
+      \textbf{UniFi} & 23/06/2026 00:02 & 04/09/2026 23:54 & 20 dias com logs \\
       \bottomrule
     \end{tabular}%
   }%
@@ -50,7 +48,7 @@ A fim de atestar a simultaneidade e a equivalência temporal das coletas de dado
 }
 \end{table}
 
-\textit{Nota: Ambos os datasets cobrem o mesmo período temporal (de 23/06/2026 00:00 a 10/07/2026 23:55, totalizando 14 dias úteis de monitoramento efetivo após a exclusão de finais de semana), garantindo que os cenários de carga de rede sejam diretamente comparáveis.}
+\textit{Nota: Ambos os datasets cobrem o mesmo período temporal (de 23/06/2026 00:00 a 04/09/2026 23:55, totalizando 20 dias com registros de log efetivamente monitorados), garantindo sobreposição temporal das amostras.}
 
 \subsection{Dados Ausentes (Missing Values)}
 
@@ -69,13 +67,13 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
       \texttt{timestamp} & 0,00\% & 0,00\% & Datetime \\
       \texttt{AP} & 0,00\% & 0,00\% & Categórico \\
       \texttt{cliente (MAC)} & 0,00\% & 0,00\% & Categórico \\
-      \texttt{RSSI} & 10,34\% & 0,00\% & Numérico \\
-      \texttt{signal} & 10,34\% & 0,00\% & Numérico \\
-      \texttt{noise} & 10,34\% & 0,00\% & Numérico \\
+      \texttt{RSSI} & 10,11\% & 0,00\% & Numérico \\
+      \texttt{signal} & 10,11\% & 0,00\% & Numérico \\
+      \texttt{noise} & 10,11\% & 0,00\% & Numérico \\
       \texttt{canal} & 0,00\% & 0,00\% & Categórico \\
       \texttt{throughput\_tx\_mbps} & 0,00\% & 0,00\% & Numérico \\
       \texttt{throughput\_rx\_mbps} & 0,00\% & 0,00\% & Numérico \\
-      \texttt{link\_speed\_tx\_mbps} & 6,51\% & 0,00\% & Numérico \\
+      \texttt{link\_speed\_tx\_mbps} & 8,02\% & 0,00\% & Numérico \\
       \texttt{link\_speed\_rx\_mbps} & 100,00\% & 0,00\% & Numérico \\
       \texttt{retransmissoes\_pct} & 0,00\% & 0,00\% & Numérico \\
       \texttt{volume\_tx\_mb} & 0,00\% & 0,00\% & Numérico \\
@@ -93,7 +91,7 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
 
 \begin{itemize}
   \item \textbf{Link Speed no Ruckus}: A taxa de modulação física de TX (\texttt{link\_speed\_tx\_mbps}) foi extraída com sucesso a partir do campo \texttt{throughput\_rate} (em Kbps) nos logs de telemetria da controladora SmartZone. A taxa RX correspondente (\texttt{link\_speed\_rx\_mbps}) não é informada nos logs brutos e é mantida como \texttt{NaN}.
-  \item \textbf{Ruído (Noise) e Intensidade de Sinal (IS) em Ruckus}: Alguns registros continham valores de intensidade de sinal zerados ou vazios. Onde o sinal era -100 (vazio padrão) e SNR era 0, o ruído foi definido como NaN para evitar distorções de cálculo.
+  \item \textbf{Ruído (Noise) e Sinal (Signal) em Ruckus}: Alguns registros continham valores de sinal zerados ou vazios. Onde o sinal era -100 (vazio padrão) e SNR era 0, o ruído foi definido como NaN para evitar distorções de cálculo.
   \item \textbf{Valores Nulos na UniFi}: O dataset UniFi apresenta consistência total (0\% de nulos nas métricas principais de telemetria).
 
 \end{itemize}
@@ -101,7 +99,7 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
 
 As colunas foram padronizadas da seguinte forma:
 \begin{enumerate}
-  \item \textbf{Intensidade de Sinal (IS) e Ruído}: Potência medida em \textbf{dBm}.
+  \item \textbf{Sinal e Ruído}: Potência medida em \textbf{dBm}.
   \item \textbf{RSSI/SNR}: Medido em \textbf{dB} (ou índice relativo na UniFi).
   \item \textbf{Throughput}: Convertido em \textbf{Mbps} (Megabits por segundo) para Downstream (\texttt{tx}) e Upstream (\texttt{rx}).
   \item \textbf{Volume de Dados}: Convertido em \textbf{MB} (Megabytes) acumulados por cliente no período de observação.

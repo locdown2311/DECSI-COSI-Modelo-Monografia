@@ -46,12 +46,9 @@ def run_validation(ruckus_path, unifi_path, output_report_path, plots_dir):
     min_ts_unifi = df_unifi_clean['timestamp'].min()
     max_ts_unifi = df_unifi_clean['timestamp'].max()
     
-    # Calcular dias úteis (segunda a sexta)
-    all_days_rk = pd.date_range(start=min_ts_ruckus.date(), end=max_ts_ruckus.date())
-    workdays_count_rk = len(all_days_rk[all_days_rk.dayofweek < 5])
-    
-    all_days_uf = pd.date_range(start=min_ts_unifi.date(), end=max_ts_unifi.date())
-    workdays_count_uf = len(all_days_uf[all_days_uf.dayofweek < 5])
+    # Calcular dias com registros de log efetivos
+    days_count_rk = df_ruckus_clean['timestamp'].dt.date.nunique()
+    days_count_uf = df_unifi_clean['timestamp'].dt.date.nunique()
     
     # 5. Percentual de dados ausentes
     missing_ruckus = df_ruckus_clean.isnull().mean() * 100
@@ -116,10 +113,10 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
  
 | Fabricante | Data/Hora Inicial (Min) | Data/Hora Final (Max) | Duração Efetiva |
 | :--- | :---: | :---: | :---: |
-| **Ruckus** | {min_ts_ruckus.strftime('%d/%m/%Y %H:%M')} | {max_ts_ruckus.strftime('%d/%m/%Y %H:%M')} | {workdays_count_rk} dias úteis |
-| **UniFi** | {min_ts_unifi.strftime('%d/%m/%Y %H:%M')} | {max_ts_unifi.strftime('%d/%m/%Y %H:%M')} | {workdays_count_uf} dias úteis |
+| **Ruckus** | {min_ts_ruckus.strftime('%d/%m/%Y %H:%M')} | {max_ts_ruckus.strftime('%d/%m/%Y %H:%M')} | {days_count_rk} dias com logs |
+| **UniFi** | {min_ts_unifi.strftime('%d/%m/%Y %H:%M')} | {max_ts_unifi.strftime('%d/%m/%Y %H:%M')} | {days_count_uf} dias com logs |
  
-*Nota: Ambos os datasets cobrem o mesmo período temporal (de {min_ts_ruckus.strftime('%d/%m/%Y %H:%M')} a {max_ts_ruckus.strftime('%d/%m/%Y %H:%M')}, totalizando {workdays_count_rk} dias úteis de monitoramento efetivo após a exclusão de finais de semana), garantindo que os cenários de carga de rede sejam diretamente comparáveis.*
+*Nota: Ambos os datasets cobrem o mesmo período temporal (de {min_ts_ruckus.strftime('%d/%m/%Y %H:%M')} a {max_ts_ruckus.strftime('%d/%m/%Y %H:%M')}, totalizando {days_count_rk} dias com registros de log efetivamente monitorados), garantindo sobreposição temporal das amostras.*
  
 ## 3. Dados Ausentes (Missing Values)
  

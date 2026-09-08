@@ -29,7 +29,7 @@ O comportamento de uma rede Wi-Fi depende intimamente da coordenação entre as 
 A operação de WLANs é limitada pela disponibilidade de espectro nas faixas não licenciadas de 2,4~GHz e 5~GHz:
 \begin{itemize}
 	\item \textbf{Banda de 2,4 GHz}: Possui largura de banda estreita, disponibilizando apenas 3 canais mutuamente não sobrepostos (1, 6 e 11) na maior parte das regulações. Trata-se de uma banda saturada, sujeita a interferências de outras redes Wi-Fi vizinhas (interferência co-canal e de canal adjacente) e de dispositivos não-802.11 (fornos micro-ondas, telefones sem fio e Bluetooth), o que resulta em alta taxa de colisão de pacotes.
-	\item \textbf{Banda de 5 GHz}: Oferece um espectro muito mais amplo, com dezenas de canais não sobrepostos e menor atenuação contra ruídos externos. Contudo, possui menor poder de propagação física através de barreiras estruturais (paredes e divisórias) em comparação com a faixa de 2,4~GHz, exigindo maior densidade física de antenas para evitar zonas de sombra (sinal atenuado).
+	\item \textbf{Banda de 5 GHz}: Oferece um espectro muito mais amplo, com dezenas de canais não sobrepostos e maior atenuação de propagação no espaço livre e através de obstáculos físicos. Esta rápida atenuação natural atua como uma vantagem no controle de interferências, pois restringe o alcance da cobertura de cada célula e, consequentemente, reduz a ocorrência de interferência co-canal entre células vizinhas. Contudo, exige maior densidade física de antenas para evitar zonas de sombra (vales de cobertura).
 \end{itemize}
 
 \section{Métricas de Desempenho e Telemetria}
@@ -40,7 +40,7 @@ O diagnóstico operativo baseia-se na extração ativa de parâmetros de telemet
 	\item \textbf{Intensidade de Sinal (RSSI/IS)}: Potência absoluta recebida pelo rádio (dBm). Valores acima de $-65$~dBm indicam excelente sinal, enquanto marcas abaixo de $-75$~dBm representam conectividade marginal.
 	\item \textbf{Ruído de Fundo (Noise)}: Potência do ruído térmico e eletromagnético ambiental (dBm). Determina o piso limitante do SNR.
 	\item \textbf{Retransmissões de Quadros}: Percentual de pacotes físicos que precisaram ser reenviados. No UniFi, essa métrica é estimada dinamicamente pelo firmware sob a forma de \textit{Client Connection Quality} (\acs{CCQ}), onde a perda de pacotes reduz linearmente a eficiência nominal do link.
-	\item \textbf{Throughput (Vazão)}: Taxa efetiva de dados úteis transferida na camada de aplicação (Mbps), dividida entre Downstream (TX) e Upstream (RX). A garantia e o provimento de qualidade de serviço (\textit{Quality of Service} -- QoS) em redes IP dependem de estratégias de controle de vazão e priorização de tráfego, como serviços diferenciados (DiffServ) \cite{santos2017qos}.
+	\item \textbf{Throughput (Vazão)}: Taxa efetiva de dados transferidos medida nos contadores físicos da controladora (Mbps), dividida entre Downstream (TX) e Upstream (RX). Ressalta-se que este parâmetro difere do \textit{goodput} (vazão de dados úteis entregues exclusivamente na camada de aplicação). A garantia e o provimento de qualidade de serviço (\textit{Quality of Service} -- QoS) em redes IP dependem de estratégias de controle de vazão e priorização de tráfego, como serviços diferenciados (DiffServ) \cite{santos2017qos}.
 \end{itemize}
 
 \section{Mecanismos de Gerência e Conceitos Avançados de RF}
@@ -79,7 +79,7 @@ A Utilização de Canal (\textit{Channel Utilization}) mede a fração de tempo 
     \item \textbf{Tráfego co-canal}: Energia detectada proveniente de transmissões legítimas de outros APs ou clientes vizinhos operando no mesmo canal lógico de rádio;
     \item \textbf{Ruído de Interferência}: Energia eletromagnética detectada no canal que não pode ser decodificada como um quadro 802.11 válido (provocada por redes de vizinhos distantes ou fontes não-Wi-Fi).
 \end{itemize}
-Taxas de utilização de canal acima de 50\% indicam saturação do espectro local, resultando em aumento drástico dos tempos de espera de contenção (\textit{backoff}) e colisões aéreas.
+Taxas de utilização de canal acima de 50\% indicam tendência de saturação do espectro local, resultando em aumento drástico dos tempos de espera de contenção (\textit{backoff}) e colisões aéreas de quadros \cite{cisco2020design, gast2005}.
 
 \subsection{Roaming e Fenômenos de Associação: Sticky Client e Band Steering}
 \label{subsec:fundamentacao_associacao}
@@ -96,6 +96,8 @@ Em redes sem fio centralizadas, a transição contínua de dispositivos móveis 
 
 A literatura científica apresenta diversas abordagens para a caracterização de carga de trabalho e diagnóstico de anomalias em redes locais sem fio institucionais. A nível internacional, estudos seminais como o de \citeonline{schwab2004} introduziram abordagens pioneiras para caracterizar redes WLAN de campus universitários combinando dados de fluxos de pacotes com dados de autenticação de servidores RADIUS. Recentemente, o comportamento e a carga das redes de campus também foram avaliados sob condições extremas de demanda, como demonstrado por \citeonline{favale2020} na análise do tráfego de rede e plataformas de \textit{e-learning} durante a pandemia.
 
+Com o avanço dos sistemas de gerenciamento e a necessidade de diagnósticos mais dinâmicos, abordagens baseadas em telemetria em tempo real e inteligência artificial ganharam destaque. O trabalho de \citeonline{vassila2021wlan} apresenta uma revisão abrangente sobre a coleta de dados de rádio em redes de campus e a aplicação de modelos de aprendizado de máquina supervisionados e não-supervisionados para o diagnóstico preditivo de anomalias de RF. Paralelamente, \citeonline{alves2022diagnosis} propuseram um framework baseado em limiares e análise de retransmissões (\textit{retries}) para caracterizar o impacto da interferência e do congestionamento sobre a vazão útil de redes WLAN de alta densidade, evidenciando como a análise de contadores físicos do rádio pode antecipar a degradação da experiência do usuário.
+
 No cenário particular da \ac{UFOP}, monografias e relatórios técnicos locais serviram de base histórica e motivadora para o monitoramento de tráfego e infraestrutura de rede sem fio no campus do \ac{ICEA}:
 
 \begin{itemize}
@@ -104,11 +106,35 @@ No cenário particular da \ac{UFOP}, monografias e relatórios técnicos locais 
 	\item \textbf{dos Santos e Lima (2020)}: No próprio campus do \ac{ICEA}, além dos estudos de sessões de autenticação, \citeonline{santos2020} conduziram relatórios técnicos focados na análise direta de desempenho e capacidade do sinal físico da rede sem fio local, mapeando a cobertura e a qualidade das conexões nas dependências do instituto.
 \end{itemize}
 
-Embora ambas as pesquisas de caracterização histórica e relatórios tenham contribuído significativamente para a gerência da rede local do campus, elas apresentam limitações que este trabalho visa preencher. O estudo de \citeonline{lage2015} limitou-se ao tráfego de aplicação web em redes cabeadas e sem fio, sem distinguir o comportamento de rádio das conexões. Por sua vez, a caracterização de \citeonline{silva2017} baseou-se exclusivamente em logs de contabilidade administrativa do RADIUS, que registram apenas as médias e totais de sessões de conexão após o seu encerramento. Tais dados inviabilizam o diagnóstico fino do estado do rádio em tempo real e não refletem o comportamento físico do canal eletromagnético.
+Para melhor situar as contribuições deste estudo frente ao estado da arte, a Tabela~\ref{tab:trabalhos_relacionados} apresenta uma comparação estruturada das abordagens discutidas.
+
+\begin{table}[h]
+	\centering\footnotesize
+	\caption{Tabela Comparativa de Trabalhos Relacionados}
+	\label{tab:trabalhos_relacionados}
+	\resizebox{\textwidth}{!}{%
+		\begin{tabular}{lp{4.2cm}p{4.2cm}p{4.2cm}}
+			\hline
+			\textbf{Trabalho} & \textbf{Escopo de Coleta} & \textbf{Técnicas Utilizadas} & \textbf{Foco do Diagnóstico} \\
+			\hline
+			\citeonline{schwab2004} & Logs de autenticação RADIUS e fluxos de pacotes IP & Estatística Descritiva e CDFs & Caracterização de sessões e tráfego acadêmico geral \\
+			\citeonline{lage2015} & Logs HTTP de gateways de borda & Shell Script e Gnuplot & Perfis de navegação na camada de aplicação \\
+			\citeonline{silva2017} & Logs de contabilidade RADIUS Accounting & Script Python & Estatísticas de conexão e volume de tráfego histórico \\
+			\citeonline{favale2020} & Telemetria IP de roteadores e servidores & Análise de Séries Temporais & Impacto de e-learning durante a pandemia \\
+			\citeonline{vassila2021wlan} & Telemetria SNMP de APs e RF & Modelos de ML e Classificação & Diagnóstico de anomalias em tempo real de RF \\
+			\citeonline{alves2022diagnosis} & Contadores de rádio, retries e SNR & Regras de decisão e limiares de rádio & Impacto de retransmissões na vazão prática \\
+			\textbf{Este Trabalho} & Telemetria heterogênea de APs (Ruckus e UniFi) e RADIUS & Heurísticas de decisão de QoS e agrupamento K-Means & Classificação e validação de gargalos físicos e lógicos (G1 a G5) \\
+			\hline
+		\end{tabular}%
+	}
+	\fonte{Produzido pelos autores (2026).}
+\end{table}
+
+Embora as pesquisas de caracterização e os relatórios locais tenham contribuído significativamente para a gerência da rede do campus, elas apresentam limitações que este trabalho visa preencher. O estudo de \citeonline{lage2015} limitou-se ao tráfego de aplicação web em redes cabeadas e sem fio, sem distinguir o comportamento de rádio das conexões. Por sua vez, a caracterização de \citeonline{silva2017} baseou-se exclusivamente em logs de contabilidade administrativa do RADIUS, que registram apenas as médias e totais de sessões de conexão após o seu encerramento. Tais dados inviabilizam o diagnóstico fino do estado do rádio em tempo real e não refletem o comportamento físico do canal eletromagnético.
 
 O diferencial do presente trabalho em relação às pesquisas locais anteriores e à literatura corporativa geral reside nos seguintes pontos:
 \begin{enumerate}
 	\item \textbf{Heterogeneidade de Fabricantes}: O pipeline desenvolvido é capaz de unificar e correlacionar telemetrias de fabricantes distintos (Ruckus e UniFi) com métricas e frequências de amostragem discrepantes, o que não foi abordado nos estudos anteriores;
 	\item \textbf{Análise Multicamadas (Física e MAC)}: Em vez de se limitar a volumes de dados ou logs de autenticação, este estudo investiga parâmetros de tempo de execução como sinal físico recebido (\textit{Signal}/RSSI), ruído de fundo (\textit{Noise}), retransmissões de quadros eletromagnéticos e CCQ;
-	\item \textbf{Classificação de Gargalos Inteligente}: O framework propõe a formulação de um classificador por limiares determinísticos de QoS para isolar a causa exata de anomalias (sinal fraco G1, saturação de clientes G2, interferência G3, roaming excessivo G4 ou limitação cabeada G5), validando e agrupando os rádios sem intervenção manual por meio do algoritmo de aprendizado de máquina não-supervisionado \textit{K-Means}.
+	\item \textbf{Classificação de Gargalos Inteligente}: O framework propõe a formulação de um classificador por limiares determinísticos de QoS para identificar condições associadas a potenciais gargalos (sinal fraco G1, saturação de clientes G2, interferência G3, roaming excessivo G4 ou limitação cabeada G5), validando e agrupando os rádios sem intervenção manual por meio do algoritmo de agrupamento não-supervisionado \textit{K-Means}.
 \end{enumerate}

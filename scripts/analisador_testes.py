@@ -380,6 +380,20 @@ def run_statistical_analysis(ruckus_path, unifi_path, output_dir):
 *   Em 5 GHz, a comparação física foi viabilizada somente pelo Ruckus, sendo a UniFi omitida por falta de telemetria nessa banda.
 """ if has_unifi_5g else "#### Comparações por Banda de 5 GHz (Isolado)\n*   *Nota*: Não é possível realizar a comparação em 5 GHz entre fabricantes, pois a UniFi não registrou telemetria nessa frequência."
 
+    # Classificador dinâmico de tamanho de efeito
+    def classify_effect_size(r):
+        if pd.isna(r):
+            return "indeterminado"
+        abs_r = abs(r)
+        if abs_r < 0.1:
+            return "muito pequeno"
+        elif abs_r < 0.3:
+            return "pequeno"
+        elif abs_r < 0.5:
+            return "médio"
+        else:
+            return "grande"
+
     # Valores dinâmicos para a discussão de Ruckus Bandas
     row_rk_rssi = df_results[(df_results['Categoria'] == 'Ruckus_Bandas') & (df_results['Variavel'] == 'RSSI')].iloc[0]
     row_rk_ret = df_results[(df_results['Categoria'] == 'Ruckus_Bandas') & (df_results['Variavel'] == 'Retransmissões')].iloc[0]
@@ -391,11 +405,15 @@ def run_statistical_analysis(ruckus_path, unifi_path, output_dir):
     media_ret_rk_5g = f"{row_rk_ret['Media_B']:.2f}%"
     media_tp_rk_24g = f"{row_rk_tp['Media_A']:.3f}"
     media_tp_rk_5g = f"{row_rk_tp['Media_B']:.3f}"
+    eff_desc_rk_rssi = classify_effect_size(row_rk_rssi['Tamanho_Efeito'])
+    eff_desc_rk_ret = classify_effect_size(row_rk_ret['Tamanho_Efeito'])
+    eff_desc_rk_tp = classify_effect_size(row_rk_tp['Tamanho_Efeito'])
     
     # Valores dinâmicos para a discussão de Fabricantes Geral
     row_fg_rssi = df_results[(df_results['Categoria'] == 'Fabricantes_Geral') & (df_results['Variavel'] == 'Sinal Físico (dBm)')].iloc[0]
     row_fg_ret = df_results[(df_results['Categoria'] == 'Fabricantes_Geral') & (df_results['Variavel'] == 'Retransmissões')].iloc[0]
     row_fg_tp = df_results[(df_results['Categoria'] == 'Fabricantes_Geral') & (df_results['Variavel'] == 'Throughput')].iloc[0]
+    row_fg_jain = df_results[(df_results['Categoria'] == 'Fabricantes_Geral') & (df_results['Variavel'] == 'Índice de Equidade (Jain)')].iloc[0]
     
     med_rssi_fg_rk = f"{row_fg_rssi['Mediana_A']:.1f}"
     med_rssi_fg_uf = f"{row_fg_rssi['Mediana_B']:.1f}"
@@ -403,6 +421,18 @@ def run_statistical_analysis(ruckus_path, unifi_path, output_dir):
     media_ret_fg_uf = f"{row_fg_ret['Media_B']:.2f}%"
     media_tp_fg_rk = f"{row_fg_tp['Media_A']:.3f}"
     media_tp_fg_uf = f"{row_fg_tp['Media_B']:.3f}"
+    eff_desc_fg_rssi = classify_effect_size(row_fg_rssi['Tamanho_Efeito'])
+    eff_desc_fg_ret = classify_effect_size(row_fg_ret['Tamanho_Efeito'])
+    eff_desc_fg_tp = classify_effect_size(row_fg_tp['Tamanho_Efeito'])
+    eff_desc_fg_jain = classify_effect_size(row_fg_jain['Tamanho_Efeito'])
+
+    valid_tests = df_results[df_results['Teste_Aplicado'] != "Nenhum (Dados Insuficientes)"]
+    non_sig_tests = valid_tests[valid_tests['P_valor'] >= 0.05]
+    if len(non_sig_tests) == 0:
+        nota_consolidada = "Os resultados sugerem diferenças estatisticamente significativas para todas as métricas comparadas que dispõem de dados suficientes (p < 0.05)."
+    else:
+        non_sig_list = [f"{r['Variavel']} ({r['Grupo_A']} vs {r['Grupo_B']})" for _, r in non_sig_tests.iterrows()]
+        nota_consolidada = f"Os resultados sugerem diferenças estatisticamente significativas para a maioria das métricas comparadas (p < 0.05), com exceção de: {'; '.join(non_sig_list)}."
 
     report_content = f"""# Testes Estatísticos de Hipótese
 
@@ -444,7 +474,7 @@ def run_statistical_analysis(ruckus_path, unifi_path, output_dir):
 {get_md_row('Fabricantes_5GHz', 'Retransmissões')}
 {get_md_row('Fabricantes_5GHz', 'Throughput')}
 
-*Nota sobre a Tabela Consolidada*: Os resultados sugerem diferenças estatisticamente significativas para a maioria das métricas comparadas (p < 0.05), com exceção do Sinal Físico comparado em 2.4 GHz entre Ruckus e UniFi (p = 0.4176), que indica comportamento estatisticamente semelhante nesse cenário. Os coeficientes de tamanho de efeito (*r*) indicam magnitudes variadas, sugerindo que os desvios mais proeminentes localizam-se nas taxas de retransmissão e nas potências de sinal entre bandas, enquanto as diferenças de throughput sustentado e equidade apresentam efeitos sob a ótica amostral deste ambiente específico.
+*Nota sobre a Tabela Consolidada*: {nota_consolidada} Os coeficientes de tamanho de efeito (*r*) indicam magnitudes variadas, sugerindo que os desvios mais proeminentes localizam-se nas taxas de retransmissão e nas potências de sinal entre bandas, enquanto as diferenças de throughput sustentado e equidade apresentam efeitos sob a ótica amostral deste ambiente específico.
 
 Em termos práticos de rede, essas diferenças observadas sugerem as seguintes implicações:
 1.  **RSSI e Cobertura Física**: A atenuação mais acentuada verificada na banda de 5 GHz (RSSI inferior no Ruckus) pode implicar em células de cobertura menores, sugerindo a necessidade de um planejamento de posicionamento de APs mais denso para evitar áreas de sombra. No entanto, onde há boa intensidade de sinal, a menor interferência dessa banda tende a favorecer taxas de modulação superiores.
@@ -461,9 +491,9 @@ Em termos práticos de rede, essas diferenças observadas sugerem as seguintes i
 #### Ruckus
 *   **Visualização**:
 ![Comparação de Bandas Ruckus](graficos/01_ruckus_bandas_comparacao.png)
-*   **RSSI**: A diferença é altamente significativa (p < 0.001) com tamanho de efeito médio-grande (*r* = {df_results[(df_results['Categoria'] == 'Ruckus_Bandas') & (df_results['Variavel'] == 'RSSI')].iloc[0]['Tamanho_Efeito']:.4f}). A mediana em 2,4 GHz é de `{med_rssi_rk_24g} dBm` contra `{med_rssi_rk_5g} dBm` em 5 GHz, refletindo a física de atenuação do sinal de 5 GHz.
-*   **Retransmissões**: Diferença estatisticamente significativa (p < 0.001) com tamanho de efeito pequeno (*r* = {df_results[(df_results['Categoria'] == 'Ruckus_Bandas') & (df_results['Variavel'] == 'Retransmissões')].iloc[0]['Tamanho_Efeito']:.4f}). O 2,4 GHz possui retransmissões médias de `{media_ret_rk_24g}` contra `{media_ret_rk_5g}` do 5 GHz, condizente com a poluição de espectro na frequência mais baixa.
-*   **Throughput**: Diferença estatisticamente significativa (p < 0.001) com tamanho de efeito muito pequeno (*r* = {df_results[(df_results['Categoria'] == 'Ruckus_Bandas') & (df_results['Variavel'] == 'Throughput')].iloc[0]['Tamanho_Efeito']:.4f}). O throughput médio em 5 GHz (`{media_tp_rk_5g} Mbps`) mostra-se superior ao de 2,4 GHz (`{media_tp_rk_24g} Mbps`).
+*   **RSSI**: A diferença é altamente significativa (p < 0.001) com tamanho de efeito {eff_desc_rk_rssi} (*r* = {row_rk_rssi['Tamanho_Efeito']:.4f}). A mediana em 2,4 GHz é de `{med_rssi_rk_24g} dBm` contra `{med_rssi_rk_5g} dBm` em 5 GHz, refletindo a física de atenuação do sinal de 5 GHz.
+*   **Retransmissões**: Diferença estatisticamente significativa (p < 0.001) com tamanho de efeito {eff_desc_rk_ret} (*r* = {row_rk_ret['Tamanho_Efeito']:.4f}). O 2,4 GHz possui retransmissões médias de `{media_ret_rk_24g}` contra `{media_ret_rk_5g}` do 5 GHz, condizente com a poluição de espectro na frequência mais baixa.
+*   **Throughput**: Diferença estatisticamente significativa (p < 0.001) com tamanho de efeito {eff_desc_rk_tp} (*r* = {row_rk_tp['Tamanho_Efeito']:.4f}). O throughput médio em 5 GHz (`{media_tp_rk_5g} Mbps`) mostra-se superior ao de 2,4 GHz (`{media_tp_rk_24g} Mbps`).
 
 {unifi_band_plot_sec}
 
@@ -474,10 +504,10 @@ Em termos práticos de rede, essas diferenças observadas sugerem as seguintes i
 #### Geral
 *   **Visualização**:
 ![Comparação de Fabricantes Geral](graficos/03_fabricantes_geral_comparacao.png)
-*   **Sinal Físico (dBm)**: A UniFi registrou mediana de sinal físico de `{med_rssi_fg_uf} dBm` enquanto a Ruckus registrou `{med_rssi_fg_rk} dBm`, diferença significativa (p < 0.001) com tamanho de efeito pequeno (*r* = {df_results[(df_results['Categoria'] == 'Fabricantes_Geral') & (df_results['Variavel'] == 'Sinal Físico (dBm)')].iloc[0]['Tamanho_Efeito']:.4f}). Isso indica que, na média, os dispositivos UniFi monitorados estavam localizados mais próximos dos APs.
-*   **Retransmissões**: A diferença é altamente significativa (p < 0.001) com tamanho de efeito grande (*r* = {df_results[(df_results['Categoria'] == 'Fabricantes_Geral') & (df_results['Variavel'] == 'Retransmissões')].iloc[0]['Tamanho_Efeito']:.4f}). A UniFi apresenta média de `{media_ret_fg_uf}` contra `{media_ret_fg_rk}` do Ruckus. Esta disparidade indica a influência da metodologia de medição: a UniFi estima a retransmissão indiretamente com base no CCQ do firmware, enquanto a Ruckus monitora estritamente a taxa de quadros físicos retransmitidos no rádio.
-*   **Throughput**: A Ruckus registrou throughput médio de `{media_tp_fg_rk} Mbps` contra `{media_tp_fg_uf} Mbps` da UniFi, com diferença estatisticamente significativa (p < 0.001) e tamanho de efeito médio (*r* = {df_results[(df_results['Categoria'] == 'Fabricantes_Geral') & (df_results['Variavel'] == 'Throughput')].iloc[0]['Tamanho_Efeito']:.4f}). Os resultados sugerem que a rede Ruckus escoou uma taxa superior de dados por cliente no cenário coletado.
-*   **Índice de Equidade (Jain)**: A comparação da equidade de compartilhamento de throughput entre os clientes conectados simultaneamente revelou diferença estatisticamente significativa (p < 0.001) com tamanho de efeito pequeno-médio (*r* = {df_results[(df_results['Categoria'] == 'Fabricantes_Geral') & (df_results['Variavel'] == 'Índice de Equidade (Jain)')].iloc[0]['Tamanho_Efeito']:.4f}). A Ruckus registrou equidade média de `{df_results[(df_results['Categoria'] == 'Fabricantes_Geral') & (df_results['Variavel'] == 'Índice de Equidade (Jain)')].iloc[0]['Media_A']:.4f}` e mediana de `{df_results[(df_results['Categoria'] == 'Fabricantes_Geral') & (df_results['Variavel'] == 'Índice de Equidade (Jain)')].iloc[0]['Mediana_A']:.4f}`, enquanto a UniFi obteve média de `{df_results[(df_results['Categoria'] == 'Fabricantes_Geral') & (df_results['Variavel'] == 'Índice de Equidade (Jain)')].iloc[0]['Media_B']:.4f}` e mediana de `{df_results[(df_results['Categoria'] == 'Fabricantes_Geral') & (df_results['Variavel'] == 'Índice de Equidade (Jain)')].iloc[0]['Mediana_B']:.4f}`. Isso sugere tendências distintas no balanceamento de carga entre os clientes ativos de cada fabricante.
+*   **Sinal Físico (dBm)**: A UniFi registrou mediana de sinal físico de `{med_rssi_fg_uf} dBm` enquanto a Ruckus registrou `{med_rssi_fg_rk} dBm`, diferença significativa (p < 0.001) com tamanho de efeito {eff_desc_fg_rssi} (*r* = {row_fg_rssi['Tamanho_Efeito']:.4f}). Isso reflete as características físicas específicas dos locais monitorados (escritórios e laboratórios com menor distância média aos APs na UniFi), embora a intensidade do sinal dependa também das antenas, potência de transmissão e características de hardware dos dispositivos clientes.
+*   **Retransmissões**: A diferença é altamente significativa (p < 0.001) com tamanho de efeito {eff_desc_fg_ret} (*r* = {row_fg_ret['Tamanho_Efeito']:.4f}). A UniFi apresenta média de `{media_ret_fg_uf}` contra `{media_ret_fg_rk}` do Ruckus. Esta disparidade indica a influência da metodologia de medição: a UniFi estima a retransmissão indiretamente com base no CCQ do firmware, enquanto a Ruckus monitora estritamente a taxa de quadros físicos retransmitidos no rádio.
+*   **Throughput**: A Ruckus registrou throughput médio de `{media_tp_fg_rk} Mbps` contra `{media_tp_fg_uf} Mbps` da UniFi, com diferença estatisticamente significativa (p < 0.001) e tamanho de efeito {eff_desc_fg_tp} (*r* = {row_fg_tp['Tamanho_Efeito']:.4f}). Os resultados sugerem que a rede Ruckus escoou uma taxa superior de dados por cliente no cenário coletado.
+*   **Índice de Equidade (Jain)**: A comparação da equidade de compartilhamento de throughput entre os clientes conectados simultaneamente revelou diferença estatisticamente significativa (p < 0.001) com tamanho de efeito {eff_desc_fg_jain} (*r* = {row_fg_jain['Tamanho_Efeito']:.4f}). A Ruckus registrou equidade média de `{row_fg_jain['Media_A']:.4f}` e mediana de `{row_fg_jain['Mediana_A']:.4f}`, enquanto a UniFi obteve média de `{row_fg_jain['Media_B']:.4f}` e mediana de `{row_fg_jain['Mediana_B']:.4f}`. Isso sugere tendências distintas no balanceamento de carga entre os clientes ativos de cada fabricante.
 
 #### Comparações por Banda de 2.4 GHz (Isolado)
 *   **Visualização 2.4 GHz**:
@@ -488,12 +518,12 @@ Em termos práticos de rede, essas diferenças observadas sugerem as seguintes i
 
 ---
 
-## Apêndice: Tabela Detalhada de Testes de Hipótese (Reserva)
+## Tabela Detalhada dos Testes de Hipótese
 
 A tabela abaixo apresenta os mesmos testes estatísticos em formato expandido, contendo os resultados individuais de verificação de normalidade (Shapiro-Wilk), o tipo de teste selecionado (U de Mann-Whitney ou Teste t) e o valor bruto calculado da estatística de teste.
 
 | Métrica | Grupo A | Grupo B | Média/Mediana A | Média/Mediana B | Normal A/B | Teste Aplicado | Estatística | P-valor | Tam. Efeito (r / d) | Diferença Significativa? |
-| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
+| :--- | :--- | :--- | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: | :---: |
 {get_md_row_full('Ruckus_Bandas', 'RSSI')}
 {get_md_row_full('Ruckus_Bandas', 'Retransmissões')}
 {get_md_row_full('Ruckus_Bandas', 'Throughput')}

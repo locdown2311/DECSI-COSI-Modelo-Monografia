@@ -13,8 +13,8 @@ O boxplot de sinal físico por fabricante apresenta a distribuição e os quarti
 \end{figure}
 
 \begin{itemize}
-  \item \textbf{Ruckus}: Média de \texttt{-73.89 dBm}, Mediana \texttt{-75.00 dBm}.
-  \item \textbf{UniFi}: Média de \texttt{-66.56 dBm}, Mediana \texttt{-68.00 dBm}.
+  \item \textbf{Ruckus}: Média de \texttt{-73.75 dBm}, Mediana \texttt{-75.00 dBm}.
+  \item \textbf{UniFi}: Média de \texttt{-66.22 dBm}, Mediana \texttt{-67.00 dBm}.
   \item Os resultados sugerem uma cobertura de sinal física coerente para os clientes de ambas as marcas no cenário analisado, com a maioria das amostras se situando em uma faixa saudável de RF.
 
 \end{itemize}
@@ -29,7 +29,7 @@ O histograma apresenta a densidade de ocorrência de potência de sinal nos logs
 \end{figure}
 
 \begin{itemize}
-  \item O gráfico demonstra que a UniFi possui uma distribuição de sinal com menor variabilidade (concentrada em torno de -67 dBm), enquanto a Ruckus apresenta maior amplitude e dispersão das conexões ao longo do dia.
+  \item O gráfico demonstra que, na população observada, os clientes UniFi apresentaram uma distribuição de sinal com menor variabilidade (concentrada em torno de -67 dBm), enquanto a Ruckus apresenta maior amplitude e dispersão das conexões ao longo do dia.
 
 
 \end{itemize}
@@ -63,7 +63,7 @@ Este histograma ilustra a densidade de clientes associados simultaneamente a cad
 
 \begin{itemize}
   \item \textbf{UniFi}: Exibe perfil de baixa carga (maior parte dos registros possui entre 1 e 5 clientes simultâneos por rádio).
-  \item \textbf{Ruckus}: Exibe maior flexibilidade de densidade, suportando APs com cargas significativamente mais robustas de concorrência, o que condiz com o posicionamento de alta densidade da marca.
+  \item \textbf{Ruckus}: Apresenta registros com cargas substancialmente maiores de clientes simultâneos, o que reflete o fato de esses equipamentos estarem implantados nas áreas de maior circulação e densidade de alunos do campus (salas de aula, auditórios e biblioteca).
 
 
 \end{itemize}
@@ -80,7 +80,7 @@ O boxplot compara o consumo de throughput entre as bandas de 2,4 GHz e 5 GHz.
 \end{figure}
 
 \begin{itemize}
-  \item Como esperado teoricamente, a banda de \textbf{5 GHz} oferece vazão e capacidade física superior para ambas as marcas, superando a banda de \textbf{2,4 GHz} que possui limitações inerentes de modulação e largura de canal.
+  \item Como esperado teoricamente no ambiente Ruckus (único fabricante com registros na banda de 5 GHz na telemetria coletada), a faixa de \textbf{5 GHz} oferece vazão física superior, superando a banda de \textbf{2,4 GHz} que possui limitações de largura de canal e maior concorrência de meio.
 
 \end{itemize}
 \subsubsection{Retransmissões por Banda}
@@ -94,7 +94,7 @@ O boxplot compara a ocorrência de retransmissões físicas ou estimadas.
 \end{figure}
 
 \begin{itemize}
-  \item A banda de \textbf{2,4 GHz} exibe taxas médias superiores de retransmissão, justificada pelo congestionamento e interferências co-canal concorrentes de micro-ondas, Bluetooth e outras redes WiFi da vizinhança.
+  \item A banda de \textbf{2,4 GHz} exibe taxas médias superiores de retransmissão, decorrentes do maior congestionamento espectral e das colisões de quadros provocadas pela contenção CSMA/CA no reduzido número de canais não-sobrepostos disponíveis.
 
 
 \end{itemize}

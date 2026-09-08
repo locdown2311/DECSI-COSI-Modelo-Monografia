@@ -24,105 +24,21 @@ A controladora baseada em software UniFi Controller é instalada localmente no s
 \subsection{Plataforma de Visualização (Grafana)}
 O Grafana é empregado nesse trabalho como plataforma de análise de dados operacionais em tempo real e visualização de métricas históricas. Ele consome dados de séries temporais das controladoras para alimentar painéis interativos que monitoram a quantidade de usuários ativos por setor, o consumo agregado de largura de banda e alertas de indisponibilidade de rádios.
 
-Para ilustrar o monitoramento operacional da infraestrutura, diversos painéis foram desenvolvidos e integrados à plataforma. A seguir, são apresentados os painéis organizados de acordo com os fabricantes Ruckus e UniFi:
+Para ilustrar o monitoramento operacional da infraestrutura, a plataforma Grafana foi integrada aos coletores de telemetria, permitindo o acompanhamento em tempo real das conexões ativas e a saúde do espectro. A Figura~\ref{fig:grafana_ruckus_conexoes} ilustra o painel principal de monitoramento de clientes no ecossistema Ruckus, enquanto a Figura~\ref{fig:grafana_unifi_conexoes} apresenta o acompanhamento correspondente na rede UniFi. Os demais painéis operacionais desenvolvidos (incluindo gráficos de desconexões, tráfego por frequência e diagnósticos detalhados por rádio) encontram-se reunidos no Apêndice~\ref{ap:paineis_grafana}.
 
 \begin{figure}[H]
 	\centering
-	\begin{subfigure}[b]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{img/grafana-ruckus-conexoes.png}
-		\caption{Clientes conectados ativamente}
-		\label{fig:ruckus_con_sub}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{img/grafana-ruckus-desconexoes.png}
-		\caption{Histórico de desconexões}
-		\label{fig:ruckus_desc_sub}
-	\end{subfigure}
-	\caption{Painéis do Grafana para conexões e desconexões históricas (Ruckus)}
+	\includegraphics[width=0.85\textwidth]{img/grafana-ruckus-conexoes.png}
+	\caption{Painel do Grafana para monitoramento de clientes conectados (Ruckus)}
 	\label{fig:grafana_ruckus_conexoes}
 	\fonte{Produzido pelos autores (2026).}
 \end{figure}
 
 \begin{figure}[H]
 	\centering
-	\begin{subfigure}[b]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{img/grafana-ruckus-con-aps.png}
-		\caption{Visualização em pizza por AP}
-		\label{fig:ruckus_aps_sub1}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{img/grafana-ruckus-con-aps-2.png}
-		\caption{Visualização em linha temporal por AP}
-		\label{fig:ruckus_aps_sub2}
-	\end{subfigure}
-	\caption{Painéis do Grafana para conexões agregadas por Access Point (Ruckus)}
-	\label{fig:grafana_ruckus_aps}
-	\fonte{Produzido pelos autores (2026).}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}[b]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{img/grafana-ruckus-2-5.png}
-		\caption{Divisão entre 2,4 GHz e 5 GHz}
-		\label{fig:ruckus_freq_sub}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{img/grafana-ruckus-banda.png}
-		\caption{Throughput médio por banda}
-		\label{fig:ruckus_banda_sub}
-	\end{subfigure}
-	\caption{Painéis do Grafana para distribuição de frequência e throughput (Ruckus)}
-	\label{fig:grafana_ruckus_bandas}
-	\fonte{Produzido pelos autores (2026).}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}[b]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{img/grafana-ruckus-diagnostico.png}
-		\caption{Diagnóstico de conexões e canais}
-		\label{fig:ruckus_diag_sub}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{img/grafana-ruckus-heatmap.png}
-		\caption{Heatmap temporal de conexões}
-		\label{fig:ruckus_heat_sub}
-	\end{subfigure}
-	\caption{Painéis do Grafana para diagnóstico operacional e mapa de calor (Ruckus)}
-	\label{fig:grafana_ruckus_diagnostico}
-	\fonte{Produzido pelos autores (2026).}
-\end{figure}
-
-\begin{figure}[H]
-	\centering
-	\begin{subfigure}[b]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{img/grafana-unifi-conexoes.png}
-		\caption{Clientes conectados ativamente}
-		\label{fig:unifi_con_sub}
-	\end{subfigure}
-	\hfill
-	\begin{subfigure}[b]{0.48\textwidth}
-		\centering
-		\includegraphics[width=\textwidth]{img/grafana-unifi-consumo-usu.png}
-		\caption{Consumo acumulado por usuário}
-		\label{fig:unifi_cons_sub}
-	\end{subfigure}
-	\caption{Painéis do Grafana para conexões e consumo de tráfego (UniFi)}
-	\label{fig:grafana_unifi}
+	\includegraphics[width=0.85\textwidth]{img/grafana-unifi-conexoes.png}
+	\caption{Painel do Grafana para monitoramento de conexões de usuários (UniFi)}
+	\label{fig:grafana_unifi_conexoes}
 	\fonte{Produzido pelos autores (2026).}
 \end{figure}
 
