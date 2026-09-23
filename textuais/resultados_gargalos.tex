@@ -1,19 +1,12 @@
-\section{Classificação de Gargalos de Rede}
+\section{Resultados da Classificação Heurística de Gargalos}
+\label{sec:resultados_classificacao_cap}
 
-\subsection{Limiares de Decisão Estabelecidos}
+A aplicação da árvore de decisão heurística sobre a base consolidada de 498.034 registros telemétricos permitiu quantificar a incidência de cada classe de gargalo no campus do ICEA/UFOP. Esta seção apresenta as taxas de ocorrência observadas, a carga discriminada por Access Point e os impactos diretos na vazão e na perda de pacotes.
 
-\begin{enumerate}
-  \item \textbf{G1: Baixa Qualidade de Enlace}: Potência física de sinal recebido pelo AP (\texttt{signal}) < \texttt{-75 dBm}.
-  \item \textbf{G2: Congestionamento do Meio}: Número de clientes simultâneos conectados no mesmo AP e minuto >= 15.
-  \item \textbf{G3: Interferência / SNR Ruim}: Ruído de fundo (\texttt{noise}) > \texttt{-90 dBm} ou SNR < \texttt{20 dB} em clientes com bom sinal (>= -75 dBm).
-  \item \textbf{G4: Instabilidade de Roaming}: Clientes (MAC) que registraram > 5 trocas de AP no período de observação.
-  \item \textbf{G5: Gargalo Cabeado (FE)}: Throughput de tráfego agregado sustentado do AP >= 90 Mbps (limite de interface Fast Ethernet de 100 Mbps).
-
-
-\end{enumerate}
 \subsection{Tabela Geral de Ocorrência e Impacto de Gargalos}
+\label{subsec:tabela_geral_gargalos}
 
-A Tabela Geral de Ocorrência apresenta as taxas e consequências físicas associadas a cada tipo de gargalo detectado de forma isolada ao longo do monitoramento de produção.
+A \autoref{tab:data_classificacao_gargalos_1} apresenta a consolidação das taxas de ocorrência e os efeitos físicos associados a cada categoria de gargalo avaliada de forma isolada ao longo do monitoramento de produção, em conformidade com os limiares estabelecidos na \autoref{sec:classificacao_limiares_cap}.
 
 \begin{table}[H]
 \IBGEtab{%
@@ -185,9 +178,15 @@ O histograma geral ilustra as taxas percentuais de ocorrência de cada tipo de g
 
 
 \end{itemize}
-\subsection{Clusterização e Perfil Operacional dos Access Points (K-Means)}
+\section{Resultados do Agrupamento Operacional (K-Means)}
+\label{sec:resultados_kmeans_cap}
 
-Para agrupar os Access Points com comportamentos operacionais semelhantes e gerar um mapa de diagnóstico útil, aplicou-se o algoritmo de aprendizado de máquina \textbf{K-Means} (com $K=4$ clusters para cada fabricante). A clusterização baseou-se na aplicação do algoritmo com normalização prévia das variáveis por meio do \texttt{StandardScaler} para evitar que a diferença de escalas (como potência de sinal em dBm vs clientes em unidades) distorcesse as distâncias euclidianas. 
+Para validar de forma não-supervisionada os perfis de operação dos Access Points sem a imposição de regras manuais, aplicou-se o algoritmo de aprendizado de máquina \textit{K-Means}, conforme modelagem matemática descrita na \autoref{sec:kmeans_desenvolvimento_cap}.
+
+\subsection{Validação e Seleção do Número Ótimo de Clusters (\texorpdfstring{$K=4$}{K=4})}
+\label{subsec:validacao_kmeans_cap}
+
+A clusterização baseou-se na aplicação do algoritmo com normalização prévia das variáveis por meio do \texttt{StandardScaler} para evitar que a diferença de escalas (como potência de sinal em dBm versus clientes em unidades) distorcesse as distâncias euclidianas. 
 
 A escolha do número de clusters ($K=4$) foi fundamentada por uma análise quantitativa cruzada baseada no Método do Cotovelo (inércia intra-cluster), no Índice de Silhueta (\textit{Silhouette Score}) e no Índice de Davies-Bouldin:
 \begin{itemize}
@@ -195,9 +194,10 @@ A escolha do número de clusters ($K=4$) foi fundamentada por uma análise quant
   \item \textbf{Ambiente UniFi}: O Método do Cotovelo indicou uma redução acentuada da inércia de \textbf{45,27} ($K=2$) para \textbf{17,36} ($K=3$) e \textbf{11,13} ($K=4$), estabilizando-se em \textbf{8,89} para $K=5$. Embora as métricas de partição silhueta e Davies-Bouldin apontem que a rede UniFi divide-se fortemente em duas grandes macro-regiões ($K=2$, com silhueta de 0,5538 e Davies-Bouldin de 0,2959) devido à ociosidade crônica do espectro de 2,4 GHz, a adoção de $K=4$ foi mantida por simetria de modelo de análise comparativa. Esta escolha permitiu expor perfis operacionais minoritários de suma importância para o diagnóstico da rede, como o cluster de anomalia de RF (Grupo C: Alta Retransmissão).
 
 \end{itemize}
-As variáveis utilizadas para a clusterização foram: média de clientes, throughput agregado médio do AP, sinal físico médio e taxa média de retransmissões. Os centróides e perfis detalhados resultantes de cada cluster são discutidos a seguir:
+As variáveis utilizadas para a clusterização foram: média de clientes, throughput agregado médio do AP, sinal físico médio e taxa média de retransmissões. Os centróides e perfis detalhados resultantes de cada cluster são discutidos a seguir.
 
-\subsubsection{Perfis de Rádios Ruckus}
+\subsection{Perfis Operacionais dos Rádios Ruckus}
+\label{subsec:perfis_ruckus_cap}
 
 \begin{table}[H]
 \IBGEtab{%
@@ -222,13 +222,14 @@ As variáveis utilizadas para a clusterização foram: média de clientes, throu
 \end{table}
 
 \begin{itemize}
-  \item \textbf{Grupo A: Muito Carregado}: Representa os access points que operam sob intensa demanda de usuários (como \texttt{RK-fea0} e \texttt{RK-0d40}, com média de \texttt{21.66} clientes conectados e pico de tráfego agregado médio de \texttt{13.251 Mbps}). Apesar de operar sob alta concorrência de canal e sinal físico médio atenuado de \texttt{-75.7 dBm} (Gargalo G2), este grupo apresenta a menor taxa de retransmissão de toda a rede Ruckus (média de \texttt{3.90\%}). Este comportamento sugere o desempenho eficiente das tecnologias dinâmicas de filtragem espacial da Ruckus. A ação prática sugerida para estes APs visa aliviar a contenção de tempo aéreo (\textit{airtime}) por meio da ativação do direcionamento de banda (\textit{Band Steering}) e regras de balanceamento de carga ativo nas controladoras (Seção 6,2).
+  \item \textbf{Grupo A: Muito Carregado}: Representa os access points que operam sob intensa demanda de usuários (como \texttt{RK-fea0} e \texttt{RK-0d40}, com média de \texttt{21.66} clientes conectados e pico de tráfego agregado médio de \texttt{13.251 Mbps}). Apesar de operar sob alta concorrência de canal e sinal físico médio atenuado de \texttt{-75.7 dBm} (Gargalo G2), este grupo apresenta a menor taxa de retransmissão de toda a rede Ruckus (média de \texttt{3.90\%}). Este comportamento sugere o desempenho eficiente das tecnologias dinâmicas de filtragem espacial da Ruckus. A ação prática sugerida para estes APs visa aliviar a contenção de tempo aéreo (\textit{airtime}) por meio da ativação do direcionamento de banda (\textit{Band Steering}) e regras de balanceamento de carga ativo nas controladoras (\autoref{sec:recomendacoes_g2}).
   \item \textbf{Grupo B: Pouco Utilizado}: Constituído por APs com baixo volume de tráfego (média de \texttt{2.817 Mbps}) e baixa concorrência (média de \texttt{6.44} clientes). O sinal físico médio é excelente (média de \texttt{-72.3 dBm}) e as retransmissões mantêm-se estáveis em \texttt{5.71\%}, representando pontos de ociosidade operacional na rede corporativa.
   \item \textbf{Grupo C: Carga Moderada}: Representa o perfil operacional típico nominal de RF da rede no campus (como os APs \texttt{RK-4050} e \texttt{RK-51f0}, com média de \texttt{14.90} clientes e throughput agregado médio de \texttt{6.425 Mbps}). Apresenta sinal médio de \texttt{-73.1 dBm} e taxa de retransmissão saudável de \texttt{5.16\%}.
-  \item \textbf{Grupo D: Baixa Qualidade de Sinal}: Caracteriza os rádios severamente limitados pela qualidade física de recepção de sinal (como o AP \texttt{RK-3440} e \texttt{RK-dcd0}, com sinal médio degradado de \texttt{-75.3 dBm}). O baixo tráfego agregado registrado (\texttt{2.319 Mbps}) é consequência direta da elevada taxa de retransmissão de quadros (\texttt{8.96\%}), caracterizando o Gargalo G1. A ação recomendada para resolver este problema envolve o reposicionamento físico do AP para remover barreiras de atenuação e redimensionar a cobertura de rádio local (Seção 6,1).
+  \item \textbf{Grupo D: Baixa Qualidade de Sinal}: Caracteriza os rádios severamente limitados pela qualidade física de recepção de sinal (como o AP \texttt{RK-3440} e \texttt{RK-dcd0}, com sinal médio degradado de \texttt{-75.3 dBm}). O baixo tráfego agregado registrado (\texttt{2.319 Mbps}) é consequência direta da elevada taxa de retransmissão de quadros (\texttt{8.96\%}), caracterizando o Gargalo G1. A ação recomendada para resolver este problema envolve o reposicionamento físico do AP para remover barreiras de atenuação e redimensionar a cobertura de rádio local (\autoref{sec:recomendacoes_g1}).
 
 \end{itemize}
-\subsubsection{Perfis de Rádios UniFi}
+\subsection{Perfis Operacionais dos Rádios UniFi}
+\label{subsec:perfis_unifi_cap}
 
 \begin{table}[H]
 \IBGEtab{%
@@ -253,31 +254,32 @@ As variáveis utilizadas para a clusterização foram: média de clientes, throu
 \end{table}
 
 \begin{itemize}
-  \item \textbf{Grupo A: Muito Carregado}: Engloba os APs da rede UniFi com maior atividade relativa (como \texttt{Lab Redes} e \texttt{Guarita Entrada}, com média de \texttt{6.35} clientes e throughput agregado médio de \texttt{1.678 Mbps}). O sinal médio é saudável (\texttt{-66.1 dBm}), mas a taxa de retransmissões média é elevada (\texttt{25.13\%}), sugerindo contenção severa no espectro saturado de 2,4~GHz e colisões decorrentes do CSMA/CA (Gargalo G2). Ação prática: desativar rádios 2,4~GHz redundantes e planejar a distribuição de canais estáticos não-sobrepostos (Seção 6,3).
+  \item \textbf{Grupo A: Muito Carregado}: Engloba os APs da rede UniFi com maior atividade relativa (como \texttt{Lab Redes} e \texttt{Guarita Entrada}, com média de \texttt{6.35} clientes e throughput agregado médio de \texttt{1.678 Mbps}). O sinal médio é saudável (\texttt{-66.1 dBm}), mas a taxa de retransmissões média é elevada (\texttt{25.13\%}), sugerindo contenção severa no espectro saturado de 2,4~GHz e colisões decorrentes do CSMA/CA (Gargalo G2). Ação prática: desativar rádios 2,4~GHz redundantes e planejar a distribuição de canais estáticos não-sobrepostos (\autoref{sec:recomendacoes_g3}).
   \item \textbf{Grupo B: Pouco Utilizado}: É o maior cluster em número de APs na UniFi (como \texttt{A101-Novo} e \texttt{Biblioteca-2}), ilustrando sua ociosidade (média de \texttt{1.67} clientes e vazão de tráfego irrisória de \texttt{0.166 Mbps}). As retransmissões médias situam-se em \texttt{23.24\%}, valor induzido pelo ruído de fundo permanente do espectro.
-  \item \textbf{Grupo C: Alta Retransmissão}: Mapeia rádios com comportamento anômalo: excelente intensidade de sinal físico (AP \texttt{PICO-H-100}, com média de \texttt{-46.1 dBm}, indicando proximidade imediata dos dispositivos), porém com taxa crítica de retransmissão de \texttt{35.49\%}. Esse padrão sugere interferência severa de canais adjacentes ou desbalanceamento de potência de transmissão entre o AP e o cliente (onde o AP transmite com potência máxima e escuta o sinal fraco do cliente móvel, gerando perda de pacotes no upload). Ação prática: reduzir a potência de transmissão do AP e fixar manualmente o canal de operação (Seção 6,3).
+  \item \textbf{Grupo C: Alta Retransmissão}: Mapeia rádios com comportamento anômalo: excelente intensidade de sinal físico (AP \texttt{PICO-H-100}, com média de \texttt{-46.1 dBm}, indicando proximidade imediata dos dispositivos), porém com taxa crítica de retransmissão de \texttt{35.49\%}. Esse padrão sugere interferência severa de canais adjacentes ou desbalanceamento de potência de transmissão entre o AP e o cliente (onde o AP transmite com potência máxima e escuta o sinal fraco do cliente móvel, gerando perda de pacotes no upload). Ação prática: reduzir a potência de transmissão do AP e fixar manualmente o canal de operação (\autoref{sec:recomendacoes_g3}).
   \item \textbf{Grupo D: Baixa Retransmissão / Estável}: Representa os rádios UniFi operando em condições de melhor estabilidade de RF (como \texttt{A-315} e \texttt{A-201}, com média de \texttt{2.41} clientes e sinal médio de \texttt{-66.2 dBm}). Alcança a menor taxa de retransmissão média registrada para a UniFi (\texttt{15.67\%}), validando a estabilidade do enlace sob baixa concorrência.
 
 \end{itemize}
-\subsubsection{Gráficos de Dispersão dos Clusters de APs}
+\subsection{Dispersão Espacial dos Clusters de Access Points}
+\label{subsec:dispersao_clusters_cap}
 
-\begin{itemize}
-  \item \textbf{Ruckus}:
-\end{itemize}
+Para visualizar a distribuição e o isolamento dos clusters no espaço métrico de operação de RF, geraram-se gráficos de dispersão cruzando a Intensidade de Sinal média (eixo horizontal), o Throughput Agregado médio (eixo vertical) e as taxas médias de Retransmissão.
+
+A \autoref{fig:cluster_ruckus_png} ilustra a dispersão dos pontos de acesso da rede Ruckus. Observa-se a separação nítida dos quatro perfis, confirmando a alta resiliência dos APs do Grupo A sob carga pesada e a caracterização dos rádios degradados por atenuação de sinal no Grupo D.
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{img/cluster_ruckus.png}
-  \caption{Clusterização Ruckus}
+  \caption{Clusterização dos Access Points Ruckus}
   \label{fig:cluster_ruckus_png}
 \end{figure}
 
-\begin{itemize}
-  \item \textbf{UniFi}:
-\end{itemize}
+A \autoref{fig:cluster_unifi_png} apresenta a dispersão correspondente para a rede UniFi. O gráfico destaca a grande concentração de pontos operando com baixo tráfego e baixa demanda (Grupos B e D) e evidencia de forma cristalina a anomalia do AP \texttt{PICO-H-100} (Grupo C), que se posiciona isolado na região de sinal excelente com perdas crônicas por desbalanço de potência de transmissão.
+
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{img/cluster_unifi.png}
-  \caption{Clusterização UniFi}
+  \caption{Clusterização dos Access Points UniFi}
   \label{fig:cluster_unifi_png}
 \end{figure}
 
