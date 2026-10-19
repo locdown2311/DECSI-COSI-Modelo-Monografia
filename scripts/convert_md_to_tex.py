@@ -374,7 +374,7 @@ def parse_markdown_to_tex(md_content, section_title_default=""):
     return "\n".join(tex_lines)
 
 def main():
-    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
     monografia_dir = os.path.join(base_dir, 'monografia')
     img_dir = os.path.join(monografia_dir, 'img')
     textuais_dir = os.path.join(monografia_dir, 'textuais')

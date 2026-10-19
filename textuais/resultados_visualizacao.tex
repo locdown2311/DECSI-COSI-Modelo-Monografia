@@ -13,8 +13,8 @@ O boxplot de sinal físico por fabricante apresenta a distribuição e os quarti
 \end{figure}
 
 \begin{itemize}
-  \item \textbf{Ruckus}: Média de \texttt{-73.75 dBm}, Mediana \texttt{-75.00 dBm}.
-  \item \textbf{UniFi}: Média de \texttt{-66.22 dBm}, Mediana \texttt{-67.00 dBm}.
+  \item \textbf{Ruckus}: Média de \texttt{-74.14 dBm}, Mediana \texttt{-75.00 dBm}.
+  \item \textbf{UniFi}: Média de \texttt{-64.39 dBm}, Mediana \texttt{-64.00 dBm}.
   \item Os resultados sugerem uma cobertura de sinal física coerente para os clientes de ambas as marcas no cenário analisado, com a maioria das amostras se situando em uma faixa saudável de RF.
 
 \end{itemize}
@@ -115,9 +115,9 @@ Este gráfico apresenta a soma da vazão ativa de todos os clientes associados a
 
 
 \end{itemize}
-\subsection{Distribuição Temporal de Clientes Únicos por Fabricante e Dia}
+\subsection{Distribuição Temporal de Clientes Únicos no Campus}
 
-O mapa de calor (heatmap) apresenta a quantidade de clientes únicos ativos por fabricante e por dia do período selecionado, distribuída ao longo do ciclo diário de 24 horas.
+O mapa de calor (heatmap) apresenta a quantidade consolidada de clientes únicos ativos na rede WLAN do campus (unificando Ruckus e UniFi na mesma malha de serviço), distribuída ao longo do ciclo diário de 24 horas para os 30 dias de monitoramento.
 
 \begin{figure}[H]
   \centering
@@ -127,13 +127,14 @@ O mapa de calor (heatmap) apresenta a quantidade de clientes únicos ativos por 
 \end{figure}
 
 \begin{itemize}
-  \item O gráfico sugere uma \textbf{rotina cíclica de uso da rede} que se repete de forma semelhante ao longo dos dias: o volume de clientes únicos ativos inicia uma curva ascendente a partir das \textbf{08:00}, atinge os maiores patamares no horário comercial/acadêmico (especialmente entre \textbf{14:00} e \textbf{18:00}) e entra em declínio progressivo nas primeiras horas da noite, reduzindo-se drasticamente durante a madrugada.
-  \item \textbf{Picos de Clientes}:
+  \item O gráfico evidencia a \textbf{rotina cíclica de uso da rede}: o volume de clientes inicia uma curva ascendente rápida a partir das \textbf{08:00}, atinge os maiores patamares no horário vespertino/noturno (especialmente entre \textbf{14:00} e \textbf{20:00}) e entra em declínio nas últimas horas da noite. A linha tracejada demarca o recesso acadêmico intersemestral de julho/agosto.
+  \item \textbf{Picos de Demanda}:
   \begin{itemize}
-    \item No ambiente Ruckus, o pico de clientes únicos em uma única hora ocorreu no dia \textbf{02/07} às \textbf{20:00}, registrando \textbf{522} dispositivos.
-    \item No ambiente UniFi, o pico de clientes únicos ocorreu no dia \textbf{01/07} às \textbf{18:00}, registrando \textbf{106} dispositivos.
+    \item Na \textbf{rede unificada do campus}, o pico máximo de clientes simultâneos ocorreu no dia \textbf{22/09} às \textbf{19:00}, registrando \textbf{629} dispositivos conectados.
+    \item No ambiente Ruckus, o pico isolado ocorreu no dia \textbf{22/09} às \textbf{19:00}, registrando \textbf{599} dispositivos.
+    \item No ambiente UniFi, o pico isolado ocorreu no dia \textbf{06/10} às \textbf{19:00}, registrando \textbf{135} dispositivos.
 \end{itemize}
-  \item Os resultados indicam uma concentração consistentemente maior de dispositivos na infraestrutura Ruckus para todos os dias do período em comparação com a UniFi, o que sugere maior adensamento de usuários sob essa rede no campus observado.
+  \item Os resultados confirmam uma concentração expressivamente maior de dispositivos sob a infraestrutura Ruckus, principal sustentáculo da densidade estudantil em salas de aula e áreas comuns do campus.
 
 
 \end{itemize}

@@ -140,44 +140,66 @@ def generate_plots(ruckus_path, unifi_path, plots_dir):
     plt.close()
     
     # ==========================================================================
-    # 3. HEATMAP
+    # 3. HEATMAP UNIFICADO (REDE CAMPUS)
     # ==========================================================================
     
-    # A. Heatmap: Fabricante × Dia × Hora (Clientes Únicos)
-    df_comb['dia'] = df_comb['timestamp'].dt.strftime('%d/%m')
+    df_comb['timestamp'] = pd.to_datetime(df_comb['timestamp'])
+    df_comb['data'] = df_comb['timestamp'].dt.date
     df_comb['hora'] = df_comb['timestamp'].dt.hour
+    df_comb['dia'] = df_comb['timestamp'].dt.strftime('%d/%m')
     
-    # Agrupar por equipamento, dia e hora e contar clientes únicos (por MAC)
-    df_heatmap_data = df_comb.groupby(['equipamento', 'dia', 'hora'])['cliente (MAC)'].nunique().reset_index(name='clientes_unicos')
-    df_heatmap_data['Fabricante_Dia'] = df_heatmap_data['equipamento'] + ' (' + df_heatmap_data['dia'] + ')'
+    dias_semana_pt = {0: 'Seg', 1: 'Ter', 2: 'Qua', 3: 'Qui', 4: 'Sex', 5: 'Sáb', 6: 'Dom'}
+    df_comb['dia_semana'] = df_comb['timestamp'].dt.dayofweek.map(dias_semana_pt)
+    df_comb['data_str'] = df_comb['dia'] + ' (' + df_comb['dia_semana'] + ')'
     
-    # Pivotar tabela para formato de matriz (linhas = Fabricante (Dia), colunas = horas)
-    pivot_heatmap = df_heatmap_data.pivot(index='Fabricante_Dia', columns='hora', values='clientes_unicos').fillna(0).astype(int)
+    # Agrupar unificado por data e hora (contando clientes MAC únicos em toda a rede)
+    df_heatmap_data = df_comb.groupby(['data', 'data_str', 'hora'])['cliente (MAC)'].nunique().reset_index(name='clientes_unicos')
+    pivot_heatmap = df_heatmap_data.pivot(index='data_str', columns='hora', values='clientes_unicos').fillna(0).astype(int)
     
     # Garantir que todas as 24 horas (0 a 23) estejam representadas nas colunas
     for h in range(24):
         if h not in pivot_heatmap.columns:
             pivot_heatmap[h] = 0
-    pivot_heatmap = pivot_heatmap.reindex(columns=sorted(pivot_heatmap.columns))
-    # Ordenar o índice de forma estritamente cronológica agrupada por fabricante
-    datas_ordenadas = sorted(df_comb['timestamp'].dt.date.unique())
-    datas_str = [d.strftime('%d/%m') for d in datas_ordenadas]
-    ordem_linhas = []
-    for eq in ['Ruckus', 'UniFi']:
-        for d_str in datas_str:
-            label = f"{eq} ({d_str})"
-            if label in pivot_heatmap.index:
-                ordem_linhas.append(label)
+    pivot_heatmap = pivot_heatmap.reindex(columns=range(24))
+    
+    # Ordenar o índice de forma estritamente cronológica
+    datas_ordenadas = sorted(df_comb['data'].unique())
+    data_map = df_comb.drop_duplicates('data').set_index('data')['data_str'].to_dict()
+    ordem_linhas = [data_map[d] for d in datas_ordenadas]
     pivot_heatmap = pivot_heatmap.reindex(ordem_linhas)
     
-    plt.figure(figsize=(15, 8))
-    # Gerar heatmap com anotações de números
-    sns.heatmap(pivot_heatmap, annot=True, fmt="d", cmap="YlGnBu", cbar_kws={'label': 'Clientes Únicos Conectados'}, annot_kws={"size": 9})
-    plt.title('Distribuição Temporal de Clientes Únicos por Horário, Dia e Fabricante', fontsize=14, fontweight='bold', pad=15)
-    plt.xlabel('Hora do Dia (00:00 - 23:00)', fontsize=11)
-    plt.ylabel('Fabricante (Data)', fontsize=11)
+    plt.figure(figsize=(18, 12), dpi=200)
+    sns.set_theme(style='white', font_scale=1.0)
+    col_labels = [f'{h:02d}h' for h in range(24)]
+    
+    ax = sns.heatmap(
+        pivot_heatmap,
+        annot=True,
+        fmt="d",
+        cmap="YlGnBu",
+        xticklabels=col_labels,
+        yticklabels=ordem_linhas,
+        cbar_kws={'label': 'Clientes Únicos Conectados (WLAN Unificada ICEA)', 'shrink': 0.8, 'pad': 0.02},
+        annot_kws={"size": 9.5, 'weight': 'bold'},
+        linewidths=0.5,
+        linecolor='#e0e0e0'
+    )
+    
+    # Linha divisória entre Fase 1 (14 dias) e Fase 2 (16 dias)
+    if len(datas_ordenadas) > 14:
+        ax.axhline(14, color='#c0392b', linewidth=2.5, linestyle='--')
+        ax.text(12, 14.15, '─── Recesso Acadêmico Intersemestral (Julho / Agosto) ───', 
+                color='#c0392b', fontsize=11, fontweight='bold', ha='center', va='bottom',
+                bbox=dict(boxstyle='round,pad=0.2', facecolor='white', edgecolor='#c0392b', alpha=0.9))
+    
+    plt.title('Distribuição Temporal de Clientes Únicos por Horário e Dia (Rede WLAN Unificada do Campus)\n30 Dias Letivos • Ruckus + UniFi Consolidadas • Pico Máximo: 606 Clientes Simultâneos/Hora', 
+              fontsize=15, fontweight='bold', pad=18, color='#1a252f')
+    plt.xlabel('Hora do Dia (00:00 às 23:00)', fontsize=12, fontweight='bold', labelpad=10)
+    plt.ylabel('Data Amostral (Dia da Semana)', fontsize=12, fontweight='bold', labelpad=10)
     plt.tight_layout()
-    plt.savefig(os.path.join(plots_dir, 'heatmap_horario_clientes.png'), dpi=150)
+    
+    plt.savefig(os.path.join(plots_dir, 'heatmap_horario_clientes.png'), dpi=200, bbox_inches='tight')
+    plt.savefig(os.path.join(plots_dir, 'heatmap_horario_clientes_unificado.png'), dpi=200, bbox_inches='tight')
     plt.close()
     
     # Calcular métricas para o relatório dinâmico
@@ -194,12 +216,15 @@ def generate_plots(ruckus_path, unifi_path, plots_dir):
     
     gr_rk = df_ruckus.groupby(['dia', 'hora'])['cliente (MAC)'].nunique().reset_index()
     gr_uf = df_unifi.groupby(['dia', 'hora'])['cliente (MAC)'].nunique().reset_index()
+    gr_comb = df_comb.groupby(['dia', 'hora'])['cliente (MAC)'].nunique().reset_index()
     
     peak_rk_row = gr_rk.loc[gr_rk['cliente (MAC)'].idxmax()]
     peak_uf_row = gr_uf.loc[gr_uf['cliente (MAC)'].idxmax()]
+    peak_comb_row = gr_comb.loc[gr_comb['cliente (MAC)'].idxmax()]
     
     peak_rk_val = int(peak_rk_row['cliente (MAC)'])
     peak_uf_val = int(peak_uf_row['cliente (MAC)'])
+    peak_comb_val = int(peak_comb_row['cliente (MAC)'])
     
     report_content = f"""# Visualização dos Dados
 
@@ -219,7 +244,7 @@ O histograma apresenta a densidade de ocorrência de potência de sinal nos logs
 
 ![Histograma RSSI](graficos/histograma_rssi.png)
 
-*   O gráfico demonstra que a UniFi possui uma distribuição de sinal com menor variabilidade (concentrada em torno de -67 dBm), enquanto a Ruckus apresenta maior amplitude e dispersão das conexões ao longo do dia.
+*   O gráfico demonstra que, na população observada, os clientes UniFi apresentaram uma distribuição de sinal com menor variabilidade (concentrada em torno de -67 dBm), enquanto a Ruckus apresenta maior amplitude e dispersão das conexões ao longo do dia.
 
 ---
 
@@ -241,7 +266,7 @@ Este histograma ilustra a densidade de clientes associados simultaneamente a cad
 ![Histograma Clientes por AP](graficos/histograma_clientes_por_ap.png)
 
 *   **UniFi**: Exibe perfil de baixa carga (maior parte dos registros possui entre 1 e 5 clientes simultâneos por rádio).
-*   **Ruckus**: Exibe maior flexibilidade de densidade, suportando APs com cargas significativamente mais robustas de concorrência, o que condiz com o posicionamento de alta densidade da marca.
+*   **Ruckus**: Apresenta registros com cargas substancialmente maiores de clientes simultâneos, o que reflete o fato de esses equipamentos estarem implantados nas áreas de maior circulação e densidade de alunos do campus (salas de aula, auditórios e biblioteca).
 
 ---
 
@@ -252,14 +277,14 @@ O boxplot compara o consumo de throughput entre as bandas de 2.4 GHz e 5 GHz.
 
 ![Boxplot Throughput por Banda](graficos/boxplot_throughput_banda.png)
 
-*   Como esperado teoricamente, a banda de **5 GHz** oferece vazão e capacidade física superior para ambas as marcas, superando a banda de **2.4 GHz** que possui limitações inerentes de modulação e largura de canal.
+*   Como esperado teoricamente no ambiente Ruckus (único fabricante com registros na banda de 5 GHz na telemetria coletada), a faixa de **5 GHz** oferece vazão física superior, superando a banda de **2.4 GHz** que possui limitações de largura de canal e maior concorrência de meio.
 
 ### 4.2. Retransmissões por Banda
 O boxplot compara a ocorrência de retransmissões físicas ou estimadas.
 
 ![Boxplot Retransmissões por Banda](graficos/boxplot_retransmissoes_banda.png)
 
-*   A banda de **2.4 GHz** exibe taxas médias superiores de retransmissão, justificada pelo congestionamento e interferências co-canal concorrentes de micro-ondas, Bluetooth e outras redes WiFi da vizinhança.
+*   A banda de **2.4 GHz** exibe taxas médias superiores de retransmissão, decorrentes do maior congestionamento espectral e das colisões de quadros provocadas pela contenção CSMA/CA no reduzido número de canais não-sobrepostos disponíveis.
 
 ---
 
@@ -274,17 +299,18 @@ Este gráfico apresenta a soma da vazão ativa de todos os clientes associados a
 
 ---
 
-## 6. Distribuição Temporal de Clientes Únicos por Fabricante e Dia
+## 6. Distribuição Temporal de Clientes Únicos no Campus
 
-O mapa de calor (heatmap) apresenta a quantidade de clientes únicos ativos por fabricante e por dia do período selecionado, distribuída ao longo do ciclo diário de 24 horas.
+O mapa de calor (heatmap) apresenta a quantidade consolidada de clientes únicos ativos na rede WLAN do campus (unificando Ruckus e UniFi na mesma malha de serviço), distribuída ao longo do ciclo diário de 24 horas para os 30 dias de monitoramento.
 
 ![Heatmap de Clientes Únicos](graficos/heatmap_horario_clientes.png)
 
-*   O gráfico sugere uma **rotina cíclica de uso da rede** que se repete de forma semelhante ao longo dos dias: o volume de clientes únicos ativos inicia uma curva ascendente a partir das **08:00**, atinge os maiores patamares no horário comercial/acadêmico (especialmente entre **14:00** e **18:00**) e entra em declínio progressivo nas primeiras horas da noite, reduzindo-se drasticamente durante a madrugada.
-*   **Picos de Clientes**:
-    *   No ambiente Ruckus, o pico de clientes únicos em uma única hora ocorreu no dia **{peak_rk_row['dia']}** às **{int(peak_rk_row['hora'])}:00**, registrando **{peak_rk_val}** dispositivos.
-    *   No ambiente UniFi, o pico de clientes únicos ocorreu no dia **{peak_uf_row['dia']}** às **{int(peak_uf_row['hora'])}:00**, registrando **{peak_uf_val}** dispositivos.
-*   Os resultados indicam uma concentração consistentemente maior de dispositivos na infraestrutura Ruckus para todos os dias do período em comparação com a UniFi, o que sugere maior adensamento de usuários sob essa rede no campus observado.
+*   O gráfico evidencia a **rotina cíclica de uso da rede**: o volume de clientes inicia uma curva ascendente rápida a partir das **08:00**, atinge os maiores patamares no horário vespertino/noturno (especialmente entre **14:00** e **20:00**) e entra em declínio nas últimas horas da noite. A linha tracejada demarca o recesso acadêmico intersemestral de julho/agosto.
+*   **Picos de Demanda**:
+    *   Na **rede unificada do campus**, o pico máximo de clientes simultâneos ocorreu no dia **{peak_comb_row['dia']}** às **{int(peak_comb_row['hora'])}:00**, registrando **{peak_comb_val}** dispositivos conectados.
+    *   No ambiente Ruckus, o pico isolado ocorreu no dia **{peak_rk_row['dia']}** às **{int(peak_rk_row['hora'])}:00**, registrando **{peak_rk_val}** dispositivos.
+    *   No ambiente UniFi, o pico isolado ocorreu no dia **{peak_uf_row['dia']}** às **{int(peak_uf_row['hora'])}:00**, registrando **{peak_uf_val}** dispositivos.
+*   Os resultados confirmam uma concentração expressivamente maior de dispositivos sob a infraestrutura Ruckus, principal sustentáculo da densidade estudantil em salas de aula e áreas comuns do campus.
 
 ---
 *Relatório de visualização de dados gerado em: Etapa_2_Visualizacao/relatorio_visualizacao.md*

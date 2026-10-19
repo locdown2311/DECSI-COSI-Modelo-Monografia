@@ -9,13 +9,13 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
   \caption{Quantidade de Registros}%
   \label{tab:data_validacao_de_dados_1}%
 }{%
-  \centering\footnotesize
-  \resizebox{0.92\textwidth}{!}{%
+  \resizebox{\textwidth}{!}{%
     \begin{tabular}{lcccc}
+      \toprule
       Fabricante & Registros Originais & Registros Duplicados Removidos & Registros Limpos & \% de Redundância \\
       \midrule
-      \textbf{Ruckus} & 446.060 & 0 & 446.060 & 0,00\% \\
-      \textbf{UniFi} & 51.974 & 0 & 51.974 & 0,00\% \\
+      \textbf{Ruckus} & 1.232,364 & 29.956 & 1.202,408 & 2,43\% \\
+      \textbf{UniFi} & 147.517 & 0 & 147.517 & 0,00\% \\
       \bottomrule
     \end{tabular}%
   }%
@@ -33,13 +33,13 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
   \caption{Período Coberto pela Coleta}%
   \label{tab:data_validacao_de_dados_2}%
 }{%
-  \centering\footnotesize
-  \resizebox{0.78\textwidth}{!}{%
+  \resizebox{\textwidth}{!}{%
     \begin{tabular}{lccc}
+      \toprule
       Fabricante & Data/Hora Inicial (Min) & Data/Hora Final (Max) & Duração Efetiva \\
       \midrule
-      \textbf{Ruckus} & 23/06/2026 00:00 & 04/09/2026 23:55 & 20 dias com logs \\
-      \textbf{UniFi} & 23/06/2026 00:02 & 04/09/2026 23:54 & 20 dias com logs \\
+      \textbf{Ruckus} & 23/06/2026 00:00 & 16/10/2026 23:55 & 48 dias com logs \\
+      \textbf{UniFi} & 23/06/2026 00:02 & 16/10/2026 22:50 & 49 dias com logs \\
       \bottomrule
     \end{tabular}%
   }%
@@ -48,7 +48,7 @@ A tabela abaixo resume a quantidade de registros encontrados nos logs de telemet
 }
 \end{table}
 
-\textit{Nota: Ambos os datasets cobrem o mesmo período temporal (de 23/06/2026 00:00 a 04/09/2026 23:55, totalizando 20 dias com registros de log efetivamente monitorados), garantindo sobreposição temporal das amostras.}
+\textit{Nota: Ambos os datasets cobrem o mesmo período temporal (de 23/06/2026 00:00 a 16/10/2026 23:55, totalizando 48 dias com registros de log efetivamente monitorados), garantindo sobreposição temporal das amostras.}
 
 \subsection{Dados Ausentes (Missing Values)}
 
@@ -59,21 +59,21 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
   \caption{Dados Ausentes (Missing Values)}%
   \label{tab:data_validacao_de_dados_3}%
 }{%
-  \centering\footnotesize
   \resizebox{\textwidth}{!}{%
     \begin{tabular}{lccc}
+      \toprule
       Coluna Padronizada & \% Nulos Ruckus & \% Nulos UniFi & Tipo de Dado \\
       \midrule
       \texttt{timestamp} & 0,00\% & 0,00\% & Datetime \\
       \texttt{AP} & 0,00\% & 0,00\% & Categórico \\
       \texttt{cliente (MAC)} & 0,00\% & 0,00\% & Categórico \\
-      \texttt{RSSI} & 10,11\% & 0,00\% & Numérico \\
-      \texttt{signal} & 10,11\% & 0,00\% & Numérico \\
-      \texttt{noise} & 10,11\% & 0,00\% & Numérico \\
+      \texttt{RSSI} & 10,02\% & 0,00\% & Numérico \\
+      \texttt{signal} & 10,02\% & 0,00\% & Numérico \\
+      \texttt{noise} & 10,02\% & 0,00\% & Numérico \\
       \texttt{canal} & 0,00\% & 0,00\% & Categórico \\
       \texttt{throughput\_tx\_mbps} & 0,00\% & 0,00\% & Numérico \\
       \texttt{throughput\_rx\_mbps} & 0,00\% & 0,00\% & Numérico \\
-      \texttt{link\_speed\_tx\_mbps} & 8,02\% & 0,00\% & Numérico \\
+      \texttt{link\_speed\_tx\_mbps} & 7,12\% & 0,00\% & Numérico \\
       \texttt{link\_speed\_rx\_mbps} & 100,00\% & 0,00\% & Numérico \\
       \texttt{retransmissoes\_pct} & 0,00\% & 0,00\% & Numérico \\
       \texttt{volume\_tx\_mb} & 0,00\% & 0,00\% & Numérico \\
@@ -116,17 +116,17 @@ A tabela abaixo mostra a relação entre os campos extraídos de cada fabricante
   \caption{Equivalência de Métricas (Mapeamento Ruckus vs UniFi)}%
   \label{tab:data_validacao_de_dados_4}%
 }{%
-  \centering\footnotesize
   \resizebox{\textwidth}{!}{%
     \begin{tabular}{lccc}
+      \toprule
       Grandeza Física & Métrica Ruckus (Raw) & Métrica UniFi (Raw) & Coluna Padronizada Final \\
       \midrule
       Potência do Sinal & \texttt{signal\_rssi} & \texttt{signal} & \texttt{signal} (dBm) \\
       Relação Sinal/Ruído & \texttt{snr} & \texttt{rssi} & \texttt{RSSI} (dB) \\
-      Throughput Downstream & \texttt{tx\_bytes / uptime} & \texttt{tx\_bytes\_r * 8} & \texttt{throughput\_tx\_mbps} \\
-      Throughput Upstream & \texttt{rx\_bytes / uptime} & \texttt{rx\_bytes\_r * 8} & \texttt{throughput\_rx\_mbps} \\
+      Throughput Downstream & \texttt{tx\_bytes / uptime} & \texttt{tx\_bytes\_r \textsuperscript{*} 8} & \texttt{throughput\_tx\_mbps} \\
+      Throughput Upstream & \texttt{rx\_bytes / uptime} & \texttt{rx\_bytes\_r \textsuperscript{*} 8} & \texttt{throughput\_rx\_mbps} \\
       Retransmissões & \texttt{tx\_retries / (tx\_pkts + tx\_retries)} & \texttt{100 - (ccq / 10)} & \texttt{retransmissoes\_pct} \\
-      Volume Trafegado & \texttt{tx\_bytes}, \texttt{rx\_bytes} & \texttt{tx\_bytes\_r * uptime}, \texttt{rx\_bytes\_r * uptime} & \texttt{volume\_tx\_mb}, \texttt{volume\_rx\_mb} \\
+      Volume Trafegado & \texttt{tx\_bytes}, \texttt{rx\_bytes} & \texttt{tx\_bytes\_r \textit{ uptime}, \texttt{rx\_bytes\_r } uptime} & \texttt{volume\_tx\_mb}, \texttt{volume\_rx\_mb} \\
       Modulação de Velocidade & \texttt{throughput\_rate} & \texttt{tx\_rate}, \texttt{rx\_rate} & \texttt{link\_speed\_tx\_mbps}, \texttt{link\_speed\_rx\_mbps} \\
       \bottomrule
     \end{tabular}%
