@@ -3,12 +3,11 @@ import re
 import shutil
 
 def escape_latex(text):
-    # Não escapar se estiver em modo matemático (começa e termina com $)
-    # Vamos separar o texto em partes matemáticas e normais
-    parts = re.split(r'(\$.*?\$)', text)
+    # Não escapar se estiver em modo matemático ($...$) ou em comando LaTeX protegido como ~\ref{...}, \cite{...}, etc.
+    parts = re.split(r'(\$.*?\$|~?\\ref\{[^}]+\}|\\cite(?:online)?\{[^}]+\}|\\acp?\{[^}]+\})', text)
     for i in range(len(parts)):
-        if not parts[i].startswith('$'):
-            # Escapar caracteres especiais do LaTeX fora do modo matemático
+        if not (parts[i].startswith('$') or parts[i].startswith('\\ref') or parts[i].startswith('~\\ref') or parts[i].startswith('\\cite') or parts[i].startswith('\\ac')):
+            # Escapar caracteres especiais do LaTeX fora do modo matemático e comandos protegidos
             p = parts[i]
             p = p.replace('\\', '\\textbackslash ')
             p = p.replace('&', '\\&')
@@ -42,9 +41,10 @@ def clean_heading_title(title):
     return title.strip()
 
 def format_number_br(text):
-    # 1. Substituir milhares com vírgula por marcador temporário: ex: 285,181 -> 285_TEMP_DOT_181
-    # Usamos (?!\d) para evitar casar números decimais com 4 casas após a vírgula (ex: 0,3383)
-    text = re.sub(r'(\d+),(\d{3})(?!\d)', r'\1_TEMP_DOT_\2', text)
+    # 1. Substituir milhares com vírgula por marcador temporário: ex: 1,202,408 ou 285,181
+    # Repete enquanto houver padrões de milhar para suportar milhões e bilhões
+    while re.search(r'(\d+),(\d{3})(?!\d)', text):
+        text = re.sub(r'(\d+),(\d{3})(?!\d)', r'\1_TEMP_DOT_\2', text)
     
     # 2. Substituir decimais com ponto por vírgula: ex: -67.4 -> -67,4
     text = re.sub(r'(\d+)\.(\d+)', r'\1,\2', text)

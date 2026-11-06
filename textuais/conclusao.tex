@@ -14,7 +14,7 @@ As análises quantitativas geradas ao longo do estudo propiciaram diagnósticos 
 \begin{itemize}
 	\item \textbf{Padronização Telemétrica}: Superou-se o desafio de integrar métricas de fabricantes distintos (como o alinhamento de fusos horários e a normalização de taxas e velocidades físicas), estabelecendo um dataset consolidado comum;
 	\item \textbf{Índice de Jain}: A modelagem da equidade de compartilhamento provou-se um indicador útil para rastrear a distribuição de recursos e identificar cenários de monopolização de canal físico;
-	\item \textbf{Classificação de Gargalos}: O classificador determinístico por limiares segmentou os estados de conexão dos APs, revelando que a instabilidade de roaming (G4) e a cobertura física marginal (G1) representam os problemas mais crônicos nas dependências do campus, enquanto o gargalo cabeado físico de backhaul (G5) manteve-se nulo;
+	\item \textbf{Classificação de Gargalos}: O classificador determinístico por limiares segmentou os estados de conexão dos APs, revelando que o congestionamento do meio por contenção de canal (G2, com 47,4\% na Ruckus) e a cobertura física marginal (G1, com 44,5\% na Ruckus e 21,3\% na UniFi) representam os limitadores mais incidentes, enquanto a instabilidade de roaming (G4, limiar calibrado $> 15$) incidiu em 15,3\% na Ruckus e 6,6\% na UniFi, e a saturação de cabeamento físico de backhaul (G5) manteve-se residual ($\le 0,01\%$);
 	\item \textbf{Agrupamento K-Means}: A clusterização agrupou de forma coerente os APs em quatro perfis operacionais bem definidos (Grupos A, B, C e D), fornecendo evidências empíricas complementares sobre os padrões de carga e degradação de sinal observados na infraestrutura.
 \end{itemize}
 

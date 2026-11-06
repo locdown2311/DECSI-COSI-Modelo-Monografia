@@ -20,6 +20,7 @@
 \definecolor{azul}{HTML}{962038}
 \setbeamercolor{structure}{fg=azul}
 \setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{blocks}[rounded][shadow=false]
 \usepackage{multicol}
 \usepackage{algorithm} 
 \usepackage{algpseudocode} 
@@ -63,17 +64,19 @@
     }
 
     \section{Introdução}
-	\begin{frame}{Introdução}{Cenário do Campus e Infraestrutura de Rede}	
+	\begin{frame}{Introdução}{Cenário do Campus e Infraestrutura}	
         \begin{itemize}
-            \item \textbf{Comunidade Acadêmica}: Cerca de \textbf{1.350 pessoas} (1.206 discentes, 89 docentes e 28 TAEs) \cite{icea2024relatorio}, com estimativa superior a 2.000 dispositivos móveis.
-            \item \textbf{Conectividade Externa}: Link dedicado corporativo de \textbf{1 Gbps} (RNP), gerenciado por firewall pfSense.
-            \item \textbf{Infraestrutura Sem Fio (43 APs catalogados)}:
+            \item \textbf{Comunidade Acadêmica}: $\approx 1.350$ pessoas (docentes, discentes e técnicos)$^1$, com demanda superior a 2.000 dispositivos móveis.
+            \item \textbf{Conexão Externa}: Link dedicado corporativo de \textbf{1 Gbps} (RNP).
+            \item \textbf{Parque de Pontos de Acesso (43 APs catalogados)}:
             \begin{itemize}
-                \item \textbf{24 APs Ruckus R600}: Dual-band (2,4 e 5 GHz, MIMO 3x3:3) cobrindo salas, laboratórios e biblioteca.
-                \item \textbf{19 APs UniFi legados}: Operação observada em 2,4 GHz em gabinetes docentes e áreas administrativas.
+                \item \textbf{24 APs Ruckus R600}: Operação \textit{Dual-band} (salas de aula, laboratórios e biblioteca).
+                \item \textbf{19 APs UniFi}: Operação em 2,4 GHz (gabinetes docentes e áreas administrativas).
             \end{itemize}
-            \item \textbf{Demanda Concorrente}: Picos simultâneos superiores a \textbf{580 clientes ativos} disputando o meio aéreo.
+            \item \textbf{Demanda Concorrente}: Picos superiores a \textbf{600 clientes simultâneos} disputando o meio aéreo.
         \end{itemize} 
+        \vfill
+        \scriptsize \footnotetext[1]{Relatório Institucional ICEA/UFOP \cite{icea2024relatorio}.}
     \end{frame}
     \note{
         [~1,5 min] Contextualizar o cenário real onde o estudo foi desenvolvido: \\
@@ -85,14 +88,11 @@
         A conectividade conta com link dedicado de 1 Gbps da RNP e 43 APs catalogados (24 Ruckus e 19 UniFi, com média de ~40 APs ativos concorrentemente a cada ciclo telemétrico), registrando picos reais superiores a 580 dispositivos conectados no mesmo meio aéreo.
     }
    
-    \begin{frame}{Introdução}{O Problema Real de Pesquisa}	
-        \begin{block}{A Queixa do Usuário vs. Visibilidade da Gestão}
-            Estudantes e docentes relatam frequentemente lentidão e instabilidade. Contudo, a equipe de TI carece de telemetria unificada para isolar a causa raiz.
-        \end{block}
+    \begin{frame}{Introdução}{O Problema de Pesquisa}	
         \begin{itemize}
-            \item \textbf{Link Externo vs. Rede Sem Fio}: A percepção do usuário tende a atribuir falhas genericamente à ``internet da universidade'', sem distinguir a capacidade do link de 1 Gbps das restrições físicas da interface aérea de RF.
-            \item \textbf{Heterogeneidade Operacional}: Controladoras distintas (SmartZone SNMP e UniFi REST API) sem visão consolidada de métricas e de espectro.
-            \item \textbf{Questão de Pesquisa}: \textit{Onde residem os gargalos da WLAN (atenuação de sinal, concorrência no canal, interferência, mobilidade ou saturação de porta) e como diagnosticá-los empiricamente?}
+            \item \textbf{Percepção vs. Realidade}: Relatos frequentes de lentidão atribuídos genericamente ao ``link de internet'', sem distinção das restrições físicas da interface sem fio.
+            \item \textbf{Falta de Visibilidade Unificada}: Sistemas heterogêneos de gerência (SmartZone e UniFi) sem métricas consolidadas de desempenho e RF.
+            \item \textbf{Questão Central}: \textit{Onde residem os gargalos reais da WLAN no campus (sinal, concorrência, interferência, mobilidade ou cabeamento) e como diagnosticá-los empiricamente?}
         \end{itemize}
 	\end{frame}
     \note{
@@ -105,10 +105,10 @@
     \section{Motivação e Objetivos}
     \begin{frame}{Motivação}
         \begin{itemize}
-            \item \textbf{Desafio da Alta Densidade}: No protocolo CSMA/CA, a multiplicação de estações ativas divide o tempo aéreo compartilhado (\textit{airtime}) \cite{gast2005}.
-            \item \textbf{Coexistência Heterogênea}: Equipamentos corporativos modernos (Ruckus) operando no mesmo espaço físico com modelos legados (UniFi), sem coordenação dinâmica de RF.
-            \item \textbf{Diagnóstico Baseado em Telemetria}: Substituir relatos informais e percepções qualitativas por métricas quantitativas de rede coletadas diretamente em produção.
-            \item \textbf{Assimetria de Tráfego}: Investigar o impacto da concentração de tráfego em poucos usuários sobre a disponibilidade global de tempo aéreo para os demais.
+            \item \textbf{Contenção no Meio Aéreo}: No protocolo CSMA/CA, múltiplos clientes dividem o tempo de antena (\textit{airtime}), elevando colisões e latência \cite{gast2005}.
+            \item \textbf{Ambiente Heterogêneo}: Coexistência de plataformas distintas (Ruckus e UniFi) sem coordenação dinâmica de rádio.
+            \item \textbf{Assimetria de Demanda}: Tráfego concentrado em poucos dispositivos reduz a disponibilidade do canal para os demais.
+            \item \textbf{Diagnóstico Baseado em Dados}: Substituir percepções subjetivas por telemetria contínua coletada em produção.
         \end{itemize}
     \end{frame}
     \note{
@@ -119,15 +119,15 @@
     
     \begin{frame}{Objetivos}
         \begin{block}{Objetivo Geral}
-            Caracterizar e diagnosticar os gargalos físicos e lógicos que afetam o desempenho das redes sem fio corporativas do campus ICEA/UFOP.
+            Caracterizar e diagnosticar gargalos de desempenho na WLAN corporativa do campus ICEA/UFOP a partir de dados telemétricos.
         \end{block}
         \begin{block}{Objetivos Específicos}
             \begin{itemize}
-                \item Coleta automatizada de dados quantitativos de telemetria das controladoras (SmartZone SNMP e UniFi REST API).
-                \item Pré-processamento, limpeza, unificação e padronização das grandezas de RF.
-                \item Modelagem determinística para classificação operacional de gargalos (G1 a G5).
-                \item Identificação de perfis operacionais complementares dos APs via agrupamento não-supervisionado (\textit{K-Means}).
-                \item Elaboração de recomendações práticas de engenharia de redes e gerência de RF de baixo custo.
+                \item Coletar, tratar e unificar dados de produção das controladoras SmartZone (SNMP) e UniFi (REST API).
+                \item Avaliar correlações e contrastes estatísticos entre grandezas de RF.
+                \item Classificar gargalos operacionais por meio de modelo heurístico (G1 a G5).
+                \item Identificar perfis naturais de APs via agrupamento não-supervisionado (\textit{K-Means}).
+                \item Propor ações práticas de otimização de infraestrutura e RF de baixo custo.
             \end{itemize}
         \end{block}
     \end{frame}
@@ -137,28 +137,25 @@
     }
 
     \section{Metodologia}
-    \begin{frame}{Metodologia}{Coleta e Arquitetura de Fluxo de Dados}
+    \begin{frame}{Metodologia}{Coleta e Consolidação dos Dados}
         \begin{itemize}
-            \item \textbf{Estudo de Caso}: Monitoramento das redes corporativas do campus (Eduroam e ICEA-WIFI).
-            \item \textbf{Automação em Python 3}: Coletas diárias das controladoras via SNMP (Ruckus) e REST API (UniFi).
-            \item \textbf{Período Amostral (30 Dias de Monitoramento Efetivo)}:
+            \item \textbf{Ambiente}: Redes \textit{Eduroam} e \textit{ICEA-WIFI} monitoradas via SNMP (Ruckus) e REST API (UniFi).
+            \item \textbf{Período}: \textbf{49 dias} de monitoramento contínuo em duas etapas letivas:
             \begin{itemize}
-                \scriptsize
-                \item \textbf{Fase 1 (Fechamento 2026/1 -- 23/06 a 10/07)}: Encerramento do período letivo e semanas de exames finais.
-                \item \textbf{Recesso Acadêmico}: Intervalo entre semestres com atividade residual no campus.
-                \item \textbf{Fase 2 (Abertura 2026/2 -- 24/08 a 18/09)}: Retomada das aulas presenciais, período em que se registraram os maiores picos de conexões.
+                \item \textbf{Fase 1}: Final de semestre letivo e exames (23/06 a 10/07).
+                \item \textbf{Fase 2}: Retomada e aulas plenas presenciais (24/08 a 16/10).
             \end{itemize}
-            \item \textbf{Volume Consolidado}: \textbf{760.734 registros telemétricos} reais de produção.
+            \item \textbf{Volume Total}: \textbf{1.349.925 registros limpos} de telemetria.
         \end{itemize}
-        
+        \vspace{0.1cm}
         \begin{table}[h]
             \centering\footnotesize
             \begin{tabular}{lccc}
                 \hline
                 \textbf{Fabricante} & \textbf{Registros Originais} & \textbf{Registros Limpos} & \textbf{Redundância} \\
                 \hline
-                \textbf{Ruckus} & 704.785 & 674.829 & 4,25\% \\
-                \textbf{UniFi} & 85.905 & 85.905 & 0,00\% \\
+                \textbf{Ruckus} & 1.232.364 & 1.202.408 & 2,43\% \\
+                \textbf{UniFi}  & 147.517   & 147.517   & 0,00\% \\
                 \hline
             \end{tabular}
             \caption{Consolidação dos Datasets do Campus}
@@ -166,44 +163,49 @@
         \end{table}
     \end{frame}
     \note{
-        [~1,5 min] Explicar a divisão temporal dos 30 dias de monitoramento de coleta: \\
+        [~1,5 min] Explicar a divisão temporal dos 48 a 49 dias de monitoramento de coleta: \\
         A coleta cobriu a rotina real do campus em duas etapas letivas distintas: \\
         1. Final do período 2026/1 (23/06 a 10/07): encerramento de aulas e semanas de provas finais. \\
-        2. Início do período 2026/2 (24/08 a 18/09): volta às aulas presenciais, quando foram registrados os picos de conexões ativas (587 Ruckus e 121 UniFi). \\
-        Volume consolidado: 760.734 registros limpos de produção (674.829 Ruckus e 85.905 UniFi), após tratamento de 4,25\% de duplicatas no polling da Ruckus e redundância zero na UniFi.
+        2. Período letivo 2026/2 consolidado (24/08 a 16/10): aulas presenciais plenas com alta densidade de conexões ativas. \\
+        Volume consolidado: 1.349.925 registros limpos de produção (1.202.408 Ruckus e 147.517 UniFi), após tratamento de 2,43\% de duplicatas no polling da Ruckus e redundância zero na UniFi.
     }
 
-    \begin{frame}{Metodologia}{Pipeline Metodológico da Pesquisa}
-        \centering
-        \vspace{-0.15cm}
-        \includegraphics[width=\textwidth,height=0.82\textheight,keepaspectratio]{img/fluxograma_metodologia.png}
+    \begin{frame}[label=slide_metodologia]{Metodologia}{Pipeline Metodológico da Pesquisa}
+        \vspace{-0.35cm}
+        \begin{center}
+            \makebox[\textwidth][c]{%
+                \hyperlink{zoom_metodologia}{%
+                    \includegraphics[width=1.08\textwidth,height=0.86\textheight,keepaspectratio]{img/fluxograma_metodologia.png}%
+                }%
+            }
+        \end{center}
     \end{frame}
     \note{
         [~1,5 min] Este fluxograma sintetiza visualmente o pipeline metodológico da pesquisa em 5 etapas: \\
-        1. Cenário e Coleta (Etapa 1): 43 APs no campus (24 Ruckus e 19 UniFi), 30 dias de monitoramento e mais de 760 mil registros telemétricos via SNMP e REST API. \\
+        1. Cenário e Coleta (Etapa 1): 43 APs no campus (24 Ruckus e 19 UniFi), 49 dias de monitoramento e mais de 1,3 milhão de registros telemétricos via SNMP e REST API. \\
         2. Tratamento e Features (Etapa 2): deduplicação temporal (4,25\% tratada), padronização de variáveis de RF (dBm, SNR, Mbps) e anonimização conforme LGPD. \\
-        3. Análise Estatística (Etapa 3): confirmação de não-normalidade (p < 0,001), testes não-paramétricos e forte assimetria instantânea de tráfego (Jain = 0,27). \\
+        3. Análise Estatística (Etapa 3): indicação de não-normalidade (p < 0,001), testes não-paramétricos e forte assimetria instantânea de tráfego (Jain mediano = 0,26). \\
         4. Classificação Heurística (Etapa 4): árvore determinística baseada na dinâmica de RF e referências técnicas para categorizar os gargalos G1 a G5. \\
         5. Agrupamento Operacional (Etapa 5): clusterização não-supervisionada via K-Means como análise complementar para identificar perfis de APs sem imposição prévia de regras.
     }
 
-    \begin{frame}{Metodologia}{Limiares Determinísticos de Gargalos}
-        Classificador baseado em 5 perfis heurísticos e operacionais definidos para o estudo:
+    \begin{frame}{Metodologia}{Limiares Operacionais de Gargalos}
+        Critérios heurísticos para caracterização dos estados da rede:
         \begin{itemize}
-            \item \textbf{G1: Baixa Qualidade de Enlace}: Sinal atenuado ($IS < -75$ dBm), patamar associado à redução de modulação (MCS) \cite{cisco2020design}.
-            \item \textbf{G2: Congestionamento do Meio}: Concorrência elevada ($\ge 15$ clientes simultâneos/min no AP) \cite{gast2005,cisco2020design}; picos observados no campus atingiram até \textbf{64 clientes}.
-            \item \textbf{G3: Interferência / SNR Crítico}: Ruído elevado ($Noise > -90$ dBm) ou relação sinal-ruído marginal ($SNR < 20$ dB sob bom sinal).
-            \item \textbf{G4: Instabilidade de Roaming}: Limiar exploratório de mobilidade e permanência em células distantes ($> 5$ transições de AP/dia).
-            \item \textbf{G5: Saturação em Fast Ethernet}: Tráfego no uplink cabeado do AP próximo ao teto físico da interface ($\ge 90$ Mbps em portas de 100 Mbps).
+            \item \textbf{G1: Sinal Atenuado}: Sinal fraco ($IS < -75$ dBm), reduzindo a velocidade de modulação \cite{cisco2020design}.
+            \item \textbf{G2: Contenção de Meio}: Disputa no mesmo rádio ($\ge 15$ clientes simultâneos) \cite{gast2005}. Picos observados atingiram até \textbf{64 clientes/AP}.
+            \item \textbf{G3: Interferência / Ruído}: Ruído elevado no canal ($Noise > -90$ dBm ou SNR $< 20$ dB).
+            \item \textbf{G4: Instabilidade de Roaming}: Troca excessiva de antenas ($> 15$ vezes ao dia), gerando oscilações e quedas momentâneas.
+            \item \textbf{G5: Saturação do Cabo}: Tráfego no teto da porta cabeada ($\ge 90$ Mbps em portas Fast Ethernet de 100 Mbps).
         \end{itemize}
     \end{frame}
     \note{
-        [~1,5 min] Explicar a lógica dos limiares adotados para a classificação: \\
-        1. G1 (IS < -75 dBm): diretrizes práticas de projeto de RF (Cisco), patamar onde a relação sinal-ruído força o rádio a recuar para modulações mais lentas. \\
-        2. G2 (>= 15 clientes/min): limiar operacional de concorrência embasado na dinâmica de contenção do CSMA/CA e em guias corporativos de alta densidade (Gast, 2005; Cisco, 2020), onde a disputa por tempo aéreo eleva a probabilidade de colisões. No campus, observamos picos de 50 a 64 clientes por AP. \\
-        3. G3 (Noise > -90 dBm ou SNR < 20 dB): ruído elevado ou sinal-ruído marginal sob sinal de recepção razoável. \\
-        4. G4 (> 5 transições/dia): limiar exploratório para identificar estações em trânsito frequente ou presas a APs distantes (sticky clients). \\
-        5. G5 (>= 90 Mbps): verificação de saturação nas portas Fast Ethernet de 100 Mbps.
+        [~1,5 min] Explicar a lógica prática dos 5 gargalos: \\
+        1. G1 (Sinal < -75 dBm): sinal atenuado pela distância ou obstáculos, forçando o rádio a transmitir em velocidades mais baixas. \\
+        2. G2 (>= 15 clientes): no Wi-Fi apenas um fala por vez. Com 15 ou mais clientes disputando o ar, a espera e as colisões disparam. No campus vimos picos de mais de 60 clientes em um único AP. \\
+        3. G3 (Ruído > -90 dBm): interferência externa ou canal poluído por ruído. \\
+        4. G4 (> 15 trocas de antena/dia): identifica dispositivos que ficam pulando de antena em antena ou alternando em falso, provocando quedas e reautenticações frequentes. \\
+        5. G5 (>= 90 Mbps): verifica se a lentidão vinha do cabo dos switches antigos de 100 Mbps em vez do rádio.
     }
 
     \section{Resultados e Discussões}
@@ -218,14 +220,14 @@
                         \hline
                         \textbf{Fabricante} & \textbf{Métrica} & \textbf{Média} & \textbf{Q1 (25\%)} & \textbf{Mediana} & \textbf{Q3 (75\%)} \\
                         \hline
-                        \textbf{Ruckus} & IS [dBm] & -73,9 & -81,0 & -75,0 & -68,0 \\
-                        \textbf{UniFi}  & IS [dBm] & -65,4 & -75,0 & -66,0 & -56,0 \\
+                        \textbf{Ruckus} & IS [dBm] & -74,1 & -81,0 & -75,0 & -68,0 \\
+                        \textbf{UniFi}  & IS [dBm] & -64,4 & -74,0 & -64,0 & -55,0 \\
                         \hline
                         \textbf{Ruckus} & Throughput [Mbps] & 0,46 & 0,03 & 0,12 & 0,46 \\
-                        \textbf{UniFi}  & Throughput [Mbps] & 0,27 & 0,00 & 0,00 & 0,02 \\
+                        \textbf{UniFi}  & Throughput [Mbps] & 0,27 & 0,00 & 0,00 & 0,03 \\
                         \hline
-                        \textbf{Ruckus} & Retransm. [\%] & \textbf{5,74\%} & 0,00\% & 0,00\% & 1,55\% \\
-                        \textbf{UniFi}  & Retransm. [\%] & \textbf{21,51\%} & \textbf{2,90\%} & \textbf{12,20\%} & \textbf{30,00\%} \\
+                        \textbf{Ruckus} & Retransm. [\%] & \textbf{5,70\%} & 0,00\% & 0,00\% & 1,37\% \\
+                        \textbf{UniFi}  & Retransm. [\%] & \textbf{20,38\%} & \textbf{2,50\%} & \textbf{11,50\%} & \textbf{28,00\%} \\
                         \hline
                     \end{tabular}%
                     }
@@ -233,9 +235,9 @@
                 \end{table}
                 \scriptsize
                 \begin{itemize}
-                    \item \textbf{Estatística Robusta}: Mediana e quartis (Q1 e Q3) atenuam a distorção causada por leituras atípicas (ex.: $-20$ dBm colado à carcaça do rádio).
-                    \item \textbf{Tráfego Intermitente}: Medianas de $0,12$ Mbps (RK) e $0,00$ Mbps (UF) refletem conexões ativas em segundo plano (notificações push, sem consumo contínuo).
-                    \item \textbf{Disparidade de Retransmissões}: UniFi opera com mediana de \textbf{12,20\%} e Q3 de \textbf{30,00\%} (vs. 0,00\% e 1,55\% na Ruckus), sugerindo maior vulnerabilidade a perdas no meio aéreo.
+                    \item \textbf{Estatística Robusta}: Mediana e quartis descrevem o comportamento típico em distribuições com caudas pesadas.
+                    \item \textbf{Throughput Típico}: Medianas próximas de zero (0,12 RK e 0,00 UF) refletem dispositivos ociosos ou tráfego em segundo plano.
+                    \item \textbf{Retransmissões}: UniFi opera com mediana de \textbf{11,50\%} e Q3 de \textbf{28,00\%} (vs. 0,00\% e 1,37\% na Ruckus), indicando vulnerabilidade a perdas no ar em 2,4 GHz.
                 \end{itemize}
             \end{column}
             \begin{column}{0.50\textwidth}
@@ -253,64 +255,72 @@
         \textbf{[Tempo: ~1,5 min | Roteiro de Fala - Análise Descritiva]}\\[2pt]
         $\bullet$ \textbf{Por que Mediana e Quartis em vez de Máximo?} Em distribuições não-gaussianas, a média e os valores extremos distorcem a percepção real. Um sinal de -20 dBm, por exemplo, ocorre apenas quando o aparelho encosta no rádio. Mediana e quartis (Q1 e Q3) fornecem estatística robusta que descreve a faixa central de operação.\\[2pt]
         $\bullet$ \textbf{Sinal Físico (IS):} A UniFi apresenta sinal mediano ligeiramente superior (-66 dBm vs -75 dBm da Ruckus). Isso decorre da arquitetura do prédio: a UniFi está em gabinetes menores de professores, enquanto a Ruckus cobre grandes salas de aula e vãos abertos do campus.\\[2pt]
-        $\bullet$ \textbf{Retransmissões (Ponto Crítico):} A UniFi opera com perdas elevadas: mediana de \textbf{12,20\%} e Q3 atingindo \textbf{30,00\%} de quadros retransmitidos. A Ruckus opera com mediana zero e Q3 de apenas 1,55\% (média de 5,74\% influenciada por picos pontuais de alta carga).\\[2pt]
+        $\bullet$ \textbf{Retransmissões (Ponto Crítico):} A UniFi opera com perdas elevadas: mediana de \textbf{11,50\%} e Q3 atingindo \textbf{28,00\%} de quadros retransmitidos. A Ruckus opera com mediana zero e Q3 de apenas 1,37\% (média de 5,70\% influenciada por picos pontuais de alta carga).\\[2pt]
         $\bullet$ \textbf{Throughput Mediano:} É próximo de zero em ambas (0,12 e 0,00 Mbps). A maioria das estações conectadas não está demandando tráfego pesado contínuo, mantendo apenas sessões leves e serviços em segundo plano.
     }
 
     \begin{frame}[label=slide_distribuicao]{Resultados}{Distribuição Temporal de Clientes Únicos}
-        \vspace{-0.1cm}
+        \vspace{-0.15cm}
         \begin{figure}
             \centering
-            \hyperlink{zoom_heatmap}{\includegraphics[width=0.88\textwidth,height=3.2cm,keepaspectratio]{img/heatmap_horario_clientes.png}}
-            \caption{Distribuição Temporal de Clientes Únicos por Horário e Dia (Rede WLAN Unificada) \quad \hyperlink{zoom_heatmap}{\beamergotobutton{Ampliar}}}
+            \hyperlink{zoom_heatmap}{\includegraphics[width=0.92\textwidth,height=3.8cm,keepaspectratio]{img/heatmap_horario_clientes.png}}
+            \caption{Distribuição Temporal de Clientes Únicos por Horário (WLAN Unificada) \quad \hyperlink{zoom_heatmap}{\beamergotobutton{Ampliar}}}
             \label{fig:heatmap_clientes_slides}
         \end{figure}
+        \vspace{-0.2cm}
         \scriptsize
         \begin{itemize}
-            \item \textbf{Janelas de Coleta (30 dias)}: Fase 1 (23/06 a 10/07, fim de 2026/1) e Fase 2 (24/08 a 18/09, início de 2026/2), intercaladas pelo recesso acadêmico.
-            \item \textbf{Ciclo Circadiano}: Atividade residual noturna, ascensão rápida a partir das 08h, ápice letivo (14h--18h) e redução progressiva após 22h.
-            \item \textbf{Pico Unificado do Campus}: Demanda máxima de \textbf{606} clientes únicos/h (15/09 às 19h), com patamares frequentes acima de 400--500 dispositivos nos períodos letivos da Fase 2.
-            \item \textbf{Origem do Gargalo G2}: A concentração de dezenas de aparelhos nos horários de aula intensifica a disputa pelo tempo aéreo (\textit{airtime}) no CSMA/CA.
+            \item \textbf{Ciclo Circadiano}: Madrugada ociosa, elevação a partir das 08h e concentração entre 14h e 20h.
+            \item \textbf{Pico Unificado}: \textbf{606 clientes simultâneos} (15/09 às 19h), com médias frequentes de 400 a 500 no período 2026/2.
+            \item \textbf{Origem do Gargalo G2}: A concentração de dezenas de aparelhos nos horários de aula intensifica a disputa por tempo aéreo no CSMA/CA.
         \end{itemize}
     \end{frame}
     \note{
         \scriptsize
         \textbf{[Tempo: ~1,5 min | Roteiro de Fala - Distribuição Temporal]}\\[2pt]
-        $\bullet$ \textbf{Visão Unificada do Campus:} O mapa de calor consolida a infraestrutura global da WLAN institucional (Ruckus e UniFi unificadas em uma única malha de serviço), contabilizando clientes únicos conectados por horário ao longo dos 30 dias de monitoramento efetivo.\\[2pt]
+        $\bullet$ \textbf{Visão Unificada do Campus:} O mapa de calor consolida a infraestrutura global da WLAN institucional (Ruckus e UniFi unificadas em uma única malha de serviço), contabilizando clientes únicos conectados por horário ao longo dos 49 dias de monitoramento efetivo.\\[2pt]
         $\bullet$ \textbf{Ciclo Circadiano e Recesso:} A rede reflete a rotina universitária: madrugada ociosa, subida acentuada a partir das 08:00 com o início das aulas, concentração máxima entre 14:00 e 20:00 e desocupação progressiva após as 22:00, com clara demarcação do recesso acadêmico.\\[2pt]
         $\bullet$ \textbf{Pico Unificado de Demanda:} O pico máximo da rede alcançou \textbf{606 clientes conectados em uma única hora} (no dia 15/09 às 19:00, durante a Fase 2), demonstrando a alta densidade suportada pela infraestrutura no retorno presencial de 2026/2.\\[2pt]
-        $\bullet$ \textbf{Origem do Gargalo G2:} Essa concentração massiva em horários de aula intensifica a disputa pelo tempo aéreo (\textit{airtime}) no CSMA/CA, explicando a expressiva incidência do Gargalo G2 (47,0\% na Ruckus).
+        $\bullet$ \textbf{Origem do Gargalo G2:} Essa concentração massiva em horários de aula intensifica a disputa pelo tempo aéreo (\textit{airtime}) no CSMA/CA, explicando a expressiva incidência do Gargalo G2 (47,4\% na Ruckus).
     }
 
-    \begin{frame}[label=slide_correlacoes]{Resultados}{Estudo de Correlações (Spearman)}
+    \begin{frame}[label=slide_correlacoes]{Resultados}{Correlações de Grandezas de RF (Spearman)}
         \begin{columns}
             \begin{column}{0.54\textwidth}
                 \scriptsize
                 \begin{itemize}
                     \setlength{\itemsep}{3pt}
-                    \item \textbf{Sinal x Vazão (Dinâmica do CSMA/CA)}: \\
-                    \textbf{RK ($r_s = 0,03$)}: Quase nula ($p < 0,001$). Sinal forte não garante vazão útil individual no meio compartilhado \cite{bianchi2000}. \\
-                    \textbf{UF ($r_s = 0,46$)}: Moderada. Em 2,4 GHz, sinal degradado restringe a modulação básica (MCS).
-                    \item \textbf{Sinal x Retransmissões}: \\
-                    \textbf{UF ($r_s = -0,34$)}: Negativa moderada. Sinal atenuado eleva perda de quadros. \\
-                    \textbf{RK ($r_s = 0,17$)}: Fraca positiva. Rádio sustenta enlace fraco; perdas pontuais associam-se à colisão em salas cheias.
-                    \item \textbf{Ruído x Retransmissões (Interpretação Cautelosa)}: \\
-                    \textbf{RK ($r_s = -0,64$)} vs \textbf{UF ($r_s = 0,02$)}: Resultado inesperado que indica a necessidade de interpretar com cautela a métrica de ruído fornecida pela controladora, influenciada pela sensibilidade dinâmica da plataforma.
-                    \item \textbf{Volume x Tempo de Sessão}: \\
-                    \textbf{RK ($r_s = 0,70$)} vs \textbf{UF ($r_s = 0,36$)}: Sessões mais consistentes observadas na Ruckus.
+                    \item \textbf{Sinal vs. Vazão}:
+                    \begin{itemize}
+                        \item \textbf{RK ($r_s = 0,03$)}: Quase nula. Sinal forte não assegura maior vazão em meio compartilhado (estações ociosas).
+                        \item \textbf{UF ($r_s = 0,46$)}: Moderada. Em 2,4 GHz, sinal fraco força modulações básicas lentas.
+                    \end{itemize}
+                    \item \textbf{Sinal vs. Retransmissões}:
+                    \begin{itemize}
+                        \item \textbf{UF ($r_s = -0,34$)}: Sinal atenuado eleva perdas de pacotes.
+                        \item \textbf{RK ($r_s = 0,17$)}: Perdas associadas à contenção em salas cheias, não apenas ao sinal.
+                    \end{itemize}
+                    \item \textbf{Ruído vs. Retransmissões}:
+                    \begin{itemize}
+                        \item Divergência ($r_s = -0,64$ RK vs $0,02$ UF) indica necessidade de interpretar com cautela a métrica de ruído.
+                    \end{itemize}
+                    \item \textbf{Volume vs. Tempo de Sessão}:
+                    \begin{itemize}
+                        \item Associação moderada a forte ($r_s = 0,70$ RK / $0,36$ UF).
+                    \end{itemize}
                 \end{itemize}
             \end{column}
             \begin{column}{0.46\textwidth}
                 \begin{figure}
                     \centering
                     \hyperlink{zoom_correlacoes}{\includegraphics[width=\textwidth]{img/matriz_correlacao_heatmap.png}}
-                    \caption{Matriz de Correlação de Spearman \quad \hyperlink{zoom_correlacoes}{\beamergotobutton{Ampliar}}}
+                    \caption{Matriz de Correlação (Spearman) \quad \hyperlink{zoom_correlacoes}{\beamergotobutton{Ampliar}}}
                     \label{fig:correlacao_heatmap}
                 \end{figure}
                 \vspace{-0.25cm}
                 \centering
                 \scriptsize
-                \textit{Nota: No nível agregado por AP, clientes correlacionam-se com vazão total ($r_s = 0,80$ RK / $0,56$ UF).}
+                \textit{No nível agregado, clientes elevam a vazão total do AP ($r_s = 0,80$ RK / $0,56$ UF).}
             \end{column}
         \end{columns}
     \end{frame}
@@ -318,32 +328,31 @@
         \scriptsize
         \textbf{[Tempo: ~1,5 min | Roteiro de Fala - Correlações de Spearman]}\\[2pt]
         $\bullet$ \textbf{Por que Spearman em vez de Pearson?} O teste de Shapiro-Wilk rejeitou a normalidade. Spearman avalia associações monotônicas (não-lineares), sendo robusto contra caudas pesadas e leituras atípicas.\\[2pt]
-        $\bullet$ \textbf{1. Sinal x Throughput (0,03 RK vs 0,46 UF - Achado Contraintuitivo):} Na Ruckus, a correlação é quase nula ($r_s = 0,03$). A intuição comum diz que sinal forte garante velocidade. No entanto, no protocolo CSMA/CA, o meio é compartilhado e a grande maioria dos clientes está ociosa, desacoplando o sinal da vazão instantânea. Na UniFi ($r_s = 0,46$), o rádio legado em 2,4 GHz faz com que a atenuação restrinja a modulação básica (MCS) dos clientes distantes.\\[2pt]
+        $\bullet$ \textbf{1. Sinal x Throughput (0,03 RK vs 0,46 UF - Achado Contraintuitivo):} Na Ruckus, a correlação é quase nula ($r_s = 0,03$). A intuição comum sugeriria que sinal forte proporcionaria maior velocidade. No entanto, no protocolo CSMA/CA, o meio é compartilhado e a grande maioria dos clientes está ociosa, desacoplando o sinal da vazão instantânea. Na UniFi ($r_s = 0,46$), o rádio legado em 2,4 GHz faz com que a atenuação restrinja a modulação básica (MCS) dos clientes distantes.\\[2pt]
         $\bullet$ \textbf{2. Sinal x Retransmissões (0,17 RK vs -0,34 UF):} Na UniFi, correlação negativa (-0,34): sinal fraco eleva a perda física de pacotes. Na Ruckus (+0,17), o enlace fraco é sustentado pelas antenas adaptativas, mas estações próximas em salas cheias sofrem colisões aéreas.\\[2pt]
         $\bullet$ \textbf{3. Ruído x Retransmissões (-0,64 RK vs 0,02 UF):} Frise à banca: trata-se de um resultado inesperado que indica a necessidade de interpretar com cautela a métrica de ruído fornecida pela controladora, influenciada pela sensibilidade dinâmica da plataforma (evitando especulações físicas prematuras).\\[2pt]
         $\bullet$ \textbf{4. Volume x Tempo de Sessão (0,70 RK vs 0,36 UF):} Usuários na Ruckus apresentam conexões mais estáveis e prolongadas durante as aulas.\\[2pt]
         $\bullet$ \textbf{Nota de Densidade:} Agrupando dados por rádio, a presença de clientes eleva a vazão somada do AP ($r_s = 0,80$ RK / $0,56$ UF).
     }
 
-    \begin{frame}[label=slide_testes]{Resultados}{Inferência Estatística e Distribuição de Carga}
+    \begin{frame}[label=slide_testes]{Resultados}{Inferência Estatística e Equidade}
         \begin{columns}
             \begin{column}{0.50\textwidth}
                 \scriptsize
                 \begin{itemize}
-                    \item \textbf{Distribuição dos Dados (Shapiro-Wilk)}: Rejeição da normalidade ($p < 0,001$) em todas as variáveis, fundamentando o uso de métodos não-paramétricos.
-                    \item \textbf{Diferenças entre Redes (Mann-Whitney U)}: Divergências estatisticamente significativas ($p < 0,001$) em Sinal Físico, Retransmissões e Vazão.
+                    \item \textbf{Não-Normalidade (Shapiro-Wilk)}: Rejeição de normalidade ($p < 0,001$) em todas as métricas, justificando testes não-paramétricos.
+                    \item \textbf{Comparação entre Redes (Mann-Whitney U)}: Diferenças estatisticamente significativas ($p < 0,001$) em sinal, vazão e retransmissões.
                     \item \textbf{Tamanho de Efeito ($r$ de Rosenthal)}:
-                        \begin{itemize}
-                            \scriptsize
-                            \item Retransmissões Geral: $r = 0,3767$ (Efeito moderado).
-                            \item Retransmissões RK (2,4G vs 5G): $r = 0,5182$ (\textbf{Efeito grande}).
-                        \end{itemize}
-                    \item \textbf{Índice de Jain ($p < 0,001, r = 0,4162$)}:
-                        \begin{itemize}
-                            \scriptsize
-                            \item Mediana: \textbf{0,27} (RK) e \textbf{0,14} (UF); Q3 em apenas \textbf{0,43}.
-                            \item \textbf{Forte Assimetria Instantânea}: Valores baixos refletem a dinâmica do CSMA/CA e a concentração de demanda em salas específicas, onde poucos clientes em transmissão ativa reduzem o índice de equidade.
-                        \end{itemize}
+                    \begin{itemize}
+                        \scriptsize
+                        \item 2,4 GHz vs 5 GHz (Ruckus): $r = 0,5133$ (\textbf{efeito grande}, justificando priorizar 5 GHz).
+                    \end{itemize}
+                    \item \textbf{Índice de Equidade de Jain ($p < 0,001$)}:
+                    \begin{itemize}
+                        \scriptsize
+                        \item Medianas: \textbf{0,26} (Ruckus) e \textbf{0,13} (UniFi).
+                        \item Indica distribuição desigual de vazão instantânea, inerente ao CSMA/CA e ao tráfego em segundo plano.
+                    \end{itemize}
                 \end{itemize}
             \end{column}
             \begin{column}{0.50\textwidth}
@@ -362,28 +371,16 @@
     \note{
         \scriptsize
         \textbf{[Tempo: ~2 min | Roteiro de Fala - Inferência Estatística e Jain]}\\[2pt]
-        $\bullet$ \textbf{Significância Estatística ($p < 0,001$):} Evidencia formalmente que as diferenças observadas entre as tecnologias Ruckus e UniFi têm probabilidade ínfima (< 0,1\%) de terem ocorrido ao acaso.\\[2pt]
+        $\bullet$ \textbf{Significância Estatística ($p < 0,001$):} Indica que as diferenças observadas entre as tecnologias Ruckus e UniFi têm probabilidade estatística ínfima (< 0,1\%) de decorrerem de flutuações amostrais ao acaso.\\[2pt]
         $\bullet$ \textbf{1. Shapiro-Wilk ($p < 0,001$):} Rejeita a hipótese gaussiana. O tráfego de rede apresenta caudas pesadas e comportamento altamente assimétrico, tornando o teste $t$ de Student inadequado.\\[2pt]
-        $\bullet$ \textbf{2. Tamanho de Efeito ($r$ de Rosenthal):} O $p$-valor confirma que há diferença; o $r$ mede a relevância prática. O ganho da faixa de 5 GHz sobre 2,4 GHz na Ruckus teve efeito grande ($r = 0,5182$), sustentando tecnicamente a política de Band Steering.\\[2pt]
-        $\bullet$ \textbf{3. Equidade de Jain e Assimetria de Carga:} O índice mede a distribuição instantânea de vazão. Se vários dispositivos estão ociosos e poucos estão transferindo dados ativamente, o índice cai naturalmente pela dinâmica de contenção do CSMA/CA, sem que a rede seja intrinsicamente injusta. A mediana de \textbf{0,27} na Ruckus e \textbf{0,14} na UniFi reflete essa forte assimetria temporal e a concentração de discentes em salas de aula específicas (Gargalo G2).
+        $\bullet$ \textbf{2. Tamanho de Efeito ($r$ de Rosenthal):} O $p$-valor aponta diferença estatisticamente significativa; o $r$ dimensiona a relevância prática. A vantagem da faixa de 5 GHz sobre 2,4 GHz na Ruckus exibiu tamanho de efeito grande ($r = 0,5133$), sugerindo a conveniência técnica da política de Band Steering.\\[2pt]
+        $\bullet$ \textbf{3. Equidade de Jain e Assimetria de Carga:} O índice mede a distribuição instantânea de vazão. Se vários dispositivos estão ociosos e poucos estão transferindo dados ativamente, o índice cai naturalmente pela dinâmica de contenção do CSMA/CA, sem que a rede seja intrinsicamente injusta. A mediana de \textbf{0,26} na Ruckus e \textbf{0,13} na UniFi reflete essa forte assimetria temporal e a concentração de discentes em salas de aula específicas (Gargalo G2).
     }
 
     \begin{frame}[label=slide_gargalos_geral]{Resultados}{Classificação Heurística de Gargalos: Prevalência Geral}
         \begin{columns}
             \begin{column}{0.53\textwidth}
-                \scriptsize
-                \begin{itemize}
-                    \setlength{\itemsep}{2pt}
-                    \item \textbf{Universo Amostral}: Classificação determinística aplicada a \textbf{760.734 registros telemétricos limpos} de produção no campus ICEA/UFOP.
-                    \item \textbf{Clivagem Arquitetural}:
-                        \begin{itemize}
-                            \scriptsize
-                            \item \textbf{Ruckus}: Predomínio de \textbf{G4 (Roaming: 59,4\%)} e \textbf{G2 (Contenção: 47,0\%)}. Apenas 12,3\% sem gargalos, fruto da intensa agregação discente.
-                            \item \textbf{UniFi}: Predomínio de \textbf{G4 (24,6\%)} e \textbf{G1 (24,3\%)}. Apresenta \textbf{52,7\% sem gargalos} devido à baixa densidade nos gabinetes.
-                        \end{itemize}
-                    \item \textbf{Desmistificação Cabeada (G5)}: Incidência residual ($< 0,01\%$ RK / $0,01\%$ UF) comprova que o cabeamento \textbf{não} é a causa da instabilidade.
-                \end{itemize}
-                \vspace{-0.1cm}
+                \footnotesize
                 \begin{table}[h]
                     \centering
                     \resizebox{\linewidth}{!}{%
@@ -391,17 +388,24 @@
                         \hline
                         \textbf{Categoria de Gargalo} & \textbf{Ruckus (\%)} & \textbf{UniFi (\%)} & \textbf{Natureza Física / Lógica} \\
                         \hline
-                        G1: Baixa Qualidade de Enlace & 43,5\% & 24,3\% & Atenuação de RF / Distância \\
-                        G2: Congestionamento do Meio  & 47,0\% & 3,1\%  & CSMA/CA / Tempo Aéreo \\
-                        G3: Interferência / SNR Ruim   & 0,0\%  & 1,0\%  & Ruído no Espectro de 2,4 GHz \\
-                        G4: Instabilidade de Roaming  & \textbf{59,4\%} & \textbf{24,6\%} & Mobilidade / \textit{Sticky Clients} \\
-                        G5: Saturação Fast Ethernet   & $< 0,01\%$ & 0,01\% & Cabeamento Físico (100 Mbps) \\
+                        G1: Baixa Qualidade de Enlace & 44,5\% & 21,3\% & Atenuação / Distância \\
+                        G2: Congestionamento do Meio  & 47,4\% & 4,9\%  & CSMA/CA / Tempo Aéreo \\
+                        G3: Interferência / Ruído     & 0,0\%  & 0,7\%  & Ruído em 2,4 GHz \\
+                        G4: Instabilidade de Roaming  & 15,3\% & 6,6\%  & Trocas $> 15$ vezes/dia \\
+                        G5: Saturação Fast Ethernet   & 0,01\% & 0,004\% & Cabo (100 Mbps) \\
                         \hline
-                        Operação Ideal (Sem Gargalos) & 12,3\% & 52,7\% & Enlace Estável e Não Saturado \\
+                        Operação sem Gargalos         & 24,9\% & 68,0\% & Enlace Estável \\
                         \hline
                     \end{tabular}%
                     }
                 \end{table}
+                \vspace{-0.2cm}
+                \begin{itemize}
+                    \setlength{\itemsep}{2pt}
+                    \item \textbf{Salas de Aula (Ruckus)}: 40 a 60 alunos disputando o meio sem fio geram contenção crônica de tempo aéreo (G2: 47,4\%) e atenuação de sinal (G1: 44,5\%).
+                    \item \textbf{Salas Docentes (UniFi)}: Gabinetes de professores com 1 a 2 usuários simultâneos; com baixa concorrência, \textbf{68,0\% das medições operaram em regime ideal (livres de gargalos)}.
+                    \item \textbf{Causa Raiz no Meio Sem Fio}: As limitações residem na física do ar (RF e contenção). A rede cabeada (G5 $\le 0,01\%$) operou com ampla folga.
+                \end{itemize}
             \end{column}
             \begin{column}{0.47\textwidth}
                 \begin{figure}
@@ -416,90 +420,90 @@
     \note{
         \scriptsize
         \textbf{[Tempo: ~1,5 min | Roteiro de Fala - Prevalência Geral dos Gargalos]}\\[2pt]
-        $\bullet$ \textbf{Introdução do Clímax da Pesquisa:} Apresentamos aqui a resposta central do trabalho: a caracterização objetiva dos gargalos sobre 760.734 registros reais de telemetria.\\[2pt]
-        $\bullet$ \textbf{Clivagem Clara entre as Redes:} As duas marcas refletem realidades de uso completamente distintas no mesmo campus:
-        - Na Ruckus, a rede é altamente exigida: 47,0\% de amostras em G2 e 59,4\% em G4, restando apenas 12,3\% de registros livres de gargalos.
-        - Na UniFi, a ociosidade predomina (52,7\% operam sem gargalo), mas quando há problemas, são de atenuação física (G1: 24,3\%) e roaming (G4: 24,6\%).\\[2pt]
-        $\bullet$ \textbf{Gargalo G5 (Ponto Fundamental):} Menos de 0,01\% das amostras atingiram $\ge 90$ Mbps. Isso fornece a prova empírica definitiva de que o cabeamento Fast Ethernet (100 Mbps) não foi o gargalo do campus. A lentidão percebida pela comunidade é estritamente de natureza aérea.
+        $\bullet$ \textbf{Introdução do Clímax da Pesquisa:} Apresentamos aqui a resposta central do trabalho: a caracterização objetiva dos gargalos sobre 1.349.925 registros reais de telemetria.\\[2pt]
+        $\bullet$ \textbf{Clivagem Clara entre as Redes:} As duas marcas refletem perfis de ocupação física totalmente distintos:
+        - Na Ruckus, os APs atendem salas de aula com 40 a 60 alunos disputando o canal simultaneamente: por isso vemos 47,4\% de contenção (G2) e 44,5\% de sinal atenuado (G1), com apenas 24,9\% das amostras livres de problemas.
+        - Na UniFi, os APs atendem gabinetes docentes e setores administrativos, onde há apenas 1 ou 2 pessoas conectadas por sala: com essa baixíssima concorrência no ar, 68,0\% de todas as medições operaram em regime ideal, totalmente livres de gargalos. Quando ocorrem problemas na UniFi, decorrem de atenuação por paredes (G1: 21,3\%) e transições de roaming (G4: 6,6\%).\\[2pt]
+        $\bullet$ \textbf{Gargalo G5 (Ponto Fundamental):} Apenas 0,01\% das amostras atingiram $\ge 90$ Mbps. Isso fornece forte indício empírico de que o cabeamento Fast Ethernet (100 Mbps) provavelmente não atuou como gargalo preponderante no campus. A lentidão percebida pela comunidade parece associar-se predominantemente a fatores do meio sem fio e à mobilidade.
     }
 
     \begin{frame}[label=slide_gargalos_rf]{Resultados}{Diagnóstico Físico: Rádio, Cobertura e Contenção (G1, G2 e G3)}
-        \begin{block}{Gargalo G1: Baixa Qualidade de Enlace (43,5\% RK / 24,3\% UF)}
+        \begin{block}{Gargalo G1: Baixa Qualidade de Enlace (44,5\% RK / 21,3\% UF)}
             \scriptsize
-            $\bullet$ \textbf{Mecanismo Físico}: Atenuação por distância geométrica somada a obstáculos estruturais internos (divisórias, estantes metálicas na biblioteca) e absorção de RF pelo corpo humano em salas lotadas (70\% de água no corpo absorve 2,4 e 5 GHz).\\
-            $\bullet$ \textbf{Impacto Técnico}: Dispositivos operando com sinal $< -75$ dBm recorrem a esquemas básicos de modulação (baixo MCS), ocupando muito mais tempo aéreo para transferir poucos bytes e arrastando o desempenho de toda a célula.
+            $\bullet$ \textbf{Mecanismo}: Atenuação do sinal por distância e obstáculos físicos no ambiente.\\
+            $\bullet$ \textbf{Impacto}: Sinal $< -75$ dBm força o uso de modulações mais lentas (baixo MCS), aumentando o tempo de transmissão no ar e penalizando a célula.
         \end{block}
         
-        \begin{block}{Gargalo G2: Congestionamento do Meio CSMA/CA (47,0\% RK vs 3,1\% UF)}
+        \begin{block}{Gargalo G2: Congestionamento do Meio CSMA/CA (47,4\% RK vs 4,9\% UF)}
             \scriptsize
-            $\bullet$ \textbf{Contenção de Canal}: No protocolo CSMA/CA, o ar é um recurso compartilhado no qual apenas uma estação transmite por vez em cada rádio. Em salas de aula da Ruckus com 30 a 60 alunos, a presença de múltiplos nós ativos gera períodos contínuos de contenção e colisões aéreas.\\
-            $\bullet$ \textbf{Inanição de Tempo Aéreo (\textit{Airtime Starvation})}: O meio fica saturado pela disputa concorrente e atrasos de \textit{backoff}, mesmo com tráfego em Mbps moderado. Na UniFi, gabinetes individuais mantêm G2 residual (3,1\%).
+            $\bullet$ \textbf{Contenção de Canal}: No CSMA/CA, apenas uma estação transmite por vez no rádio. Em salas cheias com 30 a 60 alunos, a disputa eleva colisões e atrasos de \textit{backoff}.\\
+            $\bullet$ \textbf{Esgotamento de Tempo Aéreo}: Ocorre lentidão pela concorrência no ar, mesmo com ampla folga de banda externa. Na UniFi, salas docentes e administrativas mantêm G2 reduzido (4,9\%).
         \end{block}
         
-        \begin{block}{Gargalo G3: Interferência de RF e SNR Crítico (0,0\% RK vs 1,0\% UF)}
+        \begin{block}{Gargalo G3: Interferência de RF e SNR Crítico (0,0\% RK vs 0,7\% UF)}
             \scriptsize
-            $\bullet$ \textbf{Espectro Limpo}: O campus opera com espectro de 5 GHz sem interferências externas. A incidência residual na UniFi decorre do confinamento da tecnologia ao espectro estreito de 2,4 GHz (apenas 3 canais ortogonais: 1, 6 e 11).
+            $\bullet$ \textbf{Espectro Limpo}: Incidência desprezível em 5 GHz. Ocorrência residual na UniFi deve-se à maior concorrência na faixa de 2,4 GHz (apenas 3 canais sem sobreposição).
         \end{block}
     \end{frame}
     \note{
         \scriptsize
         \textbf{[Tempo: ~1,5 min | Roteiro de Fala - Diagnóstico de RF e Contenção]}\\[2pt]
-        $\bullet$ \textbf{G1 (Baixa Qualidade de Enlace - 43,5\% RK / 24,3\% UF):} Enfatize que a atenuação decorre da dispersão física no campus e de obstáculos diversos (divisórias, estantes na biblioteca e absorção eletromagnética pelo trânsito de pessoas em salas de aula). Quando o sinal cai abaixo de -75 dBm, a estação usa taxa básica de modulação (baixo MCS). Isso faz com que ela passe muito mais tempo transmitindo no ar, penalizando todos os vizinhos.\\[2pt]
-        $\bullet$ \textbf{G2 (Congestionamento do Meio - 47,0\% RK vs 3,1\% UF):} Este é o grande gargalo de sala de aula. Explique a dinâmica do CSMA/CA: o meio é fatiado no tempo. Ter 40 celulares conectados em segundo plano gera uma tempestade de requisições de canal. O rádio atinge esgotamento de tempo aéreo (\textit{airtime starvation}) mesmo que a velocidade contratada de internet esteja com 90\% de folga.\\[2pt]
-        $\bullet$ \textbf{G3 (Interferência de RF):} É praticamente nulo no campus universitário, confirmando que a separação física dos prédios e o uso de 5 GHz mantêm o piso de ruído controlado.
+        $\bullet$ \textbf{G1 (Baixa Qualidade de Enlace - 44,5\% RK / 21,3\% UF):} Enfatize que a atenuação decorre da dispersão física no campus e de obstáculos diversos (divisórias, estantes na biblioteca e absorção eletromagnética pelo trânsito de pessoas em salas de aula). Quando o sinal cai abaixo de -75 dBm, a estação usa taxa básica de modulação (baixo MCS). Isso faz com que ela passe muito mais tempo transmitindo no ar, penalizando todos os vizinhos.\\[2pt]
+        $\bullet$ \textbf{G2 (Congestionamento do Meio - 47,4\% RK vs 4,9\% UF):} Este é o grande gargalo de sala de aula. Explique a dinâmica do CSMA/CA: o meio é fatiado no tempo. Ter 40 celulares conectados em segundo plano gera uma tempestade de requisições de canal. O rádio atinge esgotamento de tempo aéreo (\textit{airtime starvation}) mesmo que a velocidade contratada de internet esteja com 90\% de folga.\\[2pt]
+        $\bullet$ \textbf{G3 (Interferência de RF):} É praticamente nulo no campus universitário, indicando que a separação física dos prédios e o uso de 5 GHz provavelmente contribuem para manter o piso de ruído sob controle.
     }
 
-    \begin{frame}[label=slide_gargalos_roaming_cabo]{Resultados}{Diagnóstico Sistêmico: Mobilidade e Infraestrutura Cabeada (G4 e G5)}
-        \begin{block}{Gargalo G4: Instabilidade de Roaming (59,4\% RK / 24,6\% UF) -- O Mais Frequente do Estudo}
+    \begin{frame}[label=slide_gargalos_roaming_cabo]{Resultados}{Diagnóstico Sistêmico: Mobilidade e Cabeamento (G4 e G5)}
+        \begin{block}{Gargalo G4: Instabilidade de Roaming (15,3\% RK / 6,6\% UF)}
             \scriptsize
-            $\bullet$ \textbf{Dinâmica de Mobilidade}: Trânsito acadêmico constante de discentes e professores entre salas de aula, laboratórios, biblioteca e áreas de convivência.\\
-            $\bullet$ \textbf{O Fenômeno dos \textit{Sticky Clients}}: O algoritmo proprietário dos smartphones tende a reter a conexão com o AP original fraco até que o enlace caia completamente, em vez de migrar prontamente para o AP mais forte do novo ambiente.\\
-            $\bullet$ \textbf{Impacto na Infraestrutura}: Estações distantes transmitem a taxas mínimas, forçando retransmissões repetidas e roubando o tempo aéreo do novo rádio.\\
-            $\bullet$ \textbf{Origem Técnica}: Ausência ou falta de parametrização ativa de roaming assistido (\textbf{IEEE 802.11k/v/r}) e limiares de desconexão mínima (\textit{minimum RSSI}) na controladora.
+            $\bullet$ \textbf{Comportamento}: Dispositivos alternando excessivamente entre antenas ($> 15$ vezes ao dia), muito acima da circulação normal de um usuário.\\
+            $\bullet$ \textbf{Impacto}: A cada troca de rádio, a sessão é interrompida para reautenticação, provocando congelamentos e instabilidade percebida.\\
+            $\bullet$ \textbf{Fatores Prováveis}: Possível ausência ou parametrização inadequada de roaming assistido (802.11k/v/r) e comportamento de clientes que resistem a desconectar de células fracas.
         \end{block}
         
-        \begin{block}{Gargalo G5: Saturação de Portas Fast Ethernet Cabeada ($< 0,01\%$ RK / 0,01\% UF)}
+        \begin{block}{Gargalo G5: Saturação de Portas Cabeadas (0,01\% RK / 0,004\% UF)}
             \scriptsize
-            $\bullet$ \textbf{Evidência Empírica Robusta}: Em mais de 760 mil registros, apenas 60 amostras na Ruckus e 6 na UniFi atingiram $\ge 90$ Mbps. \\
-            $\bullet$ \textbf{Desmistificação Crucial para a Gestão}: \textbf{O cabeamento estruturado Fast Ethernet (100 Mbps) NÃO foi o gargalo da rede do campus}. O gargalo é 100\% de natureza sem fio (propagação de RF, tempo aéreo e roaming).
+            $\bullet$ \textbf{Evidência Empírica}: Em mais de 1,3 milhão de registros, a interface cabeada praticamente nunca atingiu o limite de 100 Mbps.\\
+            $\bullet$ \textbf{Indicação Prática}: O cabeamento suportou a demanda com folga. Os indícios apontam que as limitações observadas decorrem primordialmente do meio sem fio.
         \end{block}
     \end{frame}
     \note{
         \scriptsize
         \textbf{[Tempo: ~1,5 min | Roteiro de Fala - Mobilidade e Cabeamento]}\\[2pt]
-        $\bullet$ \textbf{G4 (Instabilidade de Roaming - 59,4\% RK / 24,6\% UF):} Destaque como o gargalo mais prevalente da pesquisa. Explique o conceito de \textit{Sticky Client}: o aluno sai de uma aula no Bloco A e vai para o Bloco B; o smartphone continua conectado ao rádio do Bloco A com sinal de -85 dBm, tentando transmitir pacotes e gerando retransmissão. A controladora não possui limiar mínimo forçado de desconexão para forçar o aparelho a migrar.\\[2pt]
-        $\bullet$ \textbf{G5 (Saturação Cabeada - $< 0,01\%$):} Enfatize este achado com máxima clareza: a hipótese inicial comum em TI acadêmica é atribuir a lentidão ao cabeamento antigo de 100 Mbps. Os dados empíricos de 760 mil amostras desmentem categoricamente essa suposição. O cabeamento sustentou a demanda plenamente; o problema é a física do ar e a gerência de RF.
+        $\bullet$ \textbf{G4 (Instabilidade de Roaming):} Um usuário andando pelo campus troca de antena algumas vezes ao longo do dia, e isso é esperado. No entanto, quando o aparelho troca mais de 15 vezes, ele passa o dia desconectando e reautenticando, gerando pequenas oscilações. Uma explicação plausível é a possível parametrização branda de roaming assistido na controladora, somada ao comportamento dos próprios dispositivos móveis.\\[2pt]
+        $\bullet$ \textbf{G5 (Saturação Cabeada):} Havia a hipótese inicial de que a lentidão pudesse decorrer de portas de 100 Mbps nos switches antigos. No entanto, os dados indicam que em menos de 0,01\% do tempo as portas operaram perto do teto. O cabeamento provavelmente não atuou como gargalo relevante no período avaliado; os indícios sugerem que as causas situam-se no meio aéreo.
     }
 
-    \begin{frame}[label=slide_kmeans_resumo]{Resultados}{Análise Complementar de Agrupamento (K-Means)}
-        \begin{columns}
-            \begin{column}{0.48\textwidth}
-                \begin{block}{Papel Metodológico (Exploratório)}
+    \begin{frame}[label=slide_kmeans_resumo]{Resultados}{Agrupamento Exploratório dos APs (K-Means)}
+        \begin{columns}[t,onlytextwidth]
+            \begin{column}{0.46\textwidth}
+                \begin{block}{Papel Metodológico (Complementar)}
                     \scriptsize
-                    O K-Means atua como análise complementar não-supervisionada para mapear perfis dos 43 APs \textbf{sem imposição prévia dos limiares de G1 a G5}.
+                    Identificar perfis operacionais naturais dos 43 APs \textbf{sem imposição prévia dos limiares de G1 a G5}.\\[4pt]
+                    $\bullet$ \textbf{Métricas}: Clientes, Throughput, Sinal e Retransmissão padronizados.\\[2pt]
+                    $\bullet$ \textbf{Partição ($K=4$)}: Convergência de cotovelo, silhueta e Davies-Bouldin ($0,7990$).
                 \end{block}
-                \scriptsize
-                $\bullet$ \textbf{Vetor de Features ($X_j$)}: Clientes ($C_j$), Throughput ($T_j$), Sinal ($S_j$) e Retransmissão ($R_j$), normalizados em escore-$z$ (\textit{StandardScaler}).\\
-                $\bullet$ \textbf{Partição em $K=4$ Perfis}: Validação matemática conjunta: cotovelo de inércia, silhueta e Davies-Bouldin ($0,7990$).
-                \vspace{0.15cm}
+                \vspace{0.3cm}
                 \begin{center}
                     \hyperlink{zoom_kmeans_metricas}{\beamergotobutton{Métricas K}} \quad
                     \hyperlink{zoom_kmeans_ruckus}{\beamergotobutton{Clusters RK}} \quad
                     \hyperlink{zoom_kmeans_unifi}{\beamergotobutton{Clusters UF}}
                 \end{center}
             \end{column}
-            \begin{column}{0.52\textwidth}
-                \begin{block}{Convergência Empírica com os Gargalos}
+            \hfill
+            \begin{column}{0.50\textwidth}
+                \begin{block}{Convergência com os Gargalos}
                     \scriptsize
-                    \textbf{1. Rede Ruckus (Robustez de RF)}:
+                    \textbf{Rede Ruckus}:
                     \begin{itemize}
-                        \item \textit{Grupo A (Alta Carga)}: Atende até 64 clientes (13,0 Mbps) mantendo retransmissões baixas (\textbf{3,9\%}); comprova a ação do RF adaptativo e antenas direcionais.
-                        \item \textit{Grupo D (Sinal Fraco)}: Rádios periféricos com -74,8 dBm e perdas de \textbf{9,2\%}, convergindo com o Gargalo G1.
+                        \item \textit{Alta Carga}: Rádios absorvem picos de demanda mantendo perdas baixas ($4,3\%$).
+                        \item \textit{Borda/Sombra}: Rádios periféricos com sinal atenuado e perdas elevadas ($8,2\%$), alinhados ao Gargalo G1.
                     \end{itemize}
-                    \textbf{2. Rede UniFi (Contenção e Anomalia)}:
+                    \vspace{2pt}
+                    \textbf{Rede UniFi}:
                     \begin{itemize}
-                        \item \textit{Operação em 2,4 GHz}: Perdas severas ($> 20\%$) mesmo sob poucos clientes (Grupos A, B e D).
-                        \item \textit{Anomalia Crítica (AP PICO-H-100)}: Sinal excelente (\textbf{-46,4 dBm}), mas perdas de \textbf{37,4\%}. Isola um problema pontual que justifica \textit{site survey} ativo.
+                        \item \textit{Operação em 2,4 GHz}: Perdas elevadas ($> 17\%$).
+                        \item \textit{Anomalia Crítica (AP PICO-H-100)}: Sinal forte ($-44,6$ dBm) e perdas severas ($40,2\%$), indicando \textit{site survey} ativo.
                     \end{itemize}
                 \end{block}
             \end{column}
@@ -509,35 +513,45 @@
         \scriptsize
         \textbf{[Tempo: ~1 min | Roteiro de Fala - Perfis K-Means]}\\[2pt]
         $\bullet$ \textbf{Papel do K-Means na Pesquisa:} O K-Means não é o protagonista, mas sim uma ferramenta não-supervisionada complementar para verificar se os dados brutos dos APs se agrupavam naturalmente em consonância com os gargalos.\\[2pt]
-        $\bullet$ \textbf{Features e $K=4$:} Usamos 4 métricas físicas padronizadas em $z$-score. A convergência matemática para 4 grupos foi confirmada por silhueta, cotovelo e índice Davies-Bouldin de 0,7990.\\[2pt]
-        $\bullet$ \textbf{Resultados Ruckus:} O Grupo A atende picos de 64 clientes sustentando perdas em 3,9\% (graças ao RF inteligente); o Grupo D isola APs periféricos com perdas elevadas a 9,2\% (convergindo com o Gargalo G1).\\[2pt]
-        $\bullet$ \textbf{Resultados UniFi:} Revela perdas crônicas em 2,4 GHz e isola a anomalia grave do AP PICO-H-100 (sinal excelente de -46,4 dBm, mas 37,4\% de quadros perdidos), justificando uma inspeção ativa de campo.
+        $\bullet$ \textbf{Features e $K=4$:} Usamos 4 métricas físicas padronizadas em $z$-score. A partição matemática em 4 grupos mostrou-se coerente segundo as métricas de silhueta, cotovelo e índice Davies-Bouldin de 0,7990.\\[2pt]
+        $\bullet$ \textbf{Resultados Ruckus:} O Grupo A atende picos de 85 clientes sustentando perdas em 4,3\% (graças ao RF inteligente); o Grupo D isola APs periféricos com perdas elevadas a 8,2\% (convergindo com o Gargalo G1).\\[2pt]
+        $\bullet$ \textbf{Resultados UniFi:} Revela perdas crônicas em 2,4 GHz e isola a anomalia grave do AP PICO-H-100 (sinal excelente de -44,6 dBm, mas 40,2\% de quadros perdidos), justificando uma inspeção ativa de campo.
     }
 
     \section{Recomendações e Ações}
-    \begin{frame}{Recomendações e Ações de Engenharia}
-        \footnotesize
-        Ações de engenharia de redes de baixo custo derivadas diretamente dos gargalos identificados:
+    \begin{frame}[t]{Recomendações Práticas de Engenharia}
         \vspace{0.1cm}
-        \begin{columns}
-            \begin{column}{0.50\textwidth}
+        Ações de baixo custo derivadas diretamente dos diagnósticos empíricos:
+        \vspace{0.25cm}
+        \begin{columns}[t]
+            \begin{column}{0.485\textwidth}
                 \begin{block}{1. Cobertura Física (G1)}
-                    \scriptsize
-                    \textbf{Site survey passivo} nos setores periféricos (APs RK-3440 e RK-dcd0) para reposicionar antenas, contornando barreiras estruturais internas e zonas de sombra.
+                    \begin{minipage}[t][1.5cm][t]{\linewidth}
+                        \scriptsize
+                        \textbf{Site survey passivo} e reposicionamento de antenas em setores periféricos (APs RK-3440 e RK-dcd0) para contornar áreas de sombra.
+                    \end{minipage}
                 \end{block}
+                \vspace{0.25cm}
                 \begin{block}{2. Contenção CSMA/CA (G2/G3)}
-                    \scriptsize
-                    Ativação de \textbf{Band Steering} na controladora para direcionar clientes para a faixa de 5 GHz, aliviando o espectro de 2,4 GHz ($r = 0,5182$).
+                    \begin{minipage}[t][1.5cm][t]{\linewidth}
+                        \scriptsize
+                        Ativação de \textbf{Band Steering} na controladora para priorizar a faixa de 5 GHz, aliviando o espectro de 2,4 GHz ($r = 0,5133$).
+                    \end{minipage}
                 \end{block}
             \end{column}
-            \begin{column}{0.50\textwidth}
+            \begin{column}{0.485\textwidth}
                 \begin{block}{3. Roaming e Sticky Clients (G4)}
-                    \scriptsize
-                    Habilitar \textbf{802.11k/v/r} e configurar limiar mínimo de desconexão (\textit{min RSSI} em $-75$ dBm) para mitigar estações presas a APs distantes.
+                    \begin{minipage}[t][1.5cm][t]{\linewidth}
+                        \scriptsize
+                        Habilitar \textbf{802.11k/v/r} e configurar limiar mínimo de desconexão (\textit{min RSSI} em $-75$ dBm) para mitigar estações retidas em APs distantes.
+                    \end{minipage}
                 \end{block}
-                \begin{block}{4. Auditoria Espectral (UniFi)}
-                    \scriptsize
-                    Medição ativa in loco no setor do AP \texttt{PICO-H-100} com analisador de espectro para rastrear perdas anômalas ($37,4\%$).
+                \vspace{0.25cm}
+                \begin{block}{4. Auditoria de RF (UniFi)}
+                    \begin{minipage}[t][1.5cm][t]{\linewidth}
+                        \scriptsize
+                        Inspeção ativa de campo no setor do AP \texttt{PICO-H-100} para rastrear causas de perda anômala (\textbf{40,2\%}).
+                    \end{minipage}
                 \end{block}
             \end{column}
         \end{columns}
@@ -546,32 +560,32 @@
         \scriptsize
         \textbf{[Tempo: ~1,5 min | Roteiro de Fala - Recomendações e Ações]}\\[2pt]
         $\bullet$ \textbf{1. Site survey e reposicionamento (G1):} Em vez de comprar novos rádios, otimizar o posicionamento geométrico dos pontos atenuados.\\[2pt]
-        $\bullet$ \textbf{2. Band Steering (G2/G3):} Ação imediata de \textbf{custo zero} na controladora, tirando dispositivos da concorrência em 2,4 GHz e enviando para 5 GHz (ganho comprovado com $r = 0,5182$).\\[2pt]
+        $\bullet$ \textbf{2. Band Steering (G2/G3):} Ação imediata de \textbf{custo zero} na controladora, tirando dispositivos da concorrência em 2,4 GHz e enviando para 5 GHz (vantagem apoiada pelo tamanho de efeito $r = 0,5133$).\\[2pt]
         $\bullet$ \textbf{3. Mitigação de Sticky Clients (G4):} Resolver o maior gargalo da rede ativando 802.11k/v/r e limiar mínimo de RSSI para desassociar aparelhos que se afastam.\\[2pt]
-        $\bullet$ \textbf{4. Auditoria Espectral no AP PICO-H-100:} Medição de campo ativa para rastrear a perda de 37,4\% antes de qualquer ajuste de potência.
+        $\bullet$ \textbf{4. Auditoria Espectral no AP PICO-H-100:} Medição de campo ativa para rastrear a perda de 40,2\% antes de qualquer ajuste de potência.
     }
 
     \section{Conclusões}
     \begin{frame}{Conclusões}
         \footnotesize
         \begin{itemize}
-            \setlength{\itemsep}{2pt}
-            \item Caracterização empírica de um dataset de produção com \textbf{760.734 registros telemétricos limpos} no campus (30 dias em duas fases letivas), estruturando uma base quantitativa para suporte à gestão.
-            \item Os gargalos identificados concentram-se na \textbf{física de RF e na contenção CSMA/CA} sob forte assimetria de demanda (Jain mediano de 0,27 RK / 0,14 UF), e \textbf{não} no link externo de 1 Gbps ou em saturação de portas Fast Ethernet (Gargalo G5 $<0,01\%$).
-            \item A modelagem K-Means atuou como \textbf{agrupamento complementar}, identificando células sob alta demanda com baixa perda na Ruckus e isolando a anomalia severa de RF do AP \texttt{PICO-H-100} na UniFi.
-            \item As intervenções propostas (\textit{Band Steering} e \textit{site survey} direcionado) constituem soluções de \textbf{baixo custo e rápida implementação} para mitigar a concorrência espectral no campus.
+            \setlength{\itemsep}{3pt}
+            \item \textbf{Dataset de Produção}: \textbf{1.349.925 registros limpos} cobrindo 49 dias em duas etapas acadêmicas distintas (fim de semestre e aulas plenas).
+            \item \textbf{Origem Real dos Gargalos}: As limitações decorrem da \textbf{física de RF e contenção CSMA/CA} sob assimetria de demanda. O link de 1 Gbps e o cabeamento Fast Ethernet (G5 $\le 0,01\%$) não representaram os gargalos primários.
+            \item \textbf{Evidência Complementar (K-Means)}: Identificou a robustez dos APs sob alta carga na Ruckus e isolou a anomalia crítica do AP \texttt{PICO-H-100} na UniFi.
+            \item \textbf{Viabilidade Prática}: Soluções prioritárias (\textit{Band Steering}, ajuste de RSSI e \textit{site survey}) são de \textbf{custo imediato zero ou irrisório}.
         \end{itemize}
-        \vspace{-0.1cm}
+        \vspace{0.1cm}
         \begin{block}{Trabalhos Futuros}
             \scriptsize
-            Investigação de tráfego IoT, aplicação de questionários psicométricos de percepção (QoE) junto à comunidade acadêmica e modelos preditivos em tempo real.
+            Pesquisas de percepção do usuário (QoE), análise de tráfego IoT e modelagem preditiva em tempo real.
         \end{block}
     \end{frame}
     \note{
         \scriptsize
         \textbf{[Tempo: ~1 min | Roteiro de Fala - Conclusões]}\\[2pt]
         $\bullet$ \textbf{Os 4 Pilares Finais da Apresentação:}\\[2pt]
-        1. \textbf{Dataset Robusto e Real:} Mais de 760 mil registros em duas etapas acadêmicas distintas da UFOP.\\[2pt]
+        1. \textbf{Dataset Robusto e Real:} Mais de 1,3 milhão de registros em duas etapas acadêmicas distintas da UFOP.\\[2pt]
         2. \textbf{Diagnóstico da Origem dos Gargalos:} O gargalo da infraestrutura \textbf{não é a internet externa nem saturação de portas cabeadas} (G5 é residual). A degradação observada decorre da física de RF e da contenção no meio compartilhado CSMA/CA sob forte assimetria temporal.\\[2pt]
         3. \textbf{Agrupamento K-Means:} Análise não-supervisionada complementar que agrupou os APs por semelhança e isolou a anomalia do AP PICO-H-100 sem impor limiares prévios.\\[2pt]
         4. \textbf{Ações de Baixo Custo:} Soluções práticas de engenharia (Band Steering e Site Survey) que a própria UFOP pode implementar sem necessidade imediata de aquisições onerosas.\\[2pt]
@@ -602,6 +616,17 @@
     % -------------------------------------------------------------------------
     \appendix
 
+    \begin{frame}[plain,noframenumbering,label=zoom_metodologia]
+        \begin{center}
+            \hyperlink{slide_metodologia}{%
+                \includegraphics[width=\paperwidth,height=0.92\paperheight,keepaspectratio]{img/fluxograma_metodologia.png}%
+            }
+        \end{center}
+        \vspace{-0.2cm}
+        \centering
+        \hyperlink{slide_metodologia}{\beamerreturnbutton{Voltar}}
+    \end{frame}
+
     \begin{frame}[plain,noframenumbering,label=zoom_heatmap]
         \begin{center}
             \hyperlink{slide_distribuicao}{%
@@ -626,7 +651,7 @@
             \scriptsize
             \textbf{[Roteiro de Fala - Análise da Matriz de Correlação de Spearman]}\\[2pt]
             $\bullet$ \textbf{Estrutura do Heatmap:} Cruza 7 variáveis em nível microscópico de cliente para Ruckus (esquerda) e UniFi (direita).\\[2pt]
-            $\bullet$ \textbf{1. Sinal x Throughput (0,03 RK vs 0,46 UF):} Na Ruckus, a célula é neutra ($r_s = 0,03$), indicando que sob CSMA/CA e clientes em segundo plano, sinal forte não garante vazão útil individual. Na UniFi ($0,46$), a atenuação restringe a modulação básica MCS.\\[2pt]
+            $\bullet$ \textbf{1. Sinal x Throughput (0,03 RK vs 0,46 UF):} Na Ruckus, a correlação é próxima de zero ($r_s = 0,03$), sugerindo que sob CSMA/CA e estações em segundo plano, sinal forte não assegura necessariamente maior vazão útil individual. Na UniFi ($0,46$), a atenuação parece restringir a modulação básica MCS.\\[2pt]
             $\bullet$ \textbf{2. Sinal x Retransmissões (0,17 RK vs -0,34 UF):} Na UniFi, correlação negativa ($-0,34$): sinal fraco eleva a perda de pacotes. Na Ruckus ($+0,17$), o enlace fraco é sustentado pelas antenas, mas estações próximas em salas cheias sofrem colisões aéreas.\\[2pt]
             $\bullet$ \textbf{3. Ruído x Retransmissões (-0,64 RK vs 0,02 UF):} Frise que este é um resultado inesperado que indica a necessidade de interpretar com cautela a métrica de ruído fornecida pela controladora, influenciada pela sensibilidade dinâmica da plataforma.\\[2pt]
             $\bullet$ \textbf{4. Volume x Tempo de Sessão (0,70 RK vs 0,36 UF):} Usuários na Ruckus mantêm fluxo contínuo durante as aulas; na UniFi, o uso é mais intermitente.
@@ -645,10 +670,10 @@
         \note{
             \scriptsize
             \textbf{[Roteiro de Fala - Análise Detalhada da Equidade de Jain]}\\[2pt]
-            $\bullet$ \textbf{Gráfico da Esquerda (Boxplot de Jain):} Mostra quartis e medianas. Ruckus tem mediana de \textbf{0,27} e UniFi de \textbf{0,14}.\\[2pt]
+            $\bullet$ \textbf{Gráfico da Esquerda (Boxplot de Jain):} Mostra quartis e medianas. Ruckus tem mediana de \textbf{0,26} e UniFi de \textbf{0,13}.\\[2pt]
             $\bullet$ \textbf{Gráfico da Direita (Curva de Densidade - KDE):}\\[2pt]
-            - \textbf{O que significa o Eixo Y (Densidade)?} O eixo Y representa a estimativa de densidade de probabilidade (KDE), refletindo a \textbf{frequência temporal relativa} com que a rede operou em cada nível de equidade ao longo dos 30 dias. A área total sob a curva é igual a 1 (100\% do tempo).\\[2pt]
-            - \textbf{Interpretação dos Picos:} A curva da UniFi atinge seu pico em $0,14$, e a Ruckus em $0,27$. Isso reflete a forte assimetria instantânea gerada pela dinâmica do CSMA/CA e pela concentração de alunos em salas de aula específicas (Gargalo G2).\\[2pt]
+            - \textbf{O que significa o Eixo Y (Densidade)?} O eixo Y representa a estimativa de densidade de probabilidade (KDE), refletindo a \textbf{frequência temporal relativa} com que a rede operou em cada nível de equidade ao longo dos 49 dias. A área total sob a curva é igual a 1 (100\% do tempo).\\[2pt]
+            - \textbf{Interpretação dos Picos:} A curva da UniFi atinge seu pico em $0,13$, e a Ruckus em $0,26$. Isso reflete a forte assimetria instantânea gerada pela dinâmica do CSMA/CA e pela concentração de alunos em salas de aula específicas (Gargalo G2).\\[2pt]
             - \textbf{Densidade em 1,0:} Próximo a $1,0$ (equilíbrio instantâneo estrito), a densidade é praticamente nula, o que é esperado em redes móveis onde as demandas dos clientes ocorrem em rajadas assíncronas.\\[2pt]
             - \textbf{Piso Teórico de Jain:} Varia de $1/N = 1/43 \approx 0,023$ (onde 1 rádio concentra todo o tráfego e 42 ficam ociosos) até $1,0$ (partilha idêntica).
         }
