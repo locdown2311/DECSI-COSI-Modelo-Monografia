@@ -222,3 +222,6 @@ TSWLatexianTemp*
 
 # Ignore Mac DS_Store files
 .DS_Store
+
+## Backups das revisoes
+_backup_*/

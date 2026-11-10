@@ -1,0 +1,40 @@
+name: Compilar monografia
+
+on:
+  push:
+    paths:
+      - '**.tex'
+      - '**.bib'
+      - '**.cls'
+      - 'img/**'
+      - '.github/workflows/compilar-monografia.yml'
+  pull_request:
+  workflow_dispatch:   # permite rodar manualmente pela aba Actions
+
+jobs:
+  compilar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Baixar o repositório
+        uses: actions/checkout@v4
+
+      - name: Compilar com LaTeX (TeX Live completo, inclui abnTeX2)
+        uses: xu-cheng/latex-action@v3
+        with:
+          root_file: decsi-cosi-modelo-monografia.tex
+
+      - name: Avisar sobre referências ou citações quebradas
+        if: always()
+        run: |
+          LOG=decsi-cosi-modelo-monografia.log
+          [ -f "$LOG" ] || exit 0
+          grep -E "(Reference|Citation) .* undefined" "$LOG" | sort -u | while read -r linha; do
+            echo "::warning title=Referência quebrada::$linha"
+          done || true
+
+      - name: Disponibilizar o PDF
+        uses: actions/upload-artifact@v4
+        with:
+          name: monografia-pdf
+          path: decsi-cosi-modelo-monografia.pdf
+          if-no-files-found: error
