@@ -35,7 +35,7 @@
 
 \title[Caracterização de Gargalos 802.11]{Caracterização de gargalos em redes 802.11 em ambientes de alta densidade: estudo de caso em WLAN universitária}
 
-\author[Guimarães, I. C.]{Igor Carvalho Guimarães \\~\\  \textbf{Professor Orientador}: Marlon Paolo Lima \\ \textbf{Professor Coorientador}: Plínio Roque de Almeida} 
+\author[Guimarães, I. C.]{Igor Carvalho Guimarães \\ \vspace{1cm} \textbf{Professor Orientador}: Marlon Paolo Lima \\ \textbf{Professor Coorientador}: Plínio Roque de Almeida}
 
 \institute[ICEA - UFOP]{ICEA -- Universidade Federal de Ouro Preto}
 \date{2026}
@@ -163,7 +163,7 @@
         \end{table}
     \end{frame}
     \note{
-        [~1,5 min] Explicar a divisão temporal dos 48 a 49 dias de monitoramento de coleta: \\
+        [~1,5 min] Explicar a divisão temporal dos 49 dias de monitoramento de coleta: \\
         A coleta cobriu a rotina real do campus em duas etapas letivas distintas: \\
         1. Final do período 2026/1 (23/06 a 10/07): encerramento de aulas e semanas de provas finais. \\
         2. Período letivo 2026/2 consolidado (24/08 a 16/10): aulas presenciais plenas com alta densidade de conexões ativas. \\
@@ -211,44 +211,36 @@
     \section{Resultados e Discussões}
     \nologo
     \begin{frame}{Resultados}{Análise Descritiva Comparativa}
-        \begin{columns}
-            \begin{column}{0.50\textwidth}
-                \begin{table}[h]
-                    \centering
-                    \resizebox{\linewidth}{!}{%
-                    \begin{tabular}{llcccc}
-                        \hline
-                        \textbf{Fabricante} & \textbf{Métrica} & \textbf{Média} & \textbf{Q1 (25\%)} & \textbf{Mediana} & \textbf{Q3 (75\%)} \\
-                        \hline
-                        \textbf{Ruckus} & IS [dBm] & -74,1 & -81,0 & -75,0 & -68,0 \\
-                        \textbf{UniFi}  & IS [dBm] & -64,4 & -74,0 & -64,0 & -55,0 \\
-                        \hline
-                        \textbf{Ruckus} & Throughput [Mbps] & 0,46 & 0,03 & 0,12 & 0,46 \\
-                        \textbf{UniFi}  & Throughput [Mbps] & 0,27 & 0,00 & 0,00 & 0,03 \\
-                        \hline
-                        \textbf{Ruckus} & Retransm. [\%] & \textbf{5,70\%} & 0,00\% & 0,00\% & 1,37\% \\
-                        \textbf{UniFi}  & Retransm. [\%] & \textbf{20,38\%} & \textbf{2,50\%} & \textbf{11,50\%} & \textbf{28,00\%} \\
-                        \hline
-                    \end{tabular}%
-                    }
-                    \caption{Estatísticas Descritivas por Quartis (Mediana e Dispersão)}
-                \end{table}
-                \scriptsize
-                \begin{itemize}
-                    \item \textbf{Estatística Robusta}: Mediana e quartis descrevem o comportamento típico em distribuições com caudas pesadas.
-                    \item \textbf{Throughput Típico}: Medianas próximas de zero (0,12 RK e 0,00 UF) refletem dispositivos ociosos ou tráfego em segundo plano.
-                    \item \textbf{Retransmissões}: UniFi opera com mediana de \textbf{11,50\%} e Q3 de \textbf{28,00\%} (vs. 0,00\% e 1,37\% na Ruckus), indicando vulnerabilidade a perdas no ar em 2,4 GHz.
-                \end{itemize}
-            \end{column}
-            \begin{column}{0.50\textwidth}
-                \begin{figure}
-                    \centering
-                    \includegraphics[width=\textwidth]{img/boxplot_rssi_fabricante.png}
-                    \caption{Distribuição de Intensidade de Sinal por Fabricante}
-                    \label{fig:boxplot_rssi_slide}
-                \end{figure}
-            \end{column}
-        \end{columns}
+        \centering
+        \resizebox{\linewidth}{!}{%
+        \begin{tabular}{llcccc}
+            \hline
+            \textbf{Fabricante} & \textbf{Métrica} & \textbf{Média} & \textbf{Q1 (25\%)} & \textbf{Mediana} & \textbf{Q3 (75\%)} \\
+            \hline
+            \textbf{Ruckus} & IS [dBm] & -74,1 & -81,0 & -75,0 & -68,0 \\
+            \textbf{UniFi}  & IS [dBm] & -64,4 & -74,0 & -64,0 & -55,0 \\
+            \hline
+            \textbf{Ruckus} & Throughput [Mbps] & 0,46 & 0,03 & 0,12 & 0,46 \\
+            \textbf{UniFi}  & Throughput [Mbps] & 0,27 & 0,00 & 0,00 & 0,03 \\
+            \hline
+            \textbf{Ruckus} & Retransm. [\%] & \textbf{5,70\%} & 0,00\% & 0,00\% & 1,37\% \\
+            \textbf{UniFi}  & Retransm. [\%] & \textbf{20,38\%} & \textbf{2,50\%} & \textbf{11,50\%} & \textbf{28,00\%} \\
+            \hline
+        \end{tabular}%
+        }
+        \scriptsize \textbf{Estatísticas Descritivas por Quartis (Mediana e Dispersão)}\\[0.2cm]
+        \scriptsize
+        \begin{itemize}
+            \item \textbf{Estatística Robusta}: Mediana e quartis descrevem o comportamento típico em distribuições com caudas pesadas.
+            \item \textbf{Throughput Típico}: Medianas próximas de zero refletem dispositivos ociosos.
+            \item \textbf{Retransmissões}: UniFi mediana \textbf{11,50\%} (vs. 0,00\% Ruckus).
+        \end{itemize}
+    \end{frame}
+
+    \begin{frame}{Resultados}{Distribuição de Intensidade de Sinal}
+        \centering
+        \includegraphics[width=0.9\textwidth]{img/boxplot_rssi_fabricante.png}
+        \scriptsize \textbf{Figura:} Distribuição de Intensidade de Sinal por Fabricante (Boxplot)
     \end{frame}
     \note{
         \scriptsize
@@ -513,7 +505,9 @@
         \scriptsize
         \textbf{[Tempo: ~1 min | Roteiro de Fala - Perfis K-Means]}\\[2pt]
         $\bullet$ \textbf{Papel do K-Means na Pesquisa:} O K-Means não é o protagonista, mas sim uma ferramenta não-supervisionada complementar para verificar se os dados brutos dos APs se agrupavam naturalmente em consonância com os gargalos.\\[2pt]
-        $\bullet$ \textbf{Features e $K=4$:} Usamos 4 métricas físicas padronizadas em $z$-score. A partição matemática em 4 grupos mostrou-se coerente segundo as métricas de silhueta, cotovelo e índice Davies-Bouldin de 0,7990.\\[2pt]
+        $\bullet$ \textbf{Padronização com StandardScaler:} Antes do K-Means, as 4 features (clientes\_media, throughput\_agregado\_media, sinal\_medico, retransmissoes\_media) foram padronizadas usando $z$-score: $z = \frac{x - \mu}{\sigma}$, onde $\mu$ é a média aritmética e $\sigma$ o desvio padrão de cada feature no dataset de APs. \\[2pt]
+        $\bullet$ \textbf{Por que padronizar?} As métricas têm unidades diferentes (quantidade adimensional, Mbps, dBm, percentual). Sem padronização, o K-Means (que usa distância euclidiana) seria dominado pelas features com maior magnitude numérica — por exemplo, throughput em Mbps (centenas) ofuscaria retransmissões em % (duas casas decimais). \\[2pt]
+        $\bullet$ \textbf{Features e $K=4$:} A partição matemática em 4 grupos mostrou-se coerente segundo as métricas de silhueta, cotovelo e índice Davies-Bouldin de 0,7990.\\[2pt]
         $\bullet$ \textbf{Resultados Ruckus:} O Grupo A atende picos de 85 clientes sustentando perdas em 4,3\% (graças ao RF inteligente); o Grupo D isola APs periféricos com perdas elevadas a 8,2\% (convergindo com o Gargalo G1).\\[2pt]
         $\bullet$ \textbf{Resultados UniFi:} Revela perdas crônicas em 2,4 GHz e isola a anomalia grave do AP PICO-H-100 (sinal excelente de -44,6 dBm, mas 40,2\% de quadros perdidos), justificando uma inspeção ativa de campo.
     }

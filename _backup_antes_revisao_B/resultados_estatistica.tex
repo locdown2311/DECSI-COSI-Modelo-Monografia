@@ -1,0 +1,78 @@
+\section{Estatística Descritiva}
+
+\subsection{Tabela Geral de Estatísticas Descritivas}
+
+\begin{table}[H]
+\IBGEtab{%
+  \caption{Tabela Geral de Estatísticas Descritivas}%
+  \label{tab:data_estatistica_descritiva_1}%
+}{%
+  \resizebox{\textwidth}{!}{%
+    \begin{tabular}{lccccccccc}
+      \toprule
+      Fabricante & Parâmetro Analisado & Registros & Média & Desvio Padrão & Mínimo & Q1 (25\%) & Mediana (Q2) & Q3 (75\%) & Máximo \\
+      \midrule
+      \textbf{Ruckus} & Sinal (signal) [dBm] & 1081944 & -74,1351 & 10,1577 & -99,0000 & -81,0000 & -75,0000 & -68,0000 & -20,0000 \\
+      \textbf{UniFi} & Sinal (signal) [dBm] & 147517 & -64,3942 & 12,8708 & -93,0000 & -74,0000 & -64,0000 & -55,0000 & -18,0000 \\
+      \textbf{Ruckus} & RSSI / SNR [dB] & 1081944 & -74,1351 & 10,1577 & -99,0000 & -81,0000 & -75,0000 & -68,0000 & -20,0000 \\
+      \textbf{UniFi} & RSSI / SNR [dB] & 147517 & 31,4604 & 12,7792 & 3,0000 & 22,0000 & 32,0000 & 41,0000 & 74,0000 \\
+      \textbf{Ruckus} & Throughput Total [Mbps] & 1202408 & 0,4582 & 1,3327 & 0,0000 & 0,0289 & 0,1176 & 0,4594 & 105,8838 \\
+      \textbf{UniFi} & Throughput Total [Mbps] & 147517 & 0,2740 & 1,4758 & 0,0000 & 0,0000 & 0,0004 & 0,0262 & 212,6838 \\
+      \textbf{Ruckus} & Throughput Down (TX) [Mbps] & 1202408 & 0,0352 & 0,3111 & 0,0000 & 0,0029 & 0,0103 & 0,0270 & 81,6900 \\
+      \textbf{UniFi} & Throughput Down (TX) [Mbps] & 147517 & 0,2417 & 1,3882 & 0,0000 & 0,0000 & 0,0001 & 0,0133 & 209,7159 \\
+      \textbf{Ruckus} & Throughput Up (RX) [Mbps] & 1202408 & 0,4230 & 1,2694 & 0,0000 & 0,0243 & 0,0997 & 0,4148 & 104,8381 \\
+      \textbf{UniFi} & Throughput Up (RX) [Mbps] & 147517 & 0,0323 & 0,3415 & 0,0000 & 0,0000 & 0,0003 & 0,0099 & 34,0952 \\
+      \textbf{Ruckus} & Retransmissões [\%] & 1202408 & 5,6972 & 16,1439 & 0,0000 & 0,0000 & 0,0000 & 1,3737 & 100,0000 \\
+      \textbf{UniFi} & Retransmissões [\%] & 147517 & 20,3753 & 24,2971 & 0,0000 & 2,5000 & 11,5000 & 28,0000 & 99,6000 \\
+      \textbf{Ruckus} & Volume Total [MB] & 1202408 & 167,3222 & 492,8256 & 0,0000 & 3,4827 & 29,9903 & 146,6557 & 41775,9000 \\
+      \textbf{UniFi} & Volume Total [MB] & 147517 & 146,0112 & 1006,9212 & 0,0000 & 0,0000 & 0,1634 & 8,0396 & 67076,5301 \\
+      \textbf{Ruckus} & Volume Down (TX) [MB] & 1202408 & 13,5677 & 125,4035 & 0,0000 & 0,3440 & 2,3163 & 8,6623 & 18019,0245 \\
+      \textbf{UniFi} & Volume Down (TX) [MB] & 147517 & 129,2615 & 932,3470 & 0,0000 & 0,0000 & 0,0438 & 4,0994 & 64993,8583 \\
+      \textbf{Ruckus} & Volume Up (RX) [MB] & 1202408 & 153,7545 & 461,1750 & 0,0000 & 2,8641 & 25,8701 & 132,0909 & 41555,3949 \\
+      \textbf{UniFi} & Volume Up (RX) [MB] & 147517 & 16,7496 & 219,9003 & 0,0000 & 0,0000 & 0,0965 & 2,8044 & 22473,7324 \\
+      \textbf{Ruckus} & Link Speed Down (TX) [Mbps] & 1116836 & 147,0460 & 217,3131 & 0,0010 & 12,4710 & 58,3770 & 184,4172 & 1299,9320 \\
+      \textbf{UniFi} & Link Speed Down (TX) [Mbps] & 147517 & 73,9327 & 45,0658 & 0,0000 & 49,9270 & 72,2220 & 117,0000 & 144,4440 \\
+      \textbf{Ruckus} & Link Speed Up (RX) [Mbps] & 0 & N/A & N/A & N/A & N/A & N/A & N/A & N/A \\
+      \textbf{UniFi} & Link Speed Up (RX) [Mbps] & 147517 & 15,9361 & 24,9904 & 0,0000 & 1,0000 & 6,0000 & 24,0000 & 144,2180 \\
+      \textbf{Ruckus} & Índice de Equidade de Jain & 13297 & 0,3224 & 0,2074 & 0,0148 & 0,1876 & 0,2602 & 0,3866 & 1,0000 \\
+      \textbf{UniFi} & Índice de Equidade de Jain & 7171 & 0,1950 & 0,1749 & 0,0200 & 0,0905 & 0,1340 & 0,2196 & 1,0000 \\
+      \bottomrule
+    \end{tabular}%
+  }%
+}{%
+  \fonte{Produzido pelos autores.}%
+}
+\end{table}
+
+\subsection{Principais Descobertas e Comparações}
+
+\begin{enumerate}
+  \item \textbf{Intensidade do Sinal (Signal)}:
+  \begin{itemize}
+    \item O sinal físico real (em dBm) pode ser comparado diretamente.
+    \item Valores medianos e quartis mostram a cobertura de sinal observada para os clientes conectados de cada fabricante.
+\end{itemize}
+  \item \textbf{Throughput vs Volume}:
+  \begin{itemize}
+    \item \textbf{Throughput} representa a taxa média integrada na janela de amostragem de 5 minutos (Mbps).
+    \item \textbf{Volume} representa a transferência acumulada total no período de conexão dos clientes (MB).
+    \item Note que a UniFi tem menor número de amostras, mas o comportamento estatístico da taxa de transferência e do volume calculado segue uma escala e distribuição coerentes com os dados de produção do Ruckus.
+\end{itemize}
+  \item \textbf{Qualidade de Enlace e Retransmissões}:
+  \begin{itemize}
+    \item A taxa de retransmissões do Ruckus é derivada da proporção de pacotes TX de retransmissão sobre o total de tentativas.
+    \item A taxa de retransmissões da UniFi é estimada a partir da métrica CCQ (Client Connection Quality), sendo \texttt{100 - CCQ/10}.
+\end{itemize}
+  \item \textbf{Link Speed}:
+  \begin{itemize}
+    \item A velocidade física negociada no download (TX Link Speed) está disponível para ambos os fabricantes (extraída de \texttt{throughput\_rate} no Ruckus e de \texttt{tx\_rate} na UniFi). A velocidade física de upload (RX) é exclusiva da UniFi.
+    \item O Ruckus negocia taxas físicas médias significativamente maiores devido ao suporte a múltiplos canais em 5 GHz e MIMO 3x3:3.
+\end{itemize}
+  \item \textbf{Índice de Equidade da Rede (Jain's Fairness Index)}:
+  \begin{itemize}
+    \item Mede o compartilhamento de throughput entre os clientes conectados simultaneamente (com pelo menos 2 usuários ativos).
+    \item Valores de média e mediana próximos de 1,0 indicam partilha equilibrada, enquanto valores próximos de 0 sugerem monopolização da banda por poucos dispositivos.
+    \item Os resultados indicam um compartilhamento de recursos que pode ser estatisticamente comparado para avaliar a qualidade de serviço de cada marca.
+
+\end{itemize}
+\end{enumerate}

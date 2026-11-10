@@ -1,0 +1,59 @@
+% ----------------------------------------------------------
+% Introdução
+% ----------------------------------------------------------
+\chapter{Introdução}
+\label{cap:introducao}
+% ----------------------------------------------------------
+
+Nos últimos anos, a infraestrutura de redes locais sem fio (\textit{Wireless Local Area Networks} -- WLANs) tornou-se um recurso de utilidade essencial para o ecossistema das instituições de ensino superior. Em ambientes universitários, como nos \textit{campi} da \ac{UFOP}, a rede Wi-Fi suporta uma vasta gama de atividades pedagógicas, administrativas e científicas. A demanda contínua por conectividade, impulsionada pela diversidade de dispositivos móveis dos usuários, impõe aos administradores de rede o desafio de monitorar e garantir elevados padrões de \ac{QoS}.
+
+Entretanto, diagnosticar anomalias e avaliar o desempenho em redes sem fio corporativas de grande porte é uma tarefa complexa. As WLANs acadêmicas frequentemente operam com equipamentos de múltiplos fabricantes, caracterizando ambientes de rede heterogêneos. A análise do comportamento físico desses canais requer o monitoramento constante de dados de telemetria, cuja extração e padronização impõem dificuldades metodológicas severas devido à disparidade de métricas e de frequências de amostragem oferecidas pelas controladoras de rede. Neste contexto, este trabalho investiga a integração e análise estatística de dados telemétricos das marcas Ruckus e UniFi na \ac{UFOP}, visando classificar comportamentos operativos e gargalos de rede.
+
+\section{Contextualização}
+\label{sec:contextualizacao}
+
+As redes corporativas contemporâneas operam sob o fenômeno da alta densidade de dispositivos. Ambientes acadêmicos representam cenários extremos desse perfil, onde centenas de usuários concorrem simultaneamente por recursos de radiofrequência (RF) em salas de aula, laboratórios e auditórios. A proliferação de dispositivos por usuário (como \textit{smartphones}, \textit{tablets} e \textit{laptops}) sobrecarrega os \acp{AP} e satura os canais físicos de transmissão. Nesses ambientes, os gargalos operacionais não se limitam apenas à atenuação do sinal eletromagnético, mas envolvem \ac{CSMA/CA}, interferências eletromagnéticas e limitações na própria infraestrutura de cabeamento local (backhaul). A análise unificada de telemetria torna-se, assim, a chave para compreender o comportamento físico e operacional desses sistemas.
+
+\section{Problema de Pesquisa}
+\label{sec:problema}
+
+A heterogeneidade de hardwares e sistemas operacionais de gerência de rede representa um obstáculo para a manutenção preventiva e diagnóstico de problemas de conectividade. Enquanto a controladora Ruckus (utilizada na rede principal da \ac{UFOP}) extrai dados consolidados que incluem a taxa física de retransmissão de pacotes diretamente do rádio, a controladora UniFi (empregada em áreas periféricas ou unidades de pesquisa) reporta a qualidade de enlace por meio de uma métrica estimada baseada no firmware denominada \ac{CCQ}. Além disso, os intervalos de coleta (\textit{polling}) diferem significativamente, e inconsistências temporais relativas a fusos horários nos arquivos de registro (\textit{logs}) dificultam correlações diretas.
+
+Diante desse cenário, a ausência de um pipeline de dados unificado impede a classificação padronizada de gargalos. O administrador de rede carece de ferramentas metodológicas que permitam determinar se as quedas de desempenho percebidas pelos usuários decorrem de cobertura atenuada (sinal fraco), congestionamento físico do espectro (concorrência de meio por múltiplos clientes ativos) ou forte ruído e interferência eletromagnética (elevadas taxas de retransmissão sob baixa carga de tráfego). O problema central desta pesquisa consiste, portanto, em responder: de que forma a normalização de dados telemétricos e a aplicação de técnicas estatísticas e aprendizado de máquina podem unificar a caracterização operacional e a identificação/classificação de condições associadas a potenciais gargalos em uma infraestrutura Wi-Fi heterogênea?
+
+\section{Objetivos}
+\label{sec:objetivos}
+
+O presente trabalho visa estabelecer um framework metodológico para o processamento unificado e a análise quantitativa de desempenho de redes sem fio.
+
+O objetivo geral deste estudo consiste em desenvolver um pipeline sistemático de coleta, normalização, análise estatística e classificação de gargalos operacionais para redes corporativas Wi-Fi heterogêneas utilizando dados de telemetria nas dependências da \ac{UFOP}.
+
+Para a consecução do objetivo geral, definem-se os seguintes objetivos específicos:
+\begin{itemize}
+	\item Padronizar e normalizar bases de dados brutas de telemetria provenientes de fabricantes distintos (Ruckus e UniFi), realizando o alinhamento de fusos horários e de escalas temporais de coleta;
+	\item Incorporar métricas analíticas avançadas na avaliação do desempenho da rede, especificamente computando o Índice de Equidade de Jain (\textit{Jain's Fairness Index}) para mensurar o equilíbrio na distribuição da vazão (\textit{throughput}) entre clientes concorrentes;
+	\item Validar as hipóteses de comportamento físico das bandas de frequência (2,4~GHz e 5~GHz) e o impacto das condições de sinal sobre as taxas de retransmissão por meio de testes estatísticos de hipótese não-paramétricos;
+	\item Classificar os gargalos operacionais dos pontos de acesso (\textit{access points} -- \acsp{AP}) a partir de limiares físicos e agrupamentos lógicos formados pelo algoritmo de aprendizado de máquina não-supervisionado \textit{K-Means}.
+\end{itemize}
+
+\section{Justificativa}
+\label{sec:justificativa}
+
+A implementação de redes sem fio corporativas de grande escala representa investimentos financeiros expressivos para instituições públicas como a UFOP. Diagnosticar problemas baseando-se apenas em reclamações de usuários ou em painéis de gerência isolados induz a tomada de decisões de expansão de infraestrutura ineficientes (como instalar mais pontos de acesso em setores que sofrem de interferência eletromagnética co-canal, o que piora o cenário operacional). 
+
+Esta pesquisa justifica-se pela necessidade científica e operacional de formular um modelo determinístico e estatístico capaz de identificar evidências associadas a diferentes classes de gargalo. Ao classificar se a origem de um gargalo de rede é sinal físico fraco (G1), excesso de concorrência local (G2), poluição eletromagnética (G3), comportamento de roaming instável do cliente (G4) ou limitação física cabeada (G5), os administradores de tecnologia da informação conseguem direcionar recursos de otimização de espectro e aquisição de ativos com maior precisão e menor desperdício financeiro.
+
+\section{Organização do trabalho}
+\label{sec:organizacao}
+
+O restante deste trabalho de conclusão está estruturado nos capítulos temáticos a seguir:
+
+\begin{itemize}
+	\item O \textbf{Capítulo~\ref{cap:revisao} (Fundamentação Teórica)} descreve os fundamentos físicos e lógicos das redes locais sem fio, o padrão IEEE 802.11, as métricas telemétricas e os trabalhos relacionados da literatura;
+	\item O \textbf{Capítulo~\ref{cap:metodologia} (Metodologia)} detalha as estratégias de coleta de dados no campus, a modelagem matemática do Índice de Jain, os limiares heurísticos e o modelo de agrupamento operacional K-Means;
+	\item O \textbf{Capítulo~\ref{cap:coleta} (Coleta e Tratamento dos Dados)} expõe as ferramentas físicas e controladoras envolvidas na aquisição das informações, bem como a etapa de validação inicial e consistência dos datasets brutos;
+	\item O \textbf{Capítulo~\ref{cap:analise} (Análise dos Dados)} agrupa a estatística descritiva, as visualizações de padrões temporais, o estudo de correlação cruzada e a validação formal dos testes estatísticos de hipóteses;
+	\item O \textbf{Capítulo~\ref{cap:classificacao} (Classificação dos Gargalos)} reúne as regras heurísticas de decisão e os centróides operacionais K-Means, apresentando e discutindo os resultados da classificação automática dos APs;
+	\item O \textbf{Capítulo~\ref{cap:recomendacoes} (Recomendações)} sugere intervenções técnicas de engenharia de rede baseadas nos problemas identificados no processamento;
+	\item Por fim, o \textbf{Capítulo~\ref{cap:conclusao} (Conclusão)} resume os principais resultados, discute as limitações metodológicas e propõe temas de continuidade para trabalhos futuros.
+\end{itemize}

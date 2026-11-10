@@ -70,9 +70,8 @@
 \end{itemize}
   \item \textbf{Índice de Equidade da Rede (Jain's Fairness Index)}:
   \begin{itemize}
-    \item Mede o compartilhamento de throughput entre os clientes conectados simultaneamente (com pelo menos 2 usuários ativos).
-    \item Valores de média e mediana próximos de 1,0 indicam partilha equilibrada, enquanto valores próximos de 0 sugerem monopolização da banda por poucos dispositivos.
-    \item Os resultados indicam um compartilhamento de recursos que pode ser estatisticamente comparado para avaliar a qualidade de serviço de cada marca.
+    \item Calculado conforme a Equação~\ref{eq:jain_metodologia} (Seção~\ref{sec:metodologia_metricas}), apenas nos instantes com pelo menos 2 clientes ativos no mesmo rádio.
+    \item Os valores observados são baixos nos dois fabricantes (média de 0,322 e mediana de 0,260 no Ruckus; média de 0,195 e mediana de 0,134 na UniFi), indicando que, na maior parte do tempo, poucos clientes concentram a maior parte da vazão do rádio. A comparação estatística entre os fabricantes é apresentada na Seção~\ref{sec:testes_hipotese}.
 
 \end{itemize}
 \end{enumerate}

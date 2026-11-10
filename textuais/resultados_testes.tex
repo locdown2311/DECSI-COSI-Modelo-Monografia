@@ -1,4 +1,5 @@
 \section{Testes Estatísticos de Hipótese}
+\label{sec:testes_hipotese}
 
 \begin{itemize}
   \item \textbf{Limitação do Dataset da UniFi}:
@@ -6,28 +7,8 @@
 
 
 \end{itemize}
-\subsection{Metodologia Aplicada}
+Os procedimentos estatísticos seguem o descrito nas Seções~\ref{subsec:metodologia_normalidade_teoria} e~\ref{subsec:metodologia_mann_whitney_teoria}. O teste de Shapiro-Wilk, aplicado a subamostras aleatórias de 5.000 pontos, \textbf{rejeitou} a hipótese de normalidade para todas as métricas analisadas (retransmissões, RSSI/sinal e throughput; $p < 0,001$). Por isso, as comparações foram realizadas com o teste não-paramétrico U de Mann-Whitney ($\alpha = 0,05$), acompanhado do tamanho do efeito $r$ (Equação~\ref{eq:effect_size_formula}).
 
-\begin{enumerate}
-  \item \textbf{Verificação de Normalidade}:
-  \begin{itemize}
-    \item Utilizou-se o teste de \textbf{Shapiro-Wilk} (\texttt{scipy.stats.shapiro}).
-    \item Devido ao tamanho elevado das amostras ($N = 1202408$ no Ruckus e $N = 147517$ na UniFi), aplicou-se uma amostragem aleatória uniforme de 5,000 pontos para realizar o teste de forma válida (já que o teste é limitado a $N \le 5,000$).
-    \item \textbf{Resultado Geral}: Para todas as métricas analisadas (Retransmissões, RSSI/Sinal e Throughput), a hipótese nula de normalidade foi \textbf{rejeitada} ($p < 0,001$, indicando que as amostras \textbf{não} seguem uma distribuição normal).
-\end{itemize}
-  \item \textbf{Escolha do Teste de Hipótese}:
-  \begin{itemize}
-    \item Como as amostras são não-normais, aplicou-se o teste não-paramétrico \textbf{U de Mann-Whitney} (\texttt{scipy.stats.mannwhitneyu}) para comparar as distribuições de dois grupos independentes (nível de significância alpha = 0,05).
-\end{itemize}
-  \item \textbf{Tamanho do Efeito (Effect Size)}:
-  \begin{itemize}
-    \item Para o teste U de Mann-Whitney, calculou-se o tamanho de efeito baseado no coeficiente de correlação de rank da distribuição normal padrão aproximada: \textit{r} = |Z| / sqrt(N).
-    \item Critérios de magnitude para \textit{r}: |\textit{r}| >= 0,1 indica efeito pequeno; |\textit{r}| >= 0,3 efeito médio; |\textit{r}| >= 0,5 efeito grande.
-    \item Para o Teste t de Welch (se aplicável), calculou-se o Cohen's d: |\textit{d}| >= 0,2 pequeno; |\textit{d}| >= 0,5 médio; |\textit{d}| >= 0,8 grande.
-
-
-\end{itemize}
-\end{enumerate}
 \subsection{Tabela Consolidada de Testes de Hipótese}
 
 \begin{table}[H]

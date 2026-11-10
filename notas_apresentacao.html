@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Anotações da Apresentação - TCC UFOP</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin: 0; padding: 0; height: 100%; width: 100%; overflow: hidden; background: #f5f5f5; font-family: Arial, Helvetica, sans-serif; }
+  #viewer { height: 100%; width: 100%; overflow-y: auto; scroll-snap-type: y mandatory; -webkit-overflow-scrolling: touch; }
+  .page { height: 100vh; width: 100vw; scroll-snap-align: start; padding: 20px 16px; display: flex; flex-direction: column; background: #fff; border-bottom: 1px solid #e0e0e0; }
+  .page:last-child { border-bottom: none; }
+  h1 { color: #962038; font-size: 1.6rem; margin: 0 0 4px 0; border-bottom: 2px solid #962038; padding-bottom: 6px; }
+  .sub { font-size: 0.95rem; color: #555; margin-bottom: 16px; }
+  h2 { color: #962038; font-size: 1.3rem; margin: 0 0 8px 0; border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+  .tempo { display: inline-block; background: #962038; color: #fff; font-size: 0.8rem; padding: 2px 8px; border-radius: 4px; margin-bottom: 10px; font-weight: bold; }
+  p { line-height: 1.55; margin: 6px 0; font-size: 1rem; color: #222; }
+  ul { margin: 6px 0; padding-left: 20px; }
+  li { margin: 4px 0; line-height: 1.5; }
+  .slide-nav { position: fixed; bottom: 0; left: 0; right: 0; height: 60px; background: #fff; border-top: 1px solid #ddd; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; z-index: 100; }
+  .page-info { font-size: 0.9rem; color: #666; font-weight: bold; }
+  .nav-btn { background: #962038; color: #fff; border: none; border-radius: 8px; width: 44px; height: 44px; font-size: 1.4rem; cursor: pointer; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+  .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+  .hint { font-size: 0.75rem; color: #888; margin-top: 4px; text-align: center; }
+  table { width: 100%; border-collapse: collapse; margin: 10px 0; font-size: 0.85rem; }
+  th, td { border: 1px solid #ccc; padding: 5px; text-align: left; }
+  th { background: #962038; color: white; }
+  .emergencia { background: #ffeef0; border: 1px solid #962038; padding: 12px; margin-bottom: 16px; border-radius: 6px; font-size: 0.9em; }
+  .dados { background: #eef; border: 1px solid #962038; padding: 12px; margin-top: 16px; border-radius: 6px; }
+  @media print {
+    #viewer { overflow: visible; }
+    .page { height: auto; page-break-after: always; border-bottom: none; }
+    .slide-nav { display: none; }
+    body { background: #fff; }
+  }
+</style>
+</head>
+<body>
+
+<div id="viewer">
+
+<!-- CAPA -->
+<section class="page">
+  <h1>ANOTAÇÕES DA APRESENTAÇÃO — TCC UFOP</h1>
+  <p class="sub">Caracterização de Gargalos em Redes 802.11 em Ambientes de Alta Densidade<br>
+  Igor Carvalho Guimarães | ICEA/UFOP | 2026</p>
+  <div class="emergencia"><strong>Plano de emergência:</strong> Todas as notas do apresentador extraídas de <code>apresentacao.tex</code>. Use este arquivo se o PDF com notas não exibir corretamente os blocos <code>\note{}</code>.</div>
+  <div class="dados">
+    <strong>Dados chave:</strong> 43 APs (24 Ruckus / 19 UniFi) | 1.349.925 registros limpos | 49 dias | G2 domina Ruckus (47,4%) | G5 residual (≤0,01%) | K=4 clusters
+  </div>
+</section>
+
+<!-- SLIDE 1 -->
+<section class="page">
+  <span class="tempo">~1 min</span>
+  <h2>SLIDE 1 — Título</h2>
+  <p>BOM DIA / BOA TARDE à banca.<br>
+  Meu nome é Igor Carvalho Guimarães.<br>
+  Apresento meu TCC: "Caracterização de gargalos em redes 802.11 em ambientes de alta densidade".<br>
+  Orientador: Prof. Marlon Paolo Lima. Coorientador: Prof. Plínio Roque de Almeida.</p>
+  <p class="hint">Deslize para o lado ou use as setas → próximo slide</p>
+</section>
+
+<!-- SLIDE 2 -->
+<section class="page">
+  <span class="tempo">~30 seg</span>
+  <h2>SLIDE 2 — Sumário</h2>
+  <p>Estrutura da apresentação:<br>
+  1. Introdução e contextualização da WLAN do ICEA.<br>
+  2. Motivação e objetivos do estudo.<br>
+  3. Metodologia de coleta, processamento e classificação.<br>
+  4. Resultados (estatística, correlações, testes, clusters).<br>
+  5. Recomendações práticas e conclusões.</p>
+</section>
+
+<!-- SLIDE 3 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>SLIDE 3 — Introdução: Cenário do Campus e Infraestrutura</h2>
+  <p>Contextualizar o cenário real onde o estudo foi desenvolvido:<br>
+  O campus do ICEA em João Monlevade abriga cerca de 1.350 pessoas fixas. Segundo os dados oficiais do Relatório de Atividades (2024):<br>
+  - Discentes: 1.206 alunos de graduação.<br>
+  - Docentes: 89 professores efetivos nos 4 departamentos.<br>
+  - TAEs e Apoio: 28 servidores técnico-administrativos e equipe de suporte.<br>
+  Em ambientes universitários de alta densidade (1,5 a 2 aparelhos por pessoa), isso representa um ecossistema com mais de 2.000 dispositivos móveis em potencial.<br>
+  A conectividade conta com link dedicado de 1 Gbps da RNP e 43 APs catalogados (24 Ruckus e 19 UniFi), registrando picos reais superiores a 580 dispositivos conectados no mesmo meio aéreo.</p>
+</section>
+
+<!-- SLIDE 4 -->
+<section class="page">
+  <span class="tempo">~1 min</span>
+  <h2>SLIDE 4 — Introdução: O Problema de Pesquisa</h2>
+  <p>Este slide apresenta o cerne do problema prático e científico:<br>
+  A insatisfação dos usuários com a rede sem fio é recorrente, mas quase sempre rotulada genericamente como "problema na internet".<br>
+  A questão investigada foi: o gargalo decorre do link da RNP, de limitações em portas de switches ou da física da interface de radiofrequência?<br>
+  Sem dados consolidados de telemetria entre Ruckus e UniFi, a tomada de decisão em infraestrutura torna-se empírica.</p>
+</section>
+
+<!-- SLIDE 5 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>SLIDE 5 — Motivação e Objetivos: Motivação</h2>
+  <p>CSMA/CA: o Wi-Fi é um meio compartilhado por contenção. Cada estação ativa consome uma fração de tempo de antena (airtime).<br>
+  A Ruckus R600 dispõe de antenas adaptativas e opera em dual-band (2,4 e 5 GHz), enquanto a UniFi legada atua em 2,4 GHz em canal único.<br>
+  A motivação central é fornecer dados técnicos de produção que permitam diagnosticar a origem real das limitações observadas pelos usuários.</p>
+</section>
+
+<!-- SLIDE 6 -->
+<section class="page">
+  <span class="tempo">~1 min</span>
+  <h2>SLIDE 6 — Motivação e Objetivos: Objetivos</h2>
+  <p>Objetivo Geral: caracterizar e diagnosticar as limitações operacionais da rede sem fio do campus.<br>
+  Específicos: ingestão de telemetria, tratamento e classificação determinística (G1 a G5), análise não-supervisionada via K-Means como evidência complementar, e intervenções práticas de rede.</p>
+</section>
+
+<!-- SLIDE 7 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>SLIDE 7 — Metodologia: Coleta e Consolidação dos Dados</h2>
+  <p>Explicar a divisão temporal dos 49 dias de monitoramento de coleta:<br>
+  A coleta cobriu a rotina real do campus em duas etapas letivas distintas:<br>
+  1. Final do período 2026/1 (23/06 a 10/07): encerramento de aulas e semanas de provas finais.<br>
+  2. Período letivo 2026/2 consolidado (24/08 a 16/10): aulas presenciais plenas com alta densidade de conexões ativas.<br>
+  Volume consolidado: 1.349.925 registros limpos de produção (1.202.408 Ruckus e 147.517 UniFi), após tratamento de 2,43% de duplicatas no polling da Ruckus e redundância zero na UniFi.</p>
+</section>
+
+<!-- SLIDE 8 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>SLIDE 8 — Metodologia: Pipeline Metodológico</h2>
+  <p>Este fluxograma sintetiza visualmente o pipeline metodológico da pesquisa em 5 etapas:<br>
+  1. Cenário e Coleta: 43 APs no campus, 49 dias de monitoramento e mais de 1,3 milhão de registros telemétricos via SNMP e REST API.<br>
+  2. Tratamento e Features: deduplicação temporal, padronização de variáveis de RF e anonimização conforme LGPD.<br>
+  3. Análise Estatística: indicação de não-normalidade (p < 0,001), testes não-paramétricos e forte assimetria instantânea de tráfego (Jain mediano = 0,26).<br>
+  4. Classificação Heurística: árvore determinística para categorizar os gargalos G1 a G5.<br>
+  5. Agrupamento Operacional: clusterização não-supervisionada via K-Means como análise complementar.</p>
+</section>
+
+<!-- SLIDE 9 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>SLIDE 9 — Metodologia: Limiares Operacionais de Gargalos</h2>
+  <p>Explicar a lógica prática dos 5 gargalos:<br>
+  1. G1 (Sinal < -75 dBm): sinal atenuado pela distância ou obstáculos, forçando o rádio a transmitir em velocidades mais baixas.<br>
+  2. G2 (>= 15 clientes): no Wi-Fi apenas um fala por vez. Com 15 ou mais clientes disputando o ar, a espera e as colisões disparam.<br>
+  3. G3 (Ruído > -90 dBm): interferência externa ou canal poluído por ruído.<br>
+  4. G4 (> 15 trocas de antena/dia): identifica dispositivos que ficam pulando de antena em antena ou alternando em falso.<br>
+  5. G5 (>= 90 Mbps): verifica se a lentidão vinha do cabo dos switches antigos de 100 Mbps em vez do rádio.</p>
+</section>
+
+<!-- SLIDE 10 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>SLIDE 10 — Resultados: Análise Descritiva Comparativa (Tabela)</h2>
+  <p>Por que Mediana e Quartis em vez de Máximo? Em distribuições não-gaussianas, a média e os valores extremos distorcem a percepção real.<br>
+  Sinal Físico (IS): A UniFi apresenta sinal mediano ligeiramente superior (-66 dBm vs -75 dBm da Ruckus).<br>
+  Retransmissões (Ponto Crítico): A UniFi opera com perdas elevadas: mediana de 11,50% e Q3 atingindo 28,00% de quadros retransmitidos. A Ruckus opera com mediana zero e Q3 de apenas 1,37%.<br>
+  Throughput Mediano: É próximo de zero em ambas (0,12 e 0,00 Mbps).</p>
+</section>
+
+<!-- SLIDE 11 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>SLIDE 11 — Resultados: Distribuição de Intensidade de Sinal (Boxplot)</h2>
+  <p>(Notas detalhadas no slide anterior — mesma seção de Estatística Descritiva)</p>
+</section>
+
+<!-- SLIDE 12 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>SLIDE 12 — Resultados: Distribuição Temporal de Clientes Únicos (Heatmap)</h2>
+  <p>Visão Unificada do Campus: O mapa de calor consolida a infraestrutura global da WLAN institucional (Ruckus e UniFi unificadas em uma única malha de serviço).<br>
+  Ciclo Circadiano e Recesso: A rede reflete a rotina universitária: madrugada ociosa, subida acentuada a partir das 08:00, concentração máxima entre 14:00 e 20:00.<br>
+  Pico Unificado de Demanda: O pico máximo da rede alcançou 606 clientes conectados em uma única hora (no dia 15/09 às 19:00).<br>
+  Origem do Gargalo G2: Essa concentração massiva em horários de aula intensifica a disputa pelo tempo aéreo (airtime) no CSMA/CA, explicando a expressiva incidência do Gargalo G2 (47,4% na Ruckus).</p>
+</section>
+
+<!-- SLIDE 13 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>SLIDE 13 — Resultados: Correlações de Grandezas de RF (Spearman)</h2>
+  <p>Por que Spearman em vez de Pearson? O teste de Shapiro-Wilk rejeitou a normalidade. Spearman avalia associações monotônicas, sendo robusto contra caudas pesadas.<br>
+  1. Sinal x Throughput (0,03 RK vs 0,46 UF): Na Ruckus, a correlação é quase nula. Na UniFi (0,46), o rádio legado em 2,4 GHz faz com que a atenuação restrinja a modulação básica.<br>
+  2. Sinal x Retransmissões (0,17 RK vs -0,34 UF): Na UniFi, correlação negativa (-0,34): sinal fraco eleva a perda física de pacotes.<br>
+  3. Ruído x Retransmissões (-0,64 RK vs 0,02 UF): Resultado inesperado que indica a necessidade de interpretar com cautela a métrica de ruído fornecida pela controladora.<br>
+  4. Volume x Tempo de Sessão (0,70 RK vs 0,36 UF): Usuários na Ruckus apresentam conexões mais estáveis e prolongadas durante as aulas.</p>
+</section>
+
+<!-- SLIDE 14 -->
+<section class="page">
+  <span class="tempo">~2 min</span>
+  <h2>SLIDE 14 — Resultados: Inferência Estatística e Equidade (Jain)</h2>
+  <p>Significância Estatística (p < 0,001): Indica que as diferenças observadas entre as tecnologias Ruckus e UniFi têm probabilidade estatística ínfima (< 0,1%) de decorrerem de flutuações amostrais ao acaso.<br>
+  1. Shapiro-Wilk (p < 0,001): Rejeita a hipótese gaussiana. O tráfego de rede apresenta caudas pesadas.<br>
+  2. Tamanho de Efeito (r de Rosenthal): A vantagem da faixa de 5 GHz sobre 2,4 GHz na Ruckus exibiu tamanho de efeito grande (r = 0,5133).<br>
+  3. Equidade de Jain e Assimetria de Carga: O índice mede a distribuição instantânea de vazão. A mediana de 0,26 na Ruckus e 0,13 na UniFi reflete essa forte assimetria temporal.</p>
+</section>
+
+<!-- SLIDE 15 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>SLIDE 15 — Resultados: Classificação Heurística de Gargalos (Tabela)</h2>
+  <p>Introdução do Clímax da Pesquisa: Apresentamos aqui a resposta central do trabalho: a caracterização objetiva dos gargalos sobre 1.349.925 registros reais de telemetria.<br>
+  Clivagem Clara entre as Redes: As duas marcas refletem perfis de ocupação física totalmente distintos:<br>
+  - Na Ruckus, os APs atendem salas de aula com 40 a 60 alunos disputando o canal simultaneamente: por isso vemos 47,4% de contenção (G2) e 44,5% de sinal atenuado (G1).<br>
+  - Na UniFi, os APs atendem gabinetes docentes e setores administrativos, onde há apenas 1 ou 2 pessoas conectadas por sala: com essa baixíssima concorrência no ar, 68,0% de todas as medições operaram em regime ideal.<br>
+  Gargalo G5 (Ponto Fundamental): Apenas 0,01% das amostras atingiram >= 90 Mbps. Isso fornece forte indício empírico de que o cabeamento Fast Ethernet (100 Mbps) provavelmente não atuou como gargalo preponderante no campus.</p>
+</section>
+
+<!-- SLIDE 16 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>SLIDE 16 — Resultados: Diagnóstico Físico (G1, G2, G3)</h2>
+  <p>G1 (Baixa Qualidade de Enlace - 44,5% RK / 21,3% UF): Enfatize que a atenuação decorre da dispersão física no campus e de obstáculos diversos.<br>
+  G2 (Congestionamento do Meio - 47,4% RK vs 4,9% UF): Este é o grande gargalo de sala de aula. Explique a dinâmica do CSMA/CA: o meio é fatiado no tempo.<br>
+  G3 (Interferência de RF): É praticamente nulo no campus universitário.</p>
+</section>
+
+<!-- SLIDE 17 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>SLIDE 17 — Resultados: Diagnóstico Sistêmico (G4 e G5)</h2>
+  <p>G4 (Instabilidade de Roaming): Um usuário andando pelo campus troca de antena algumas vezes ao longo do dia. Quando o aparelho troca mais de 15 vezes, ele passa o dia desconectando e reautenticando.<br>
+  G5 (Saturação Cabeada): Havia a hipótese inicial de que a lentidão pudesse decorrer de portas de 100 Mbps nos switches antigos. No entanto, os dados indicam que em menos de 0,01% do tempo as portas operaram perto do teto.</p>
+</section>
+
+<!-- SLIDE 18 -->
+<section class="page">
+  <span class="tempo">~1 min</span>
+  <h2>SLIDE 18 — Resultados: Agrupamento Exploratório dos APs (K-Means)</h2>
+  <p>Papel do K-Means na Pesquisa: O K-Means não é o protagonista, mas sim uma ferramenta não-supervisionada complementar.<br>
+  Padronização com StandardScaler: Antes do K-Means, as 4 features foram padronizadas usando z-score: z = (x - μ)/σ.<br>
+  Por que padronizar? As métricas têm unidades diferentes (quantidade adimensional, Mbps, dBm, percentual). Sem padronização, o K-Means seria dominado pelas features com maior magnitude numérica.<br>
+  Resultados Ruckus: O Grupo A atende picos de 85 clientes sustentando perdas em 4,3%; o Grupo D isola APs periféricos com perdas elevadas a 8,2%.<br>
+  Resultados UniFi: Revela perdas crônicas em 2,4 GHz e isola a anomalia grave do AP PICO-H-100 (sinal excelente de -44,6 dBm, mas 40,2% de quadros perdidos).</p>
+</section>
+
+<!-- SLIDE 19 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>SLIDE 19 — Recomendações Práticas de Engenharia</h2>
+  <p>1. Site survey e reposicionamento (G1): Em vez de comprar novos rádios, otimizar o posicionamento geométrico dos pontos atenuados.<br>
+  2. Band Steering (G2/G3): Ação imediata de custo zero na controladora, tirando dispositivos da concorrência em 2,4 GHz e enviando para 5 GHz.<br>
+  3. Mitigação de Sticky Clients (G4): Resolver o maior gargalo da rede ativando 802.11k/v/r e limiar mínimo de RSSI.<br>
+  4. Auditoria Espectral no AP PICO-H-100: Medição de campo ativa para rastrear a perda de 40,2% antes de qualquer ajuste de potência.</p>
+</section>
+
+<!-- SLIDE 20 -->
+<section class="page">
+  <span class="tempo">~1 min</span>
+  <h2>SLIDE 20 — Conclusões</h2>
+  <p>Os 4 Pilares Finais da Apresentação:<br>
+  1. Dataset Robusto e Real: Mais de 1,3 milhão de registros em duas etapas acadêmicas distintas da UFOP.<br>
+  2. Diagnóstico da Origem dos Gargalos: O gargalo da infraestrutura não é a internet externa nem saturação de portas cabeadas (G5 é residual).<br>
+  3. Agrupamento K-Means: Análise não-supervisionada complementar que isolou a anomalia do AP PICO-H-100.<br>
+  4. Ações de Baixo Custo: Soluções práticas de engenharia (Band Steering e Site Survey) que a própria UFOP pode implementar sem necessidade imediata de aquisições onerosas.<br>
+  Encerramento: Agradecer à banca, ao orientador Marlon, coorientador Plínio e passar para a arguição com tranquilidade.</p>
+</section>
+
+<!-- SLIDE 21 -->
+<section class="page">
+  <span class="tempo">~1 min</span>
+  <h2>SLIDE 21 — Agradecimentos</h2>
+  <p>(Sem notas adicionais — encerrar e abrir para arguição)</p>
+</section>
+
+<!-- ZOOM 1 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>ZOOM — Matriz de Correlação (Spearman)</h2>
+  <p>Estrutura do Heatmap: Cruza 7 variáveis em nível microscópico de cliente para Ruckus (esquerda) e UniFi (direita).<br>
+  1. Sinal x Throughput (0,03 RK vs 0,46 UF): Na Ruckus, a correlação é próxima de zero (rs = 0,03).<br>
+  2. Sinal x Retransmissões (0,17 RK vs -0,34 UF): Na UniFi, correlação negativa (-0,34): sinal fraco eleva a perda de pacotes.<br>
+  3. Ruído x Retransmissões (-0,64 RK vs 0,02 UF): Resultado inesperado que indica a necessidade de interpretar com cautela a métrica de ruído fornecida pela controladora.<br>
+  4. Volume x Tempo de Sessão (0,70 RK vs 0,36 UF): Usuários na Ruckus mantêm fluxo contínuo durante as aulas.</p>
+</section>
+
+<!-- ZOOM 2 -->
+<section class="page">
+  <span class="tempo">~1,5 min</span>
+  <h2>ZOOM — Equidade de Jain</h2>
+  <p>Gráfico da Esquerda (Boxplot de Jain): Mostra quartis e medianas. Ruckus tem mediana de 0,26 e UniFi de 0,13.<br>
+  Gráfico da Direita (Curva de Densidade - KDE): O eixo Y representa a estimativa de densidade de probabilidade (KDE), refletindo a frequência temporal relativa com que a rede operou em cada nível de equidade ao longo dos 49 dias.<br>
+  Interpretação dos Picos: A curva da UniFi atinge seu pico em 0,13, e a Ruckus em 0,26.<br>
+  Piso Teórico de Jain: Varia de 1/N = 1/43 ≈ 0,023 até 1,0.</p>
+</section>
+
+<!-- DADOS CHAVE -->
+<section class="page">
+  <span class="tempo">Consulta rápida</span>
+  <h2>DADOS CHAVE</h2>
+  <table>
+    <tr><th>Métrica</th><th>Ruckus</th><th>UniFi</th></tr>
+    <tr><td>APs</td><td>24</td><td>19</td></tr>
+    <tr><td>Registros limpos</td><td>1.202.408</td><td>147.517</td></tr>
+    <tr><td>G1 (Sinal fraco)</td><td>44,5%</td><td>21,3%</td></tr>
+    <tr><td>G2 (Congestionamento)</td><td>47,4%</td><td>4,9%</td></tr>
+    <tr><td>G3 (Interferência)</td><td>0,0%</td><td>0,7%</td></tr>
+    <tr><td>G4 (Roaming)</td><td>15,3%</td><td>6,6%</td></tr>
+    <tr><td>G5 (Cabo)</td><td>0,01%</td><td>0,004%</td></tr>
+    <tr><td>Sem gargalos</td><td>24,9%</td><td>68,0%</td></tr>
+    <tr><td>Jain mediano</td><td>0,26</td><td>0,13</td></tr>
+    <tr><td>Tamanho efeito 5GHz</td><td>r = 0,5133</td><td>—</td></tr>
+    <tr><td>Pico clientes simultâneos</td><td colspan="2">606 (15/09 às 19h)</td></tr>
+    <tr><td>Período de coleta</td><td colspan="2">49 dias</td></tr>
+    <tr><td>K-Means</td><td colspan="2">K = 4 clusters</td></tr>
+  </table>
+  <p style="margin-top:16px; font-size:0.9em; color:#666;">Gerado de <code>apresentacao.tex</code>. Verifique ajustes de última hora no LaTeX antes da apresentação.</p>
+</section>
+
+</div>
+
+<div class="slide-nav">
+  <button class="nav-btn" id="btnPrev" onclick="prevPage()">←</button>
+  <span class="page-info" id="pageInfo">1 / 22</span>
+  <button class="nav-btn" id="btnNext" onclick="nextPage()">→</button>
+</div>
+
+<script>
+  const pages = document.querySelectorAll('.page');
+  const pageInfo = document.getElementById('pageInfo');
+  const btnPrev = document.getElementById('btnPrev');
+  const btnNext = document.getElementById('btnNext');
+  let current = 0;
+
+  function update() {
+    pages.forEach((p, i) => {
+      p.style.display = (i === current) ? 'block' : 'none';
+    });
+    pageInfo.textContent = (current + 1) + ' / ' + pages.length;
+    btnPrev.disabled = current === 0;
+    btnNext.disabled = current === pages.length - 1;
+    window.scrollTo(0, 0);
+  }
+
+  function nextPage() { if (current < pages.length - 1) { current++; update(); } }
+  function prevPage() { if (current > 0) { current--; update(); } }
+
+  btnNext.addEventListener('click', nextPage);
+  btnPrev.addEventListener('click', prevPage);
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'PageDown' || e.key === ' ') { e.preventDefault(); nextPage(); }
+    if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); prevPage(); }
+  });
+
+  // Swipe vertical
+  let startY = 0;
+  const viewer = document.getElementById('viewer');
+  viewer.addEventListener('touchstart', (e) => { startY = e.touches[0].clientY; }, { passive: true });
+  viewer.addEventListener('touchend', (e) => {
+    const endY = e.changedTouches[0].clientY;
+    if (startY - endY > 50) nextPage();
+    if (endY - startY > 50) prevPage();
+  }, { passive: true });
+
+  // Clique nas laterais: esquerda volta, direita avança
+  viewer.addEventListener('click', (e) => {
+    const x = e.clientX;
+    const mid = window.innerWidth / 2;
+    if (x < mid - 40) prevPage();
+    else if (x > mid + 40) nextPage();
+  });
+
+  update();
+</script>
+
+</body>
+</html>

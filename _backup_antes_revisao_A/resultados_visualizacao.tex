@@ -1,0 +1,140 @@
+\section{Visualização dos Dados}
+
+\subsection{Intensidade do Sinal por Fabricante}
+
+\subsubsection{Boxplot de Sinal Físico por Fabricante}
+O boxplot de sinal físico por fabricante apresenta a distribuição e os quartis da potência recebida (dBm) para ambas as infraestruturas.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{img/boxplot_rssi_fabricante.png}
+  \caption{Boxplot RSSI por Fabricante}
+  \label{fig:boxplot_rssi_fabricante_png}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{Ruckus}: Média de \texttt{-74.14 dBm}, Mediana \texttt{-75.00 dBm}.
+  \item \textbf{UniFi}: Média de \texttt{-64.39 dBm}, Mediana \texttt{-64.00 dBm}.
+  \item Os resultados sugerem uma cobertura de sinal física coerente para os clientes de ambas as marcas no cenário analisado, com a maioria das amostras se situando em uma faixa saudável de RF.
+
+\end{itemize}
+\subsubsection{Histograma de Densidade de Sinal}
+O histograma apresenta a densidade de ocorrência de potência de sinal nos logs coletados.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{img/histograma_rssi.png}
+  \caption{Histograma RSSI}
+  \label{fig:histograma_rssi_png}
+\end{figure}
+
+\begin{itemize}
+  \item O gráfico demonstra que, na população observada, os clientes UniFi apresentaram uma distribuição de sinal com menor variabilidade (concentrada em torno de -67 dBm), enquanto a Ruckus apresenta maior amplitude e dispersão das conexões ao longo do dia.
+
+
+\end{itemize}
+\subsection{Utilização de Canais por Fabricante}
+
+O histograma de utilização de canais apresenta a contagem de registros em cada frequência de operação.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{img/histograma_canais.png}
+  \caption{Histograma de Canais}
+  \label{fig:histograma_canais_png}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{2,4 GHz}: Ambas as marcas concentram o tráfego nos canais não sobrepostos \texttt{1}, \texttt{6} e \texttt{11}, validando as boas práticas de planejamento de RF adotadas no campus.
+  \item \textbf{5 GHz}: A Ruckus apresenta uma alocação de espectro mais ampla e distribuída (como canais \texttt{36}, \texttt{52}, \texttt{60}, \texttt{104}, \texttt{112}, \texttt{120}, \texttt{128}, \texttt{149}), o que reduz interferência co-canal em células adjacentes.
+
+
+\end{itemize}
+\subsection{Quantidade de Clientes Conectados por AP}
+
+Este histograma ilustra a densidade de clientes associados simultaneamente a cada Access Point.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{img/histograma_clientes_por_ap.png}
+  \caption{Histograma Clientes por AP}
+  \label{fig:histograma_clientes_por_ap_png}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{UniFi}: Exibe perfil de baixa carga (maior parte dos registros possui entre 1 e 5 clientes simultâneos por rádio).
+  \item \textbf{Ruckus}: Apresenta registros com cargas substancialmente maiores de clientes simultâneos, o que reflete o fato de esses equipamentos estarem implantados nas áreas de maior circulação e densidade de alunos do campus (salas de aula, auditórios e biblioteca).
+
+
+\end{itemize}
+\subsection{Análise de Desempenho e Qualidade de Enlace por Banda}
+
+\subsubsection{Throughput por Banda}
+O boxplot compara o consumo de throughput entre as bandas de 2,4 GHz e 5 GHz.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{img/boxplot_throughput_banda.png}
+  \caption{Boxplot Throughput por Banda}
+  \label{fig:boxplot_throughput_banda_png}
+\end{figure}
+
+\begin{itemize}
+  \item Como esperado teoricamente no ambiente Ruckus (único fabricante com registros na banda de 5 GHz na telemetria coletada), a faixa de \textbf{5 GHz} oferece vazão física superior, superando a banda de \textbf{2,4 GHz} que possui limitações de largura de canal e maior concorrência de meio.
+
+\end{itemize}
+\subsubsection{Retransmissões por Banda}
+O boxplot compara a ocorrência de retransmissões físicas ou estimadas.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{img/boxplot_retransmissoes_banda.png}
+  \caption{Boxplot Retransmissões por Banda}
+  \label{fig:boxplot_retransmissoes_banda_png}
+\end{figure}
+
+\begin{itemize}
+  \item A banda de \textbf{2,4 GHz} exibe taxas médias superiores de retransmissão, decorrentes do maior congestionamento espectral e das colisões de quadros provocadas pela contenção CSMA/CA no reduzido número de canais não-sobrepostos disponíveis.
+
+
+\end{itemize}
+\subsection{Distribuição de Throughput Agregado por AP}
+
+Este gráfico apresenta a soma da vazão ativa de todos os clientes associados a cada um dos APs mapeados, permitindo identificar o nível de carregamento individual de tráfego por antena.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{img/boxplot_throughput_por_ap.png}
+  \caption{Boxplot Throughput por AP}
+  \label{fig:boxplot_throughput_por_ap_png}
+\end{figure}
+
+\begin{itemize}
+  \item \textbf{Ruckus (AP MAC Simplificado)}: Apresenta maior amplitude e níveis superiores de vazão somada (vários APs superando médias de 5 a 10 Mbps de tráfego agregado ativo, com picos de consumo expressivos). Para melhor visualização, os endereços MAC longos do Ruckus foram simplificados no formato \texttt{RK-XXXX} (onde \texttt{XXXX} são os 4 dígitos finais do MAC).
+  \item \textbf{UniFi (AP Nome)}: Mostra distribuições de vazão agregada concentradas próximas de zero (com médias inferiores a 2 Mbps). Isso indica que a maioria dos APs da UniFi operaram com carga de dados muito baixa durante o período amostrado, corroborando a ociosidade do ambiente.
+
+
+\end{itemize}
+\subsection{Distribuição Temporal de Clientes Únicos no Campus}
+
+O mapa de calor (heatmap) apresenta a quantidade consolidada de clientes únicos ativos na rede WLAN do campus (unificando Ruckus e UniFi na mesma malha de serviço), distribuída ao longo do ciclo diário de 24 horas para os 48 a 49 dias com monitoramento efetivo de logs.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{img/heatmap_horario_clientes.png}
+  \caption{Heatmap de Clientes Únicos}
+  \label{fig:heatmap_horario_clientes_png}
+\end{figure}
+
+\begin{itemize}
+  \item O gráfico evidencia a \textbf{rotina cíclica de uso da rede}: o volume de clientes inicia uma curva ascendente rápida a partir das \textbf{08:00}, atinge os maiores patamares no horário vespertino/noturno (especialmente entre \textbf{14:00} e \textbf{20:00}) e entra em declínio nas últimas horas da noite. A linha tracejada demarca o recesso acadêmico intersemestral de julho/agosto.
+  \item \textbf{Picos de Demanda}:
+  \begin{itemize}
+    \item Na \textbf{rede unificada do campus}, o pico máximo de clientes simultâneos ocorreu no dia \textbf{22/09} às \textbf{19:00}, registrando \textbf{629} dispositivos conectados.
+    \item No ambiente Ruckus, o pico isolado ocorreu no dia \textbf{22/09} às \textbf{19:00}, registrando \textbf{599} dispositivos.
+    \item No ambiente UniFi, o pico isolado ocorreu no dia \textbf{06/10} às \textbf{19:00}, registrando \textbf{135} dispositivos.
+\end{itemize}
+  \item Os resultados indicam uma concentração expressivamente maior de dispositivos sob a infraestrutura Ruckus, principal sustentáculo da densidade estudantil em salas de aula e áreas comuns do campus.
+
+
+\end{itemize}

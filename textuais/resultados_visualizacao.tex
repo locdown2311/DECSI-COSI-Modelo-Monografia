@@ -45,7 +45,7 @@ O histograma de utilização de canais apresenta a contagem de registros em cada
 \end{figure}
 
 \begin{itemize}
-  \item \textbf{2,4 GHz}: Ambas as marcas concentram o tráfego nos canais não sobrepostos \texttt{1}, \texttt{6} e \texttt{11}, validando as boas práticas de planejamento de RF adotadas no campus.
+  \item \textbf{2,4 GHz}: A UniFi concentra o tráfego exclusivamente nos canais não sobrepostos \texttt{1}, \texttt{6} e \texttt{11}, de acordo com as boas práticas de planejamento de RF. A Ruckus, por outro lado, distribui seus registros por quase todos os canais de \texttt{1} a \texttt{11}, com maior volume nos canais \texttt{1}, \texttt{4}, \texttt{8} e \texttt{11} e uso residual do canal \texttt{6}. Como os canais intermediários (por exemplo, \texttt{4} e \texttt{8}) se sobrepõem parcialmente aos canais \texttt{1}, \texttt{6} e \texttt{11}, essa distribuição não segue o plano de três canais não sobrepostos e pode favorecer a interferência de canal adjacente entre APs vizinhos, possivelmente em decorrência da seleção dinâmica de canais da controladora.
   \item \textbf{5 GHz}: A Ruckus apresenta uma alocação de espectro mais ampla e distribuída (como canais \texttt{36}, \texttt{52}, \texttt{60}, \texttt{104}, \texttt{112}, \texttt{120}, \texttt{128}, \texttt{149}), o que reduz interferência co-canal em células adjacentes.
 
 

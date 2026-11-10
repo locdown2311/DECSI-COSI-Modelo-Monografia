@@ -50,7 +50,7 @@ Para estruturar a transição dos registros brutos capturados até a geração d
 \begin{enumerate}
     \item \textbf{Coleta de Dados Telemétricos (Sensores e Servidores)}:
     \begin{itemize}
-        \item \textbf{Rede Ruckus}: Consultas SNMP ocorrem ciclicamente a cada 5 minutos a partir de um servidor coletor dedicado, extraindo as MIBs telemétricas de rádio de cada rádio ativo. Simultaneamente, as controladoras SmartZone gravam em base de dados local as mensagens Syslog emitidas em tempo real pelos APs para registrar transições de conexões e eventos de associação;
+        \item \textbf{Rede Ruckus}: Consultas SNMP ocorrem ciclicamente a cada 5 minutos a partir de um servidor coletor dedicado, extraindo de cada rádio ativo as métricas definidas nas MIBs (\textit{Management Information Base}), estruturas que descrevem os objetos de gerência disponíveis em cada equipamento. Simultaneamente, as controladoras SmartZone gravam em base de dados local as mensagens Syslog emitidas em tempo real pelos APs para registrar transições de conexões e eventos de associação;
         \item \textbf{Rede UniFi}: Requisições REST HTTP são disparadas a cada 5 minutos direcionadas à API do servidor UniFi Controller, extraindo o estado detalhado dos APs cadastrados e seus clientes ativos associados.
     \end{itemize}
     \item \textbf{Consolidação dos Arquivos de Log (\texttt{unify\_logs.py})}:
@@ -143,6 +143,15 @@ Para mensurar a força e o sentido da associação entre os parâmetros de radio
     
     onde $d_i = \mathrm{rg}(X_i) - \mathrm{rg}(Y_i)$ representa a diferença entre os postos das observações pareadas de $X$ e $Y$. O coeficiente de Spearman é robusto na presença de valores atípicos e não exige o pressuposto de normalidade dos dados, sendo a métrica ideal para caracterizar grandezas telemétricas com distribuições altamente assimétricas ou relações limitadas por limites operacionais físicos (como a relação exponencial do sinal de rádio e o throughput).
 \end{enumerate}
+
+Ambos os coeficientes variam de $-1,00$ (correlação negativa perfeita) a $+1,00$ (correlação positiva perfeita); o valor zero indica ausência de associação linear (Pearson) ou monotônica (Spearman). A significância estatística de cada coeficiente é avaliada ao nível de $p < 0,05$. Para qualificar a intensidade dos coeficientes calculados, adota-se a classificação usual da literatura estatística (como Akoglu e Mukaka):
+\begin{itemize}
+    \item $|r| \ge 0,80$: correlação muito forte;
+    \item $0,60 \le |r| < 0,80$: correlação forte;
+    \item $0,40 \le |r| < 0,60$: correlação moderada;
+    \item $0,20 \le |r| < 0,40$: correlação fraca;
+    \item $|r| < 0,20$: correlação muito fraca ou desprezível.
+\end{itemize}
 
 \subsection{Pressupostos de Normalidade e Escolha de Testes Comparativos}
 \label{subsec:metodologia_normalidade_teoria}
