@@ -32,9 +32,12 @@ jobs:
             echo "::warning title=Referência quebrada::$linha"
           done || true
 
+      - name: Renomear o PDF com o número da revisão
+        run: cp decsi-cosi-modelo-monografia.pdf "Monografia-Igor-Rev-${{ github.run_number }}.pdf"
+
       - name: Disponibilizar o PDF
         uses: actions/upload-artifact@v4
         with:
-          name: monografia-pdf
-          path: decsi-cosi-modelo-monografia.pdf
+          name: Monografia-Igor-Rev-${{ github.run_number }}
+          path: Monografia-Igor-Rev-${{ github.run_number }}.pdf
           if-no-files-found: error

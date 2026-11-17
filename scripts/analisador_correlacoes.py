@@ -148,10 +148,10 @@ def run_correlation_analysis(ruckus_path, unifi_path, output_dir):
     plt.close()
 
     # 10. Matriz de Correlação Heatmap (Spearman)
-    corr_cols = ['signal', 'RSSI', 'noise', 'throughput_total_mbps', 'retransmissoes_pct', 'volume_total_mb', 'tempo_sessao_seg']
+    # RSSI omitido: na Ruckus RSSI == signal e na UniFi RSSI = signal - noise (ruído quase constante)
+    corr_cols = ['signal', 'noise', 'throughput_total_mbps', 'retransmissoes_pct', 'volume_total_mb', 'tempo_sessao_seg']
     renamed_cols = {
         'signal': 'Sinal (dBm)',
-        'RSSI': 'RSSI/SNR (dB)',
         'noise': 'Ruído (dBm)',
         'throughput_total_mbps': 'Throughput (Mbps)',
         'retransmissoes_pct': 'Retransmissões (%)',

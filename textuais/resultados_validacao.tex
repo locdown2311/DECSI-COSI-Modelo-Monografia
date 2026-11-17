@@ -89,12 +89,16 @@ O percentual de dados nulos ou ausentes para cada variável após a limpeza:
 
 \subsection{Tratamento de Valores Nulos}
 
-\begin{itemize}
-  \item \textbf{Link Speed no Ruckus}: A taxa de modulação física de TX (\texttt{link\_speed\_tx\_mbps}) foi extraída com sucesso a partir do campo \texttt{throughput\_rate} (em Kbps) nos logs de telemetria da controladora SmartZone. A taxa RX correspondente (\texttt{link\_speed\_rx\_mbps}) não é informada nos logs brutos e é mantida como \texttt{NaN}.
-  \item \textbf{Ruído (Noise) e Sinal (Signal) em Ruckus}: Alguns registros continham valores de sinal zerados ou vazios. Onde o sinal era -100 (vazio padrão) e SNR era 0, o ruído foi definido como NaN para evitar distorções de cálculo.
-  \item \textbf{Valores Nulos na UniFi}: O dataset UniFi apresenta consistência total (0\% de nulos nas métricas principais de telemetria).
+Durante a coleta, alguns registros de log chegaram incompletos: ocasionalmente, campos de uma consulta vinham vazios ou com valores padrão que não correspondem a uma medição real, como sinal igual a 0 ou a $-100$~dBm na Ruckus. Esses casos foram tratados da seguinte forma no pipeline de padronização:
 
+\begin{itemize}
+  \item \textbf{Registros sem horário}: registros sem a marcação de tempo (\textit{timestamp}) foram descartados, pois não podem ser posicionados na série temporal.
+  \item \textbf{Sinal, RSSI e ruído na Ruckus}: quando o sinal vinha vazio, igual a 0 ou menor ou igual a $-100$~dBm, esses três campos foram marcados como ausentes (\texttt{NaN}), em vez de se descartar o registro inteiro. Esses casos correspondem aos 10,02\% de valores nulos dessas colunas na Tabela~\ref{tab:data_validacao_de_dados_3}. Os registros afetados continuam sendo usados nas análises que não dependem do sinal, como throughput e retransmissões, e são ignorados apenas nos cálculos que envolvem sinal ou ruído.
+  \item \textbf{Contadores de tráfego e de retransmissão}: quando os campos de bytes, pacotes ou retransmissões (Ruckus), ou de taxa de transferência e CCQ (UniFi), vinham vazios, o pipeline os considerou iguais a zero. Por esse motivo, essas colunas aparecem com 0\% de valores nulos na Tabela~\ref{tab:data_validacao_de_dados_3}. Essa escolha pode subestimar levemente o throughput e as retransmissões nos registros afetados, já que um campo vazio passa a ser interpretado como ausência de tráfego.
+  \item \textbf{Link Speed na Ruckus}: a taxa física de TX (\texttt{link\_speed\_tx\_mbps}) é extraída do campo \texttt{throughput\_rate} e foi marcada como ausente quando esse campo vinha vazio, zerado ou fora da faixa válida (7,12\% dos registros). A taxa de RX (\texttt{link\_speed\_rx\_mbps}) não é informada pela controladora SmartZone e, por isso, aparece como ausente em todos os registros.
+  \item \textbf{UniFi}: após a padronização, não foram registrados valores ausentes nas métricas de sinal e ruído.
 \end{itemize}
+
 \subsection{Padronização das Unidades de Medida}
 
 As colunas foram padronizadas da seguinte forma:

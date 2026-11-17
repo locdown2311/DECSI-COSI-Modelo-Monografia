@@ -3,7 +3,7 @@
 \label{an:oids_ruckus}
 % ----------------------------------------------------------
 
-Este anexo apresenta os principais identificadores de objetos (OIDs) e descritores da \textit{MIB} (\textit{Management Information Base}) proprietária da Ruckus Wireless, consultados periodicamente via protocolo SNMP pelas ferramentas de gerência ativa no campus da UFOP.
+Este anexo apresenta os identificadores de objetos (OIDs) da \textit{MIB} (\textit{Management Information Base}) proprietária da Ruckus Wireless consultados periodicamente via SNMP pelo coletor desenvolvido neste trabalho. Todas as métricas pertencem à tabela de clientes da controladora, cujo OID base é \texttt{1.3.6.1.4.1.25053.1.2.2.1.1.3.1.1}. Cada métrica corresponde a uma coluna dessa tabela, identificada pelo número acrescentado ao OID base, e o endereço MAC do cliente compõe o índice de cada linha. O ruído de fundo não é consultado diretamente: ele é derivado como a diferença entre o sinal recebido e a relação sinal-ruído (SNR).
 
 \begin{table}[htb]
 \IBGEtab{%
@@ -13,18 +13,23 @@ Este anexo apresenta os principais identificadores de objetos (OIDs) e descritor
   \resizebox{\textwidth}{!}{%
     \begin{tabular}{lll}
       \toprule
-      Métrica Telemétrica & OID SNMP de Consulta & Descrição na \textit{MIB} da Ruckus \\
+      Métrica & OID SNMP consultado & Descrição \\
       \midrule
-      Nome do AP & \texttt{1.3.6.1.4.1.25053.1.2.2.1.1.2.1.1} & Identificador textual legível do rádio \\
-      Canal de RF & \texttt{1.3.6.1.4.1.25053.1.1.1.15.1.1.1.5} & Canal operacional físico do rádio \\
-      Clientes Conectados & \texttt{1.3.6.1.4.1.25053.1.1.1.15.1.1.1.9} & Quantidade de associações ativas por minuto \\
-      RSSI do Cliente & \texttt{1.3.6.1.4.1.25053.1.1.1.15.1.1.1.6} & Nível médio de potência de sinal do rádio do cliente \\
-      Retransmissões TX & \texttt{1.3.6.1.4.1.25053.1.1.1.15.1.1.1.23} & Contador de quadros reenviados devido a erros de RF \\
-      Uptime do Rádio & \texttt{1.3.6.1.4.1.25053.1.2.1.1.1.1.9} & Tempo de atividade operacional contínua do rádio \\
+      Endereço MAC do AP & \texttt{<base>.2} & AP ao qual o cliente está associado \\
+      Banda do rádio & \texttt{<base>.6} & Identificador da banda de operação (2,4 GHz ou 5 GHz) \\
+      Canal de RF & \texttt{<base>.7} & Canal do rádio ao qual o cliente está associado \\
+      Pacotes transmitidos & \texttt{<base>.10} & Contador cumulativo de pacotes transmitidos (TX) \\
+      Bytes transmitidos & \texttt{<base>.11} & Contador cumulativo de bytes transmitidos (TX) \\
+      Bytes recebidos & \texttt{<base>.13} & Contador cumulativo de bytes recebidos (RX) \\
+      Retransmissões TX & \texttt{<base>.14} & Contador cumulativo de quadros retransmitidos \\
+      Tempo de associação & \texttt{<base>.15} & Tempo de conexão do cliente (\textit{uptime}) \\
+      Taxa de ligação & \texttt{<base>.17} & Velocidade física negociada com o cliente (Kbps) \\
+      SNR & \texttt{<base>.21} & Relação sinal-ruído do cliente (dB) \\
+      Sinal recebido (RSSI) & \texttt{<base>.81} & Intensidade do sinal recebido do cliente (dBm) \\
       \bottomrule
     \end{tabular}%
   }%
 }{%
-  \fonte{Ruckus Wireless \textit{MIB} Reference Manual.}%
+  \fonte{Produzido pelos autores a partir do script de coleta. \texttt{<base>} = \texttt{1.3.6.1.4.1.25053.1.2.2.1.1.3.1.1}.}%
 }
 \end{table}

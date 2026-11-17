@@ -54,7 +54,7 @@
 \end{itemize}
   \item \textbf{Throughput vs Volume}:
   \begin{itemize}
-    \item \textbf{Throughput} representa a taxa média integrada na janela de amostragem de 5 minutos (Mbps).
+    \item \textbf{Throughput} representa, na Ruckus, a vazão média do cliente desde a sua conexão e, na UniFi, a taxa reportada pela controladora no momento da coleta, conforme a Seção~\ref{sec:metodologia_metricas} (Mbps).
     \item \textbf{Volume} representa a transferência acumulada total no período de conexão dos clientes (MB).
     \item Note que a UniFi tem menor número de amostras, mas o comportamento estatístico da taxa de transferência e do volume calculado segue uma escala e distribuição coerentes com os dados de produção do Ruckus.
 \end{itemize}
@@ -71,7 +71,7 @@
   \item \textbf{Índice de Equidade da Rede (Jain's Fairness Index)}:
   \begin{itemize}
     \item Calculado conforme a Equação~\ref{eq:jain_metodologia} (Seção~\ref{sec:metodologia_metricas}), apenas nos instantes com pelo menos 2 clientes ativos no mesmo rádio.
-    \item Os valores observados são baixos nos dois fabricantes (média de 0,322 e mediana de 0,260 no Ruckus; média de 0,195 e mediana de 0,134 na UniFi), indicando que, na maior parte do tempo, poucos clientes concentram a maior parte da vazão do rádio. A comparação estatística entre os fabricantes é apresentada na Seção~\ref{sec:testes_hipotese}.
+    \item Os valores observados são baixos nos dois fabricantes (média de 0,322 e mediana de 0,260 no Ruckus; média de 0,195 e mediana de 0,134 na UniFi), sugerindo que, em boa parte do tempo, poucos clientes tendem a concentrar a maior parte da vazão do rádio. A comparação estatística entre os fabricantes é apresentada na Seção~\ref{sec:testes_hipotese}.
 
 \end{itemize}
 \end{enumerate}

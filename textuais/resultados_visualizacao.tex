@@ -45,7 +45,7 @@ O histograma de utilização de canais apresenta a contagem de registros em cada
 \end{figure}
 
 \begin{itemize}
-  \item \textbf{2,4 GHz}: A UniFi concentra o tráfego exclusivamente nos canais não sobrepostos \texttt{1}, \texttt{6} e \texttt{11}, de acordo com as boas práticas de planejamento de RF. A Ruckus, por outro lado, distribui seus registros por quase todos os canais de \texttt{1} a \texttt{11}, com maior volume nos canais \texttt{1}, \texttt{4}, \texttt{8} e \texttt{11} e uso residual do canal \texttt{6}. Como os canais intermediários (por exemplo, \texttt{4} e \texttt{8}) se sobrepõem parcialmente aos canais \texttt{1}, \texttt{6} e \texttt{11}, essa distribuição não segue o plano de três canais não sobrepostos e pode favorecer a interferência de canal adjacente entre APs vizinhos, possivelmente em decorrência da seleção dinâmica de canais da controladora.
+  \item \textbf{2,4 GHz}: Nos dados coletados, a UniFi concentra o tráfego nos canais não sobrepostos \texttt{1}, \texttt{6} e \texttt{11}, de acordo com as boas práticas de planejamento de RF. A Ruckus, por outro lado, distribui seus registros por quase todos os canais de \texttt{1} a \texttt{11}, com maior volume nos canais \texttt{1}, \texttt{4}, \texttt{8} e \texttt{11} e uso residual do canal \texttt{6}. Como os canais intermediários (por exemplo, \texttt{4} e \texttt{8}) se sobrepõem parcialmente aos canais \texttt{1}, \texttt{6} e \texttt{11}, essa distribuição não segue o plano de três canais não sobrepostos e pode favorecer a interferência de canal adjacente entre APs vizinhos, possivelmente em decorrência da seleção dinâmica de canais da controladora.
   \item \textbf{5 GHz}: A Ruckus apresenta uma alocação de espectro mais ampla e distribuída (como canais \texttt{36}, \texttt{52}, \texttt{60}, \texttt{104}, \texttt{112}, \texttt{120}, \texttt{128}, \texttt{149}), o que reduz interferência co-canal em células adjacentes.
 
 
@@ -127,10 +127,11 @@ O mapa de calor (heatmap) apresenta a quantidade consolidada de clientes únicos
 \end{figure}
 
 \begin{itemize}
-  \item O gráfico evidencia a \textbf{rotina cíclica de uso da rede}: o volume de clientes inicia uma curva ascendente rápida a partir das \textbf{08:00}, atinge os maiores patamares no horário vespertino/noturno (especialmente entre \textbf{14:00} e \textbf{20:00}) e entra em declínio nas últimas horas da noite. A linha tracejada demarca o recesso acadêmico intersemestral de julho/agosto.
+  \item O gráfico mostra a \textbf{rotina cíclica de uso da rede}: o volume de clientes inicia uma curva ascendente rápida a partir das \textbf{08:00}, atinge os maiores patamares no horário vespertino/noturno (especialmente entre \textbf{14:00} e \textbf{20:00}) e entra em declínio nas últimas horas da noite. A linha tracejada demarca o recesso acadêmico intersemestral de julho/agosto.
+  \item \textbf{Atividade na madrugada}: entre 0h e 6h, período em que o ICEA não tem atividades, ainda se observam poucos clientes ativos (em geral, menos de 10 por hora). Supõe-se que esses registros correspondam principalmente a dispositivos da equipe de vigilância do campus e, possivelmente, a equipamentos que permanecem conectados de forma contínua.
   \item \textbf{Picos de Demanda}:
   \begin{itemize}
-    \item Na \textbf{rede unificada do campus}, o pico máximo de clientes simultâneos ocorreu no dia \textbf{22/09} às \textbf{19:00}, registrando \textbf{629} dispositivos conectados.
+    \item Na \textbf{rede unificada do campus}, o pico máximo de clientes simultâneos ocorreu no dia \textbf{22/09} às \textbf{19:00}, registrando \textbf{mais de 600} dispositivos conectados.
     \item No ambiente Ruckus, o pico isolado ocorreu no dia \textbf{22/09} às \textbf{19:00}, registrando \textbf{599} dispositivos.
     \item No ambiente UniFi, o pico isolado ocorreu no dia \textbf{06/10} às \textbf{19:00}, registrando \textbf{135} dispositivos.
 \end{itemize}
